@@ -67,9 +67,13 @@
 
                         <div class="form-group row">
 
-                            <label for="name" class="col-md-4 col-form-label text-md-right">Login With</label>
+                            <label for="name" class="col-md-12 col-form-label text-md-center">or</label>
 
-                            <div class="col-md-6">
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-md-12 text-md-center">
 
                                 <a href="{{ url('login/facebook') }}" class="fa fa-facebook"></a>
 
@@ -78,6 +82,7 @@
                             </div>
 
                         </div>
+
                     </form>
                 </div>
             </div>

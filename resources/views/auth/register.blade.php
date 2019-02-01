@@ -11,20 +11,38 @@
                         <form method="POST" action="{{ route('register') }}">
                             @csrf
 
-                            <div class="form-group row">
+                            @if(isset($avatar))
 
-                                <label for="name" class="col-md-4 col-form-label text-md-right">Register With</label>
+                                <div class="form-group row">
+                                    <div class="col-md-12 text-md-center">
+                                        <img src="{{$avatar}}" alt="Avatar" class="avatar"/>
+                                    </div>
+                                </div>
 
-                                <div class="col-md-6">
+                                <input id="avatar" type="hidden" name="avatar" value="{{$avatar}}">
 
-                                    <a href="{{ url('login/facebook') }}" class="fa fa-facebook"></a>
+                            @else
 
-                                    <a href="{{ url('login/google') }}" class="fa fa-google"></a>
+                                <div class="form-group row">
 
+                                    <div class="col-md-12 text-md-center">
+
+                                        <a href="{{ url('login/facebook') }}" class="fa fa-facebook"></a>
+
+                                        <a href="{{ url('login/google') }}" class="fa fa-google"></a>
+
+
+                                    </div>
 
                                 </div>
 
-                            </div>
+                                <div class="form-group row">
+
+                                    <label for="name" class="col-md-12 col-form-label text-md-center">or</label>
+
+                                </div>
+
+                            @endif
 
 
                             <div class="form-group row{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -90,6 +108,23 @@
                             </div>
 
                             <div class="form-group row">
+                                <label for="telephone"
+                                       class="col-md-4 col-form-label text-md-right">{{ __('Telephone') }}</label>
+
+                                <div class="col-md-6" style="display:flex;">
+                                    <label class="col-form-label text-md-left">+420&nbsp;&nbsp;</label><input id="telephone" type="text"
+                                               class="form-control {{ $errors->has('telephone') ? ' is-invalid' : '' }}" style="min-width: 100px;"
+                                               name="telephone" required>
+
+                                    @if ($errors->has('telephone'))
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('telephone') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="password"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
@@ -115,6 +150,12 @@
                                            name="password_confirmation" required>
                                 </div>
                             </div>
+
+                            @if(isset($FacebookID))
+                                <input id="facebookID" type="hidden" name="facebookID" value="{{$FacebookID}}">
+                            @elseif(isset($GoogleID))
+                                <input id="googleID" type="hidden" name="googleID" value="{{$GoogleID}}">
+                            @endif
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">

@@ -77,7 +77,20 @@ class LoginController extends Controller
 
         } else {
 
-            return view('auth.register', ['name' => $userSocial->getName(), 'email' => $userSocial->getEmail()]);
+            if($avatar = $userSocial->getAvatar()) {
+                if ($social == 'google') {
+                    $avatar = str_replace('?sz=50', '', $avatar);
+                } elseif ($social == 'facebook') {
+                    $avatar = str_replace('type=normal', 'type=large', $avatar);
+                }
+            }
+
+
+            if ($social == 'google') {
+                return view('auth.register')->withName($userSocial->getName())->withEmail($userSocial->getEmail())->withAvatar($avatar)->withGoogleID($userSocial->getId());
+            } elseif ($social == 'facebook') {
+                return view('auth.register')->withName($userSocial->getName())->withEmail($userSocial->getEmail())->withAvatar($avatar)->withFacebookID($userSocial->getId());
+            }
 
         }
 
