@@ -1,172 +1,142 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
+
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Register') }}</div>
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">{{ __('Registrace') }}</div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('register') }}">
 
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}">
-                            @csrf
+                    @csrf
 
-                            @if(isset($avatar))
+                    @if(isset($avatar))
 
-                                <div class="form-group row">
-                                    <div class="col-md-12 text-md-center">
-                                        <img src="{{$avatar}}" alt="Avatar" class="avatar"/>
-                                    </div>
-                                </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 text-md-center">
+                                <img src="{{$avatar}}" alt="Avatar" class="avatar"/>
+                            </div>
+                        </div>
 
-                                <input id="avatar" type="hidden" name="avatar" value="{{$avatar}}">
+                        <input id="avatar" type="hidden" name="avatar" value="{{$avatar}}">
 
-                            @else
+                    @endif
 
-                                <div class="form-group row">
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" id="name"
+                                   class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name"
+                                   placeholder="Jméno" required="required" value="{{ $name ?? old('name') }}"
+                                   autofocus="autofocus">
+                            <label for="name">Jméno</label>
 
-                                    <div class="col-md-12 text-md-center">
-
-                                        <a href="{{ url('login/facebook') }}" class="fa fa-facebook"></a>
-
-                                        <a href="{{ url('login/google') }}" class="fa fa-google"></a>
-
-
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group row">
-
-                                    <label for="name" class="col-md-12 col-form-label text-md-center">or</label>
-
-                                </div>
-
+                            @if ($errors->has('name'))
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
                             @endif
+                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="email" id="email"
+                                   class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email"
+                                   placeholder="Email" required="required" value="{{ $email ?? old('email') }}">
+                            <label for="email">Email</label>
 
-                            <div class="form-group row{{ $errors->has('name') ? ' has-error' : '' }}">
+                            @if ($errors->has('email'))
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                            @endif
+                        </div>
+                    </div>
 
-                                <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
+                    <div class="form-group">
+                        <div class="form-label-group input-group">
 
-                                <div class="col-md-6">
-
-                                    @if(!empty($name))
-
-                                        <input id="name" type="text" class="form-control" name="name" value="{{$name}}"
-                                               required autofocus>
-
-                                    @else
-
-                                        <input id="name" type="text" class="form-control" name="name"
-                                               value="{{ old('name') }}" required autofocus>
-
-                                    @endif
-
-                                    @if ($errors->has('name'))
-
-                                        <span class="help-block">
-
-                                       <strong>{{ $errors->first('name') }}</strong>
-
-                                   </span>
-
-                                    @endif
-
-                                </div>
-
+                            <div class="input-group-addon text-md-center" style="width: 15%; padding: 12px 0 12px 0;">+420</div>
+                            <div class="form-label-group" style="width: 85%;">
+                                <input type="text" id="telephone"
+                                       class="form-control {{ $errors->has('telephone') ? ' is-invalid' : '' }}" style="border-radius: 0.25rem"
+                                       name="telephone"
+                                       placeholder="Telefon" required="required" value="{{ old('telephone') }}">
+                                <label for="telephone">Telefon</label>
                             </div>
 
-                            <div class="form-group row{{ $errors->has('email') ? ' has-error' : '' }}">
-
-                                <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
-
-                                <div class="col-md-6">
-
-                                    @if(!empty($email))
-
-                                        <input id="email" type="email" class="form-control" name="email"
-                                               value="{{$email}}" required>
-
-                                    @else
-
-                                        <input id="email" type="email" class="form-control" name="email"
-                                               value="{{ old('email') }}" required>
-
-                                    @endif
-
-                                    @if ($errors->has('email'))
-
-                                        <span class="help-block">
-
-                                       <strong>{{ $errors->first('email') }}</strong>
-
-                                   </span>
-
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="telephone"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('Telephone') }}</label>
-
-                                <div class="col-md-6" style="display:flex;">
-                                    <label class="col-form-label text-md-left">+420&nbsp;&nbsp;</label><input id="telephone" type="text"
-                                               class="form-control {{ $errors->has('telephone') ? ' is-invalid' : '' }}" style="min-width: 100px;"
-                                               name="telephone" required>
-
-                                    @if ($errors->has('telephone'))
-                                        <span class="invalid-feedback" role="alert">
+                            @if ($errors->has('telephone'))
+                                <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('telephone') }}</strong>
                                     </span>
-                                    @endif
-                                </div>
-                            </div>
+                            @endif
+                        </div>
+                    </div>
 
-                            <div class="form-group row">
-                                <label for="password"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="password" id="password"
+                                   class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                   name="password" placeholder="Heslo" required="required">
+                            <label for="password">Heslo</label>
 
-                                <div class="col-md-6">
-                                    <input id="password" type="password"
-                                           class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                           name="password" required>
-
-                                    @if ($errors->has('password'))
-                                        <span class="invalid-feedback" role="alert">
+                            @if ($errors->has('password'))
+                                <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password-confirm"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control"
-                                           name="password_confirmation" required>
-                                </div>
-                            </div>
-
-                            @if(isset($FacebookID))
-                                <input id="facebookID" type="hidden" name="facebookID" value="{{$FacebookID}}">
-                            @elseif(isset($GoogleID))
-                                <input id="googleID" type="hidden" name="googleID" value="{{$GoogleID}}">
                             @endif
 
-                            <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Register') }}
-                                    </button>
-                                </div>
-                            </div>
-
-                        </form>
+                        </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="password" id="password_confirmation"
+                                   class="form-control {{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}"
+                                   name="password_confirmation" placeholder="Heslo (potvrzení)" required="required">
+                            <label for="password_confirmation">Heslo (potvrdit)</label>
+
+                            @if ($errors->has('password_confirmation'))
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                    </span>
+                            @endif
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block" style="margin: 2em 0 0 0;">
+                            {{ __('Registrovat') }}
+                        </button>
+                    </div>
+
+                </form>
+
+                @if(!isset($name))
+
+                    <div class="form-group row" style="margin-top: 1em;">
+
+                        <label for="name" class="col-md-12 col-form-label text-md-center">nebo</label>
+
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-md-12 text-md-center">
+
+                            <a href="{{ url('login/facebook') }}" class="fa fa-facebook"></a>
+
+                            <a href="{{ url('login/google') }}" class="fa fa-google"></a>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+                <div class="form-group text-md-center" style="margin: 2em 0 0 0;">
+                    Už máš účet? <a href="/login">Přihlaš se!</a>
                 </div>
             </div>
         </div>

@@ -29,7 +29,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -73,7 +73,7 @@ class LoginController extends Controller
 
             Auth::login($user);
 
-            return redirect()->action('HomeController@index');
+            return redirect()->action('DashboardController@index');
 
         } else {
 
