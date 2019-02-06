@@ -10,7 +10,7 @@
 
 <div id="wrapper">
 
-    <div id="content-wrapper">
+    <div id="content-wrapper-auth">
         @include('layouts.partials.content')
     </div>
 

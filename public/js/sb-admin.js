@@ -1,14 +1,17 @@
 (function($) {
   "use strict"; // Start of use strict
+  $(".sidebar").niceScroll({cursorcolor:"#005148", cursoropacitymax: 0.5, cursorborder: 0});
 
   // Toggle the side navigation
   $("#sidebarToggle").on('click', function(e) {
     e.preventDefault();
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
+    $("#content-wrapper").toggleClass("toggled");
   });
 
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+
   $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
     if ($(window).width() > 768) {
       var e0 = e.originalEvent,
@@ -17,6 +20,8 @@
       e.preventDefault();
     }
   });
+
+
 
   // Scroll to top button appear
   $(document).on('scroll', function() {

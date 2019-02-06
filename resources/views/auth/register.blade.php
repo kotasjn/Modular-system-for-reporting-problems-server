@@ -13,7 +13,7 @@
                     @if(isset($avatar))
 
                         <div class="form-group row">
-                            <div class="col-md-12 text-md-center">
+                            <div class="col-md-12 text-center">
                                 <img src="{{$avatar}}" alt="Avatar" class="avatar"/>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block" style="margin: 2em 0 0 0;">
+                        <button type="submit" class="btn btn-primary btn-block btn-shadow" style="margin: 2em 0 0 0;">
                             {{ __('Registrovat') }}
                         </button>
                     </div>
@@ -117,17 +117,17 @@
 
                     <div class="form-group row" style="margin-top: 1em;">
 
-                        <label for="name" class="col-md-12 col-form-label text-md-center">nebo</label>
+                        <label for="name" class="col-md-12 col-form-label text-center">nebo</label>
 
                     </div>
 
                     <div class="form-group row">
 
-                        <div class="col-md-12 text-md-center">
+                        <div class="col-md-12 text-center">
 
-                            <a href="{{ url('login/facebook') }}" class="fa fa-facebook"></a>
+                            <a href="{{ url('login/facebook') }}" class="fa fa-facebook btn-shadow"></a>
 
-                            <a href="{{ url('login/google') }}" class="fa fa-google"></a>
+                            <a href="{{ url('login/google') }}" class="fa fa-google btn-shadow"></a>
 
                         </div>
 
@@ -135,7 +135,7 @@
 
                 @endif
 
-                <div class="form-group text-md-center" style="margin: 2em 0 0 0;">
+                <div class="form-group text-center" style="margin: 2em 0 0 0;">
                     Už máš účet? <a href="/login">Přihlaš se!</a>
                 </div>
             </div>

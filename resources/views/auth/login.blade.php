@@ -40,7 +40,7 @@
 
                         </div>
 
-                        <div class="text-md-right">
+                        <div class="text-right">
 
                             <a class="d-block small" href="/password/reset">Zapomněl jsi heslo?</a>
 
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block" style="margin: 1em 0 0 0;">
+                        <button type="submit" class="btn btn-primary btn-block btn-shadow" style="margin: 1em 0 0 0;">
                             {{ __('Přihlásit') }}
                         </button>
                     </div>
@@ -68,23 +68,23 @@
 
                 <div class="form-group row" style="margin-top: 1em;">
 
-                    <label for="name" class="col-md-12 col-form-label text-md-center">nebo</label>
+                    <label for="name" class="col-md-12 col-form-label text-center">nebo</label>
 
                 </div>
 
                 <div class="form-group row">
 
-                    <div class="col-md-12 text-md-center">
+                    <div class="col-md-12 text-center">
 
-                        <a href="{{ url('login/facebook') }}" class="fa fa-facebook"></a>
+                        <a href="{{ url('login/facebook') }}" class="fa fa-facebook btn-shadow"></a>
 
-                        <a href="{{ url('login/google') }}" class="fa fa-google"></a>
+                        <a href="{{ url('login/google') }}" class="fa fa-google btn-shadow"></a>
 
                     </div>
 
                 </div>
 
-                <div class="form-group text-md-center" style="margin: 2em 0 0 0;">
+                <div class="form-group text-center" style="margin: 2em 0 0 0;">
                     Nemáš účet? <a href="/register">Zaregistruj se!</a>
                 </div>
 

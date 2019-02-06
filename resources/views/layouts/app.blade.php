@@ -15,7 +15,7 @@
 
   @include('layouts.partials.sidebar')
 
-  <div id="content-wrapper">
+  <div id="content-wrapper" class="">
     @include('layouts.partials.content')
     @include('layouts.partials.footer')
   </div>
