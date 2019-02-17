@@ -26,7 +26,7 @@ class AuthController extends Controller
      * @param  [string] password_confirmation
      * @return [string] message
      */
-    public function signup(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:50|',
@@ -39,13 +39,15 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'telephone' => $request->telephone,
+            'avatarURL' => isset($request->avatarURL) ? $request->avatarURL : 'https://res.cloudinary.com/kotik/image/upload/v1548981829/Images/default-profile.jpg',
             'password' => bcrypt($request->password)
         ]);
 
         $user->save();
 
         return response()->json([
-            'message' => 'Successfully created user!'
+            'error' => false,
+            'message' => 'Registrace proběhla úspěšně!'
         ], 201);
     }
 
@@ -71,7 +73,8 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
             return response()->json([
-                'message' => 'Unauthorized'
+                'error' => true,
+                'message' => 'Uživatel není autorizován!'
             ], 401);
 
         $user = $request->user();
@@ -84,12 +87,19 @@ class AuthController extends Controller
 
         $token->save();
 
+        $user->isSuperAdmin = ($user->isSuperAdmin) ? true : false;
+        $user->isEmployee = ($user->isEmployee) ? true : false;
+        $user->isSupervisor = ($user->isSupervisor) ? true : false;
+
         return response()->json([
+            'error' => false,
+            'message' => 'Uživatel přihlášen!',
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
-            )->toDateTimeString()
+            )->toDateTimeString(),
+            'user' => $user,
         ]);
     }
 
@@ -113,7 +123,8 @@ class AuthController extends Controller
         $request->user()->token()->revoke();
 
         return response()->json([
-            'message' => 'Successfully logged out'
+            'error' => false,
+            'message' => 'Uživatel byl úspěšně odhlážen!'
         ]);
     }
 

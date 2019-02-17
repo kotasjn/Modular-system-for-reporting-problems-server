@@ -73,7 +73,7 @@ class RegisterController extends Controller
             'telephone' => $data['telephone'],
             'facebookID' => isset($data['facebookID']) ? $data['facebookID'] : '',
             'googleID' => isset($data['googleID']) ? $data['googleID'] : '',
-            'avatarURL' => isset($data['avatar']) ? $data['avatar'] : 'storage/images/default-profile.png',
+            'avatarURL' => isset($data['avatar']) ? $data['avatar'] : 'https://res.cloudinary.com/kotik/image/upload/v1548981829/Images/default-profile.jpg',
             'password' => Hash::make($data['password']),
         ]);
     }
