@@ -29,7 +29,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function reports() {
+    public function owner() {
+        return $this->hasMany(Report::class);
+    }
+
+    public function responsible() {
         return $this->hasMany(Report::class);
     }
 
@@ -41,8 +45,16 @@ class User extends Authenticatable
         return $this->hasMany(Supervisor::class);
     }
 
-    public function territory() {
+    public function approver() {
         return $this->hasMany(Territory::class);
+    }
+
+    public function admin() {
+        return $this->hasMany(Territory::class);
+    }
+
+    public function reportLike() {
+        return $this->hasMany(ReportLike::class);
     }
 
 }

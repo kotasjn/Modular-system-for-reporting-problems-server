@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use test\Mockery\ReturnTypeObjectTypeHint;
 
 class Territory extends Model
 {
@@ -20,5 +21,17 @@ class Territory extends Model
 
     public function supervisor() {
         return $this->hasMany(Supervisor::class);
+    }
+
+    public function problemSolver() {
+        return $this->hasMany(ProblemSolver::class);
+    }
+
+    public function report() {
+        return $this->hasMany(Report::class);
+    }
+
+    public function activeModule() {
+        return $this->hasMany(ActiveModule::class);
     }
 }
