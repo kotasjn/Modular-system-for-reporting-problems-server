@@ -17,4 +17,8 @@ class Territory extends Model
     public function approver() {
         return $this->belongsTo(User::class);
     }
+
+    public function supervisor() {
+        return $this->hasMany(Supervisor::class);
+    }
 }

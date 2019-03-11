@@ -37,6 +37,10 @@ class User extends Authenticatable
         return $this->hasOne(ProblemSolver::class);
     }
 
+    public function supervisor() {
+        return $this->hasMany(Supervisor::class);
+    }
+
     public function territory() {
         return $this->hasMany(Territory::class);
     }
