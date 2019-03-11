@@ -4,7 +4,7 @@
 
     <div class="container">
         <div class="card card-login mx-auto mt-5">
-            <div class="card-header">{{ __('Přihlásit se') }}</div>
+            <div class="card-header">{{ __('Přihlášení') }}</div>
             <div class="card-body">
                 <form method="POST" action="{{ route('login') }}">
 
@@ -60,7 +60,7 @@
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block btn-shadow" style="margin: 1em 0 0 0;">
-                            {{ __('Přihlásit') }}
+                            {{ __('Přihlásit se') }}
                         </button>
                     </div>
 

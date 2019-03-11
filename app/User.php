@@ -28,4 +28,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function reports() {
+        return $this->hasMany(Report::class);
+    }
+
+    public function problemSolver() {
+        return $this->hasOne(ProblemSolver::class);
+    }
+
+    public function territory() {
+        return $this->hasMany(Territory::class);
+    }
+
 }

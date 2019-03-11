@@ -13,7 +13,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
-use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -100,23 +99,15 @@ class AuthController extends Controller
                 $tokenResult->token->expires_at
             )->toDateTimeString(),
             'user' => $user,
-        ]);
+        ], 200);
     }
-
-    public function socialLogin($social)
-    {
-
-        return Socialite::driver($social)->redirect();
-
-    }
-
-
 
 
     /**
      * Logout user (Revoke the token)
      *
-     * @return [string] message
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse [string] message
      */
     public function logout(Request $request)
     {
@@ -125,13 +116,14 @@ class AuthController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Uživatel byl úspěšně odhlážen!'
-        ]);
+        ], 200);
     }
 
     /**
      * Get the authenticated User
      *
-     * @return [json] user object
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse [json] user object
      */
     public function user(Request $request)
     {

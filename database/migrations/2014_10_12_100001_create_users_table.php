@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->boolean('isSuperAdmin')->default(false);
             $table->boolean('isEmployee')->default(false);
             $table->boolean('isSupervisor')->default(false);
-
             $table->string('password');
             
             $table->rememberToken();
