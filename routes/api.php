@@ -27,8 +27,17 @@ Route::group([
 
     Route::group([
         'middleware' => 'auth:api'
-    ], function() {
+    ], function () {
         Route::get('logout', 'Api\Auth\AuthController@logout');
         Route::get('user', 'Api\Auth\AuthController@user');
     });
 });
+
+Route::group([
+    'middleware' => 'auth:api'
+], function () {
+    Route::apiResources([
+        'reports' => 'Api\ReportController'
+    ]);
+});
+

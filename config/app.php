@@ -167,6 +167,7 @@ return [
          */
 
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -16,22 +16,24 @@ class CreateReportsTable extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->timestamp('lastChange');
             $table->string('title');
             $table->string('state');
-            $table->double('latitude');
-            $table->double('longitude');
-            $table->string('userNote');
-            $table->string('employeeNote');
-            $table->string('address');
+            $table->point('location');
+            $table->string('userNote')->nullable();
+            $table->string('employeeNote')->nullable();
+            $table->string('address')->nullable();
 
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('responsible_user_id')->nullable();
             $table->unsignedInteger('category_id');
+            $table->unsignedInteger('territory_id');
+
+            $table->spatialIndex('location');
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('responsible_user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('territory_id')->references('id')->on('territories')->onDelete('cascade');
 
 
             //TODO territoryID
