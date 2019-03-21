@@ -18,7 +18,7 @@ class CreateReportsTable extends Migration
             $table->timestamps();
             $table->string('title');
             $table->string('state');
-            $table->point('location');
+            $table->point('location', 0); // change to 4326
             $table->string('userNote')->nullable();
             $table->string('employeeNote')->nullable();
             $table->string('address')->nullable();
@@ -35,8 +35,6 @@ class CreateReportsTable extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('territory_id')->references('id')->on('territories')->onDelete('cascade');
 
-
-            //TODO territoryID
         });
     }
 

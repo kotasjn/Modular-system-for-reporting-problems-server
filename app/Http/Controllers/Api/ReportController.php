@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Report;
-use Grimzy\LaravelMysqlSpatial\Types\Geometry;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -19,7 +19,7 @@ class ReportController extends Controller
      * ID posledniho podnetu v kolekce (ten ma nejvetsi vzdalenost od vychoziho bodu) a vybere se 15
      * dalsich podnetu, ktere maji vetsi vzdalenost nez dany bod, ale zaroven nejmensi vzdalenost od vychoziho bodu
      * povinne lat, ln
-     * nepovinne report_id, numberOfRecords
+     * nepovinne skippedRecords, numberOfRecords
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -28,28 +28,49 @@ class ReportController extends Controller
     {
 
         // Latitude and longitude are mandatory
-        if (!$request->has('lat') || !$request->has('lng')) {
+        if (!$request->has('location')) {
             return response()->json([
                 'error' => true,
                 'message' => 'Missing lat and lng attributes!',
             ], 400);
+        } else if ($request->numberOfRecords > 20){
+            return response()->json([
+                'error' => true,
+                'message' => 'Maximum number of records is 20!',
+            ], 400);
         }
 
         // Creating Point object from given coordinates
-        $point = new Point($request->lat, $request->lng);
+
+        $location = new Point($request->input('location.coordinates.0'), $request->input('location.coordinates.1'));
 
         // If request contains 'skippedRecords' means that we want to load more reports. Client wants to get
         // collection of reports which has bigger distance from given coordinates. So we need to skip some amount of found records.
 
+
+        // TODO poradi neni spravne, doplnit casem o SRID
+
         if ($request->has('skippedRecords')) {
 
-            $skippedRecords = $request->skippedRecords;
+            $reports = Report::orderByDistance('location', $location, $direction = 'asc')->skip($request->skippedRecords)->limit(($request->has('$request->numberOfRecords')) ? $request->numberOfRecords : 10)->get();
 
-            // findReportsByDistanceFromPoint(point, skippedRecords, numberOfRecords) finds and sort reports by their distance from given location
-            $reports = Report::orderByDistance('location', $point, $direction = 'asc')->skip($skippedRecords)->limit(($request->has('$request->numberOfRecords')) ? $request->numberOfRecords : 15);
         } else {
-            // findReportsByDistance(point, numberOfRecords) finds and sort reports by their distance from given location
-            $reports = Report::orderByDistance('location', $point, $direction = 'asc')->limit(($request->has('$request->numberOfRecords')) ? $request->numberOfRecords : 15);
+
+            $reports = Report::orderByDistance('location', $location, $direction = 'asc')->limit(($request->has('$request->numberOfRecords')) ? $request->numberOfRecords : 10)->get();
+
+        }
+
+        foreach ($reports as $report) {
+
+            $point1 = 'POINT(' . $report->location->getLat() . ', ' . $report->location->getLng() . ')';
+            $point2 = 'POINT(' . $location->getLat() . ', ' . $location->getLng() . ')';
+
+            $value = DB::select('SELECT ST_Distance( ' . $point1 . ', ' . $point2 . ') AS distance');
+
+            if($value != null)
+                $report->distance = $value[0]->distance;
+            else
+                $report->distance = null;
         }
 
         return response()->json([
@@ -67,8 +88,6 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-
-        //$location = Geometry::fromJson(json_encode($request->location));
 
         $location = new Point($request->input('location.coordinates.0'), $request->input('location.coordinates.1'));
 
@@ -120,10 +139,18 @@ class ReportController extends Controller
      */
     public function destroy(Report $report)
     {
-        $report->delete();
+        // user can delete only his reports
+        if($report->user()->id == Auth::id()){
+            $report->delete();
+
+            return response()->json([
+                'error' => false,
+            ], 200);
+        }
 
         return response()->json([
-            'error' => false,
-        ], 200);
+            'error' => true,
+            'message' => 'Unauthenticated'
+        ], 403);
     }
 }
