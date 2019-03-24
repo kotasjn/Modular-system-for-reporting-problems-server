@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\ReportFilters;
 use App\Http\Controllers\Controller;
 use App\Report;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
@@ -22,43 +23,22 @@ class ReportController extends Controller
      * nepovinne skippedRecords, numberOfRecords
      *
      * @param Request $request
+     * @param ReportFilters $filters
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request, ReportFilters $filters)
     {
-
         // Latitude and longitude are mandatory
         if (!$request->has('location')) {
             return response()->json([
                 'error' => true,
-                'message' => 'Missing lat and lng attributes!',
-            ], 400);
-        } else if ($request->numberOfRecords > 20){
-            return response()->json([
-                'error' => true,
-                'message' => 'Maximum number of records is 20!',
+                'message' => 'Location is mandatory.',
             ], 400);
         }
-
-        // Creating Point object from given coordinates
 
         $location = new Point($request->input('location.coordinates.0'), $request->input('location.coordinates.1'));
 
-        // If request contains 'skippedRecords' means that we want to load more reports. Client wants to get
-        // collection of reports which has bigger distance from given coordinates. So we need to skip some amount of found records.
-
-
-        // TODO poradi neni spravne, doplnit casem o SRID
-
-        if ($request->has('skippedRecords')) {
-
-            $reports = Report::orderByDistance('location', $location, $direction = 'asc')->skip($request->skippedRecords)->limit(($request->has('$request->numberOfRecords')) ? $request->numberOfRecords : 10)->get();
-
-        } else {
-
-            $reports = Report::orderByDistance('location', $location, $direction = 'asc')->limit(($request->has('$request->numberOfRecords')) ? $request->numberOfRecords : 10)->get();
-
-        }
+        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(10)->get();
 
         foreach ($reports as $report) {
 
@@ -67,7 +47,7 @@ class ReportController extends Controller
 
             $value = DB::select('SELECT ST_Distance( ' . $point1 . ', ' . $point2 . ') AS distance');
 
-            if($value != null)
+            if ($value != null)
                 $report->distance = $value[0]->distance;
             else
                 $report->distance = null;
@@ -140,7 +120,7 @@ class ReportController extends Controller
     public function destroy(Report $report)
     {
         // user can delete only his reports
-        if($report->user()->id == Auth::id()){
+        if ($report->user()->id == Auth::id()) {
             $report->delete();
 
             return response()->json([

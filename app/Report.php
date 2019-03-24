@@ -2,12 +2,15 @@
 
 namespace App;
 
+use App\Filters\Filterable;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Report extends Model
 {
     use SpatialTrait;
+    use Filterable;
 
     protected $fillable = [
         'title', 'state', 'userNote', 'location', 'user_id', 'category_id', 'territory_id','employeeNote', 'address'
@@ -46,15 +49,4 @@ class Report extends Model
     {
         return $this->hasOne(ModuleData::class);
     }
-
-    public static function findReportsByDistance($point, $numberOfRecords)
-    {
-        return Report::orderByDistance('location', $point, $direction = 'asc')->limit($numberOfRecords);
-    }
-
-    public static function findReportsByDistanceFromPoint($point, $skippedRecords, $numberOfRecords)
-    {
-        return Report::orderByDistance('location', $point, $direction = 'asc')->skip($skippedRecords)->limit($numberOfRecords);
-    }
-
 }
