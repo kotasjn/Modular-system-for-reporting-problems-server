@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Filters\ReportFilters;
 use App\Http\Controllers\Controller;
 use App\Report;
+use App\ReportPhoto;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,13 +15,12 @@ class ReportController extends Controller
 {
 
     /**
-     * vybrat z db okolni podnety v okruhu souradnic, ktere jsou predany v URL, podle vzdalenosti
-     * vystupem bude kolekce 15 nebo klientem nahlaseneho poctu hlaseni, ktere jsou odeslany skrz JSON zpet
-     * v pripade, ze uzivatel chce zobrazit vetsi pocet hlaseni nez predanych 15, posle se v requestu
-     * ID posledniho podnetu v kolekce (ten ma nejvetsi vzdalenost od vychoziho bodu) a vybere se 15
-     * dalsich podnetu, ktere maji vetsi vzdalenost nez dany bod, ale zaroven nejmensi vzdalenost od vychoziho bodu
-     * povinne lat, ln
-     * nepovinne skippedRecords, numberOfRecords
+     * vybrat z db okolni podnety v okruhu souradnic, ktere jsou predany v requestu, podle vzdalenosti
+     * vystupem bude kolekce 5 hlaseni, ktere jsou odeslany skrz JSON zpet
+     * v pripade, ze uzivatel chce zobrazit vetsi pocet hlaseni nez predanych 5, posle se v requestu
+     * pocet aktualne obdrzenych podnetu a vybere se dalsich 5
+     * povinne location
+     * nepovinne skippedRecords, user
      *
      * @param Request $request
      * @param ReportFilters $filters
@@ -38,7 +38,7 @@ class ReportController extends Controller
 
         $location = new Point($request->input('location.coordinates.0'), $request->input('location.coordinates.1'));
 
-        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(10)->get();
+        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(5)->get();
 
         foreach ($reports as $report) {
 
@@ -51,6 +51,15 @@ class ReportController extends Controller
                 $report->distance = $value[0]->distance;
             else
                 $report->distance = null;
+
+            $photos = ReportPhoto::select('url')->where('report_id', '=', $report->id)->get();
+
+            $arrayPhotos = array();
+            for($i = 0; $i < count($photos); $i++) {
+                array_push($arrayPhotos, json_decode($photos[$i])->url);
+            }
+            $report->photos = $arrayPhotos;
+
         }
 
         return response()->json([
