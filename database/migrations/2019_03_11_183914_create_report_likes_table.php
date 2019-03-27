@@ -20,6 +20,8 @@ class CreateReportLikesTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('report_id');
 
+            $table->unique( array('user_id','report_id') );
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
         });
