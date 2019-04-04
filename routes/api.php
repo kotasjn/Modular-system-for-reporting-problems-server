@@ -39,5 +39,8 @@ Route::group([
     Route::apiResources([
         'reports' => 'Api\ReportController'
     ]);
+    Route::apiResources([
+        '/reports/{report}/comments' => 'Api\CommentController'
+    ]);
 });
 

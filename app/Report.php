@@ -5,7 +5,6 @@ namespace App;
 use App\Filters\Filterable;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Report extends Model
 {
@@ -48,5 +47,9 @@ class Report extends Model
     public function moduleData()
     {
         return $this->hasOne(ModuleData::class);
+    }
+
+    public function comments() {
+        return $this->hasMany(Comment::class);
     }
 }

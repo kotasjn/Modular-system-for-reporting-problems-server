@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
@@ -55,6 +54,14 @@ class User extends Authenticatable
 
     public function reportLike() {
         return $this->hasMany(ReportLike::class);
+    }
+
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function commentLikes() {
+        return $this->hasMany(CommentLike::class);
     }
 
 }

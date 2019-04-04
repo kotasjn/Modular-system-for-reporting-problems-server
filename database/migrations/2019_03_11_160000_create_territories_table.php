@@ -18,9 +18,11 @@ class CreateTerritoriesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('avatarURL');
-
+            $table->multipolygon('location', 4326);
             $table->unsignedInteger('approver_id')->nullable();
             $table->unsignedInteger('admin_id');
+
+            $table->spatialIndex('location');
 
             $table->foreign('approver_id')->references('id')->on('users');
             $table->foreign('admin_id')->references('id')->on('users');
@@ -34,6 +36,10 @@ class CreateTerritoriesTable extends Migration
      */
     public function down()
     {
+        Schema::table('territories', function (Blueprint $table) {
+            $table->dropSpatialIndex(['location']);
+        });
+
         Schema::dropIfExists('territories');
     }
 }

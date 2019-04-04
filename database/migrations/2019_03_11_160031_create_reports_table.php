@@ -45,6 +45,10 @@ class CreateReportsTable extends Migration
      */
     public function down()
     {
+        Schema::table('reports', function (Blueprint $table) {
+            $table->dropSpatialIndex(['location']);
+        });
+
         Schema::dropIfExists('reports');
     }
 }

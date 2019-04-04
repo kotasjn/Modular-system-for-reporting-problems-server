@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Comment;
 use App\Filters\ReportFilters;
 use App\Http\Controllers\Controller;
 use App\Report;
+use App\ReportLike;
 use App\ReportPhoto;
+use App\Territory;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +23,7 @@ class ReportController extends Controller
      * v pripade, ze uzivatel chce zobrazit vetsi pocet hlaseni nez predanych 5, posle se v requestu
      * pocet aktualne obdrzenych podnetu a vybere se dalsich 5
      * povinne location
-     * nepovinne skippedRecords, user
+     * nepovinne skip, user
      *
      * @param Request $request
      * @param ReportFilters $filters
@@ -60,6 +63,12 @@ class ReportController extends Controller
             }
             $report->photos = $arrayPhotos;
 
+            $report->comments = Comment::where('report_id', $report->id)->count();
+
+            $report->likes = ReportLike::where('report_id', $report->id)->count();
+
+            $report->userLike = (ReportLike::where('report_id', $report->id)->where('user_id', Auth::id())->first()) ? true : false;
+
         }
 
         return response()->json([
@@ -77,19 +86,36 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-
         $location = new Point($request->input('location.coordinates.0'), $request->input('location.coordinates.1'));
 
-        // TODO zjisteni, zda se bod nachazi na danem uzemi (zatim pevne dane terr = 0)
-        Report::create(array_merge($request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'state' => ['required', 'integer'],
-            'category_id' => ['required', 'integer']
-        ]), ['location' => $location, 'user_id' => Auth::id(), 'territory_id' => 0]));
+        // TODO zjisteni, zda se bod nachazi na danem uzemi
 
-        return response()->json([
-            'error' => false,
-        ], 200);
+        $point = 'POINT(' . $location->getLat() . ', ' . $location->getLng() . ')';
+
+        // TODO nefunguje (zřejmě kvůli SRID) ... dodělat podmínku
+        $contains = Territory::select('id')->whereRaw('ST_Contains(location, ' . $point . ') = 1')->get();
+
+        if(count($contains) > 0) {
+            $request->address = Territory::select('name')->where('id', $request->territory_id)->first()->name;
+
+            Report::create(array_merge($request->validate([
+                'title' => ['required', 'string', 'max:255'],
+                'state' => ['required', 'integer'],
+                'category_id' => ['required', 'integer'],
+                'territory_id' => ['required', 'integer']
+            ]), ['location' => $location, 'user_id' => Auth::id(), 'address' => $request->address]));
+
+            return response()->json([
+                'error' => false,
+                // 'point' => $point,
+                // 'contains' => $contains
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => true,
+                'message' => "We can not store this report, because the location is out of our supported territories."
+            ], 400);
+        }
     }
 
     /**
@@ -98,6 +124,9 @@ class ReportController extends Controller
      */
     public function show(Report $report)
     {
+
+        $report->comments = Comment::where('report_id', $report->id)->count();
+
         return response()->json([
             'report' => $report
         ]);

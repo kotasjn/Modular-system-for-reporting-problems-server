@@ -2,13 +2,19 @@
 
 namespace App;
 
+use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Illuminate\Database\Eloquent\Model;
-use test\Mockery\ReturnTypeObjectTypeHint;
 
 class Territory extends Model
 {
+    use SpatialTrait;
+
     protected $fillable = [
         'name', 'avatarURL', 'admin_id', 'approver_id'
+    ];
+
+    protected $spatialFields = [
+        'location'
     ];
 
     public function admin() {

@@ -1,16 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kotas
- * Date: 22.03.2019
- * Time: 18:57
- */
+
 
 namespace App\Filters;
 
 use Illuminate\Http\Request;
 
-class ReportFilters extends QueryFilters
+class CommentFilters extends QueryFilters
 {
     protected $request;
     public function __construct(Request $request){
