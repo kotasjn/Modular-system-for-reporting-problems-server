@@ -40,7 +40,13 @@ Route::group([
         'reports' => 'Api\ReportController'
     ]);
     Route::apiResources([
+        '/reports/{report}/likes' => 'Api\ReportLikeController'
+    ]);
+    Route::apiResources([
         '/reports/{report}/comments' => 'Api\CommentController'
+    ]);
+    Route::apiResources([
+        '/reports/{report}/comments/{comment}/likes' => 'Api\CommentLikeController'
     ]);
 });
 
