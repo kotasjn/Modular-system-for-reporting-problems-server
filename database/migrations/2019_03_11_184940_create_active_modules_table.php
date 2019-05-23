@@ -20,7 +20,7 @@ class CreateActiveModulesTable extends Migration
             $table->unsignedInteger('module_id');
             $table->unsignedInteger('territory_id');
 
-            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
+            $table->foreign('module_id')->references('id')->on('Modules')->onDelete('cascade');
             $table->foreign('territory_id')->references('id')->on('territories')->onDelete('cascade');
         });
     }

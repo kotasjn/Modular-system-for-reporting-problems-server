@@ -19,10 +19,14 @@ class ReportFilters extends QueryFilters
     }
 
     public function user($id) {
-        return $this->builder->where('user_id', 'LIKE', $id);
+        return $this->builder->where('user_id', $id);
     }
 
-    public function skip($skipped){
-        return $this->builder->skip($skipped);
+    public function page($page){
+        return $this->builder->skip(($page)*env("PAGE_SIZE", 5));
+    }
+
+    public function closed($value){
+        return ($value) ? $this->builder->where('state', 3) : $this->builder->where('state', '!=', 3);
     }
 }

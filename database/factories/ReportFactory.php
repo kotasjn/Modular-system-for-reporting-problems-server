@@ -13,7 +13,7 @@ $factory->define(App\Report::class, function (Faker $faker) {
         'title' => "Nejaky random nadpis...",
         'state' => mt_rand(0, 3),
         'user_id' => mt_rand(1, 10),
-        'category_id' => mt_rand(1, 10),
+        'category_id' => mt_rand(1, 3),
         'territory_id' => $territory,
         'location' => Point::fromWKT('SRID=0;POINT(' . strval(mt_rand(-9000000, 9000000)/100000) . ' ' . strval(mt_rand(-18000000, 18000000)/100000) . ')'),
         'userNote' => strlen($userNote) > 255 ? substr($userNote,0,252)."..." : $userNote,

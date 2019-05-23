@@ -27,7 +27,7 @@
 /******/ 	}
 /******/
 /******/
-/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	// expose the Modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
 /******/ 	// expose the module cache
@@ -64,7 +64,7 @@
 /******/ 		return ns;
 /******/ 	};
 /******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-harmony Modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
 /******/ 			function getDefault() { return module['default']; } :
@@ -7506,7 +7506,7 @@ exports.push([module.i, "\niframe[data-v-c0eea714] {\n    border: none;\n}\n", "
 module.exports = function(useSourceMap) {
 	var list = [];
 
-	// return the list of modules as css string
+	// return the list of Modules as css string
 	list.toString = function toString() {
 		return this.map(function (item) {
 			var content = cssWithMappingToString(item, useSourceMap);
@@ -7518,7 +7518,7 @@ module.exports = function(useSourceMap) {
 		}).join("");
 	};
 
-	// import a list of modules into the list
+	// import a list of Modules into the list
 	list.i = function(modules, mediaQuery) {
 		if(typeof modules === "string")
 			modules = [[null, modules, ""]];
@@ -12605,7 +12605,7 @@ function fcamelCase( all, letter ) {
 	return letter.toUpperCase();
 }
 
-// Convert dashed to camelCase; used by the css and data modules
+// Convert dashed to camelCase; used by the css and data Modules
 // Support: IE <=9 - 11, Edge 12 - 15
 // Microsoft forgot to hump their vendor prefix (#9572)
 function camelCase( string ) {
@@ -18934,14 +18934,14 @@ jQuery.isNumeric = function( obj ) {
 
 // Register as a named AMD module, since jQuery can be concatenated with other
 // files that may use define, but not via a proper concatenation script that
-// understands anonymous AMD modules. A named AMD is safest and most robust
+// understands anonymous AMD Modules. A named AMD is safest and most robust
 // way to register. Lowercase jquery is used because AMD module names are
 // derived from file names, and jQuery is normally delivered in a lowercase
 // file name. Do this after creating the global so that if an AMD module wants
 // to call noConflict to hide this version of jQuery, it will work.
 
 // Note that for maximum portability, libraries that are not jQuery should
-// declare themselves as anonymous modules, and avoid setting a global if an
+// declare themselves as anonymous Modules, and avoid setting a global if an
 // AMD loader is present. jQuery is a special case. For more information, see
 // https://github.com/jrburke/requirejs/wiki/Updating-existing-libraries#wiki-anon
 
@@ -55640,7 +55640,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// IMPORTANT: Do NOT use ES2015 features in this file (except for Modules).
 // This module is a runtime utility for cleaner component module output and will
 // be included in the final webpack user bundle.
 
@@ -58645,7 +58645,7 @@ var no = function (a, b, c) { return false; };
 var identity = function (_) { return _; };
 
 /**
- * Generate a string containing static keys from compiler modules.
+ * Generate a string containing static keys from compiler Modules.
  */
 function genStaticKeys (modules) {
   return modules.reduce(function (keys, m) {
@@ -64098,7 +64098,7 @@ function createPatchFunction (backend) {
       setScope(vnode);
     } else {
       // empty component root.
-      // skip all element-related modules except for ref (#3455)
+      // skip all element-related Modules except for ref (#3455)
       registerRef(vnode);
       // make sure to invoke the insert hook
       insertedVnodeQueue.push(vnode);
@@ -64444,7 +64444,7 @@ function createPatchFunction (backend) {
   }
 
   var hydrationBailed = false;
-  // list of modules that can skip create hook during hydration because they
+  // list of Modules that can skip create hook during hydration because they
   // are already rendered on the client or has no need for initialization
   // Note: style is excluded because it relies on initial clone for future
   // deep updates (#7063).
@@ -66420,7 +66420,7 @@ var platformModules = [
 /*  */
 
 // the directive module should be applied last, after all
-// built-in modules have been applied.
+// built-in Modules have been applied.
 var modules = platformModules.concat(baseModules);
 
 var patch = createPatchFunction({ nodeOps: nodeOps, modules: modules });
@@ -69281,7 +69281,7 @@ function createCompilerCreator (baseCompile) {
       };
 
       if (options) {
-        // merge custom modules
+        // merge custom Modules
         if (options.modules) {
           finalOptions.modules =
             (baseOptions.modules || []).concat(options.modules);

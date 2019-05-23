@@ -10,6 +10,7 @@ use App\ReportLike;
 use App\ReportPhoto;
 use App\Territory;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,27 +28,26 @@ class ReportController extends Controller
      *
      * @param Request $request
      * @param ReportFilters $filters
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request, ReportFilters $filters)
+    public function reports(Request $request, ReportFilters $filters)
     {
         // Latitude and longitude are mandatory
-        if (!$request->has('location')) {
+        if (!$request->has('lat') || !$request->has('lng')) {
             return response()->json([
                 'error' => true,
-                'message' => 'Location is mandatory.',
+                'message' => 'Location (lat and lng parameters) is mandatory.',
             ], 400);
         }
 
-        $location = new Point($request->input('location.coordinates.0'), $request->input('location.coordinates.1'));
+        $location = new Point($request->input('lat'), $request->input('lng'));
+        $point1 = 'POINT(' . $location->getLat() . ', ' . $location->getLng() . ')';
 
-        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(5)->get();
+        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(env("PAGE_SIZE", 5))->get();
 
         foreach ($reports as $report) {
 
-            $point1 = 'POINT(' . $report->location->getLat() . ', ' . $report->location->getLng() . ')';
-            $point2 = 'POINT(' . $location->getLat() . ', ' . $location->getLng() . ')';
-
+            $point2 = 'POINT(' . $report->location->getLat() . ', ' . $report->location->getLng() . ')';
             $value = DB::select('SELECT ST_Distance( ' . $point1 . ', ' . $point2 . ') AS distance');
 
             if ($value != null)
@@ -62,13 +62,14 @@ class ReportController extends Controller
                 array_push($arrayPhotos, json_decode($photos[$i])->url);
             }
             $report->photos = $arrayPhotos;
-
             $report->comments = Comment::where('report_id', $report->id)->count();
-
             $report->likes = ReportLike::where('report_id', $report->id)->count();
-
             $report->userLike = (ReportLike::where('report_id', $report->id)->where('user_id', Auth::id())->first()) ? true : false;
 
+            $report->location = (object)[
+                'lat' => $report->location->getLat(),
+                'lng' => $report->location->getLng(),
+            ];
         }
 
         return response()->json([
@@ -82,7 +83,7 @@ class ReportController extends Controller
      * Vytvorim objekt Report, zvaliduju vstupni hodnoty a vytvorim zaznam v db.
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -95,7 +96,10 @@ class ReportController extends Controller
         // TODO nefunguje (zřejmě kvůli SRID) ... dodělat podmínku
         $contains = Territory::select('id')->whereRaw('ST_Contains(location, ' . $point . ') = 1')->get();
 
+        // TODO přiřadit responsible_id z Territory
+
         if(count($contains) > 0) {
+            // TODO poté, co se správně detekuje Territory, přiřadit id z Territory a odebrat id z requestu
             $request->address = Territory::select('name')->where('id', $request->territory_id)->first()->name;
 
             Report::create(array_merge($request->validate([
@@ -120,7 +124,7 @@ class ReportController extends Controller
 
     /**
      * @param Report $report
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function show(Report $report)
     {
@@ -135,7 +139,7 @@ class ReportController extends Controller
     /**
      * @param Request $request
      * @param Report $report
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(Request $request, Report $report)
     {
@@ -152,7 +156,7 @@ class ReportController extends Controller
 
     /**
      * @param Report $report
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Exception
      */
     public function destroy(Report $report)
