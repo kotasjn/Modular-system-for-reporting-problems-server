@@ -50,5 +50,7 @@ Route::group([
     ]);
 
     Route::post('/reports/{report}/module_data', 'Api\ModuleDataController@store');
+    Route::get('/users/{user}', 'Api\UserController@show');
+
 });
 
