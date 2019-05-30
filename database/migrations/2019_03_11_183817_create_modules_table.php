@@ -13,11 +13,17 @@ class CreateModulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('Modules', function (Blueprint $table) {
+        Schema::create('modules', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->string('name')->unique();
-            $table->string('path');
+            $table->boolean('active')->default(false);
+
+            $table->unsignedInteger('category_id');
+            $table->unsignedInteger('territory_id');
+
+            $table->foreign('category_id')->references('id')->on('categories')->onDelere('cascade');
+            $table->foreign('territory_id')->references('id')->on('territories')->onDelere('cascade');
         });
     }
 
@@ -28,6 +34,6 @@ class CreateModulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Modules');
+        Schema::dropIfExists('modules');
     }
 }

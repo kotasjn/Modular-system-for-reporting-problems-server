@@ -2,22 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Module;
+use App\InputData;
 use Illuminate\Http\Request;
 
-class ModuleController extends Controller
+class InputDataController extends Controller
 {
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +14,7 @@ class ModuleController extends Controller
      */
     public function index()
     {
-        //TODO
+        //
     }
 
     /**
@@ -35,7 +24,7 @@ class ModuleController extends Controller
      */
     public function create()
     {
-        //TODO
+        //
     }
 
     /**
@@ -46,16 +35,16 @@ class ModuleController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Module  $module
+     * @param  \App\InputData  $inputData
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show(InputData $inputData)
     {
         //
     }
@@ -63,10 +52,10 @@ class ModuleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Module  $module
+     * @param  \App\InputData  $inputData
      * @return \Illuminate\Http\Response
      */
-    public function edit(Module $module)
+    public function edit(InputData $inputData)
     {
         //
     }
@@ -75,10 +64,10 @@ class ModuleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Module  $module
+     * @param  \App\InputData  $inputData
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Module $module)
+    public function update(Request $request, InputData $inputData)
     {
         //
     }
@@ -86,10 +75,10 @@ class ModuleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Module  $module
+     * @param  \App\InputData  $inputData
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Module $module)
+    public function destroy(InputData $inputData)
     {
         //
     }

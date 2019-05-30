@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Module extends Model
 {
     protected $fillable = [
-        'name'
+        'name', 'active', 'category_id', 'territory_id'
     ];
 
-    public function moduleData() {
-        return $this->hasMany(ModuleData::class);
+    public function territory() {
+        return $this->belongsTo(Territory::class);
     }
 
-    public function activeModule() {
-        return $this->hasMany(ActiveModule::class);
+    public function category() {
+        return $this->belongsTo(Category::class);
     }
 }

@@ -231,4 +231,21 @@ return [
 
     ],
 
+
+    /*
+     * Project global config constants
+     */
+
+    // Database constants
+
+    'page_size' => 5,
+    'users' => 10,
+    'reports' => 50,
+    'categories' => 3,
+    'modules' => 5,
+    'inputs' => 10,
+    'items' => 25,
+    'comments' => 1000,
+    'report_photos' => 150,
+
 ];

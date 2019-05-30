@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ModuleData extends Model
 {
     protected $fillable = [
-        'data', 'report_id', 'module_id'
+        'report_id', 'module_id'
     ];
 
     public function report() {

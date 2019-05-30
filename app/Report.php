@@ -21,7 +21,7 @@ class Report extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function supervisor()
@@ -31,12 +31,12 @@ class Report extends Model
 
     public function responsible()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function category()
     {
-        return $this->hasOne(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function reportPhoto()
@@ -46,7 +46,7 @@ class Report extends Model
 
     public function moduleData()
     {
-        return $this->hasOne(ModuleData::class);
+        return $this->hasMany(ModuleData::class);
     }
 
     public function comments() {

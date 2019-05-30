@@ -11,6 +11,6 @@ class ReportPhotosTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\ReportPhoto', 150)->create();
+        factory('App\ReportPhoto', config('app.report_photos'))->create();
     }
 }

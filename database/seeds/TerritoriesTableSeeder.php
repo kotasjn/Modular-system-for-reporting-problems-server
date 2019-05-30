@@ -11,6 +11,6 @@ class TerritoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Territory', 10)->create();
+        factory('App\Territory', 1)->create();
     }
 }

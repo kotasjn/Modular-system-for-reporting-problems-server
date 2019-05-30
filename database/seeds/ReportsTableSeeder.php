@@ -11,6 +11,6 @@ class ReportsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Report', 50)->create();
+        factory('App\Report', config('app.reports'))->create();
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateModuleDatasTable extends Migration
+class CreateInputDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateModuleDatasTable extends Migration
      */
     public function up()
     {
-        Schema::create('module_datas', function (Blueprint $table) {
+        Schema::create('input_data', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->string('data');
 
-            $table->unsignedInteger('module_id');
-            $table->unsignedInteger('report_id');
+            $table->unsignedInteger('input_id');
+            $table->unsignedInteger('module_data_id');
 
-            $table->foreign('module_id')->references('id')->on('Modules')->onDelere('cascade');
-            $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
+            $table->foreign('input_id')->references('id')->on('inputs')->onDelete('cascade');
+            $table->foreign('module_data_id')->references('id')->on('module_data')->onDelete('cascade');
         });
     }
 
@@ -33,6 +33,6 @@ class CreateModuleDatasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('module_datas');
+        Schema::dropIfExists('input_data');
     }
 }

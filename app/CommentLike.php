@@ -12,11 +12,11 @@ class CommentLike extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function comment()
     {
-        return $this->hasOne(Comment::class);
+        return $this->belongsTo(Comment::class);
     }
 }

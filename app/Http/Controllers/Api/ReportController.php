@@ -58,7 +58,7 @@ class ReportController extends Controller
             $photos = ReportPhoto::select('url')->where('report_id', '=', $report->id)->get();
 
             $arrayPhotos = array();
-            for($i = 0; $i < count($photos); $i++) {
+            for ($i = 0; $i < count($photos); $i++) {
                 array_push($arrayPhotos, json_decode($photos[$i])->url);
             }
             $report->photos = $arrayPhotos;
@@ -87,39 +87,22 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-        $location = new Point($request->input('location.coordinates.0'), $request->input('location.coordinates.1'));
 
-        // TODO zjisteni, zda se bod nachazi na danem uzemi
 
-        $point = 'POINT(' . $location->getLat() . ', ' . $location->getLng() . ')';
 
-        // TODO nefunguje (zřejmě kvůli SRID) ... dodělat podmínku
-        $contains = Territory::select('id')->whereRaw('ST_Contains(location, ' . $point . ') = 1')->get();
+        $location = new Point($request->input('lat'), $request->input('lng'));
 
-        // TODO přiřadit responsible_id z Territory
+        Report::create(array_merge($request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'userNote' => ['required', 'string', 'max:255'],
+            'state' => ['required', 'integer'],
+            'category_id' => ['required', 'integer'],
+            'territory_id' => 1
+        ]), ['location' => $location, 'user_id' => Auth::id(), 'address' => $request->address]));
 
-        if(count($contains) > 0) {
-            // TODO poté, co se správně detekuje Territory, přiřadit id z Territory a odebrat id z requestu
-            $request->address = Territory::select('name')->where('id', $request->territory_id)->first()->name;
-
-            Report::create(array_merge($request->validate([
-                'title' => ['required', 'string', 'max:255'],
-                'state' => ['required', 'integer'],
-                'category_id' => ['required', 'integer'],
-                'territory_id' => ['required', 'integer']
-            ]), ['location' => $location, 'user_id' => Auth::id(), 'address' => $request->address]));
-
-            return response()->json([
-                'error' => false,
-                // 'point' => $point,
-                // 'contains' => $contains
-            ], 200);
-        } else {
-            return response()->json([
-                'error' => true,
-                'message' => "We can not store this report, because the location is out of our supported territories."
-            ], 400);
-        }
+        return response()->json([
+            'error' => false,
+        ], 200);
     }
 
     /**
@@ -162,7 +145,7 @@ class ReportController extends Controller
     public function destroy(Report $report)
     {
         // user can delete only his reports
-        if ($report->user()->id == Auth::id()) {
+        if ($report->user->id == Auth::id()) {
             $report->delete();
 
             return response()->json([

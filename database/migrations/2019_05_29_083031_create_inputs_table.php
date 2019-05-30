@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActiveModulesTable extends Migration
+class CreateInputsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,17 @@ class CreateActiveModulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('active_modules', function (Blueprint $table) {
+        Schema::create('inputs', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->string('title');
+            $table->string('inputType');
+            $table->integer('characters')->nullable();
+            $table->string('hint')->nullable();
 
             $table->unsignedInteger('module_id');
-            $table->unsignedInteger('territory_id');
 
-            $table->foreign('module_id')->references('id')->on('Modules')->onDelete('cascade');
-            $table->foreign('territory_id')->references('id')->on('territories')->onDelete('cascade');
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
         });
     }
 
@@ -32,6 +34,6 @@ class CreateActiveModulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('active_modules');
+        Schema::dropIfExists('inputs');
     }
 }

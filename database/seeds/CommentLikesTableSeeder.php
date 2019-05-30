@@ -13,8 +13,8 @@ class CommentLikesTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($comment = 1; $comment <= 1000; $comment++) {
-            for ($user = 1; $user <= 10; $user++) {
+        for ($comment = 1; $comment <= config('app.comments'); $comment++) {
+            for ($user = 1; $user <= config('app.users'); $user++) {
 
                 $rnd = random_int(1, 5);
 

@@ -37,11 +37,12 @@ Route::group([
     'middleware' => 'auth:api'
 ], function () {
 
+    // REPORT
     Route::post('/reports', 'Api\ReportController@reports');
     Route::post('/report', 'Api\ReportController@store');
     Route::get('/reports/{report}', 'Api\ReportController@show');
     Route::put('/reports/{report}', 'Api\ReportController@update');
-    Route::get('/reports/{report}', 'Api\ReportController@destroy');
+    Route::delete('/reports/{report}', 'Api\ReportController@destroy');
 
     Route::apiResources([
         '/reports/{report}/likes' => 'Api\ReportLikeController',
@@ -49,7 +50,10 @@ Route::group([
         '/reports/{report}/comments/{comment}/likes' => 'Api\CommentLikeController'
     ]);
 
+    // MODULE DATA
     Route::post('/reports/{report}/module_data', 'Api\ModuleDataController@store');
+
+    // USER
     Route::get('/users/{user}', 'Api\UserController@show');
 
 });

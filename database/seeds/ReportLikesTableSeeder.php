@@ -14,8 +14,8 @@ class ReportLikesTableSeeder extends Seeder
     public function run()
     {
 
-        for ($user = 1; $user <= 10; $user++) {
-            for ($report = 1; $report <= 50; $report++) {
+        for ($user = 1; $user <= config('app.users'); $user++) {
+            for ($report = 1; $report <= config('app.reports'); $report++) {
 
                 $rnd = random_int(0,1);
 
