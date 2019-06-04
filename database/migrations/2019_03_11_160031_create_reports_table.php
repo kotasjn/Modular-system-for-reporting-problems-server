@@ -17,7 +17,7 @@ class CreateReportsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('title');
-            $table->string('state');
+            $table->string('state')->default(0);
             $table->point('location', 0); // change to 4326
             $table->string('userNote')->nullable();
             $table->string('employeeNote')->nullable();
@@ -26,7 +26,7 @@ class CreateReportsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('responsible_user_id')->nullable();
             $table->unsignedInteger('category_id');
-            $table->unsignedInteger('territory_id');
+            $table->unsignedInteger('territory_id')->default(1);
 
             $table->spatialIndex('location');
 

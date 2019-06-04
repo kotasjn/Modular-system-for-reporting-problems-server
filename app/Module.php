@@ -17,4 +17,8 @@ class Module extends Model
     public function category() {
         return $this->belongsTo(Category::class);
     }
+
+    public function moduleData() {
+        return $this->hasMany(ModuleData::class);
+    }
 }

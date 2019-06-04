@@ -50,6 +50,9 @@ Route::group([
         '/reports/{report}/comments/{comment}/likes' => 'Api\CommentLikeController'
     ]);
 
+    // MODULE
+    Route::post('/modules', 'Api\ModuleController@getActiveModules');
+
     // MODULE DATA
     Route::post('/reports/{report}/module_data', 'Api\ModuleDataController@store');
 

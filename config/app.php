@@ -240,12 +240,12 @@ return [
 
     'page_size' => 5,
     'users' => 10,
-    'reports' => 50,
-    'categories' => 3,
-    'modules' => 5,
-    'inputs' => 10,
-    'items' => 25,
+    'reports' => 1000,
+    'categories' => 5,
+    'modules' => 25,
+    'inputs' => 30,
+    'items' => 50,
     'comments' => 1000,
-    'report_photos' => 150,
+    'report_photos' => 5000,
 
 ];

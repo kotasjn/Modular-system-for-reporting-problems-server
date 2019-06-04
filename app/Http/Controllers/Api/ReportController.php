@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Comment;
 use App\Filters\ReportFilters;
 use App\Http\Controllers\Controller;
+use App\InputData;
+use App\ModuleData;
 use App\Report;
 use App\ReportLike;
 use App\ReportPhoto;
-use App\Territory;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -88,17 +89,44 @@ class ReportController extends Controller
     public function store(Request $request)
     {
 
+        $location = new Point($request->input('location.lat'), $request->input('location.lng'));
 
-
-        $location = new Point($request->input('lat'), $request->input('lng'));
-
-        Report::create(array_merge($request->validate([
+        $report = Report::create(array_merge($request->validate([
             'title' => ['required', 'string', 'max:255'],
             'userNote' => ['required', 'string', 'max:255'],
-            'state' => ['required', 'integer'],
-            'category_id' => ['required', 'integer'],
-            'territory_id' => 1
-        ]), ['location' => $location, 'user_id' => Auth::id(), 'address' => $request->address]));
+            'address' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'integer']
+        ]), ['location' => $location, 'user_id' => Auth::id()]));
+
+
+        foreach ($request->photos as $url) {
+            $photo = new ReportPhoto([
+                'url' => $url,
+                'report_id' => $report->id
+            ]);
+
+            $photo->save();
+        }
+
+        foreach ($request->moduleData as $dataModule) {
+
+            $moduleData = new ModuleData([
+                'module_id' => $dataModule["module_id"],
+                'report_id' => $report->id
+            ]);
+            $moduleData->save();
+
+            foreach ($dataModule["inputData"] as $dataInput) {
+
+                $inputData = new InputData([
+                    'module_data_id' => $moduleData->id,
+                    'input_id' => $dataInput["input_id"],
+                    'data' => $dataInput["value"]
+                ]);
+                $inputData->save();
+            }
+        }
+
 
         return response()->json([
             'error' => false,
