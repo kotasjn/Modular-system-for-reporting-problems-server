@@ -26,7 +26,6 @@ Route::get('/login/{social}','Auth\LoginController@socialLogin')->where('social'
 Route::get('/login/{social}/callback','Auth\LoginController@handleProviderCallback')->where('social','facebook|google');
 
 
-
-Route::get('/', 'DashboardController@index')->name('dashboard');
-
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/territory/{territory}', 'TerritoryController@show');
+});
