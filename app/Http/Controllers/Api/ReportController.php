@@ -44,7 +44,7 @@ class ReportController extends Controller
         $location = new Point($request->input('lat'), $request->input('lng'));
         $point1 = 'POINT(' . $location->getLat() . ', ' . $location->getLng() . ')';
 
-        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(env("PAGE_SIZE", 5))->get();
+        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(($request->has('page_size')) ? $request->input('page_size') : config('app.page_size'))->get();
 
         foreach ($reports as $report) {
 

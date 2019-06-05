@@ -1,36 +1,42 @@
-
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
 require('./bootstrap');
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Vuex from 'vuex';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTachometerAlt, faChartArea, faUser, faTable, faFolder, faBug } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-window.Vue = require('vue');
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+library.add(faTachometerAlt, faChartArea, faUser, faTable, faFolder, faBug);
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+import {routes} from './routes';
+import StoreData from './store';
+import MainApp from './components/MainApp.vue';
+import {initialize} from './helpers/general';
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.use(VueRouter);
+Vue.use(Vuex);
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+const store = new Vuex.Store(StoreData);
+
+const router = new VueRouter({
+    routes,
+    mode: 'history'
+});
+
+initialize(store, router);
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    router,
+    store,
+    components: {
+        MainApp
+    }
 });
+
+
 
 
 /**
@@ -39,10 +45,10 @@ const app = new Vue({
 
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '{256222181953557}',
+        appId      : '256222181953557',
         cookie     : true,
         xfbml      : true,
-        version    : '{v3.2}'
+        version    : 'v3.3'
     });
 
     FB.AppEvents.logPageView();
@@ -53,6 +59,6 @@ window.fbAsyncInit = function() {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) {return;}
     js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    js.src = "https://connect.facebook.net/en_GB/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));

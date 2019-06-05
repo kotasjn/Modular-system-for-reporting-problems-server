@@ -19,13 +19,22 @@ use Illuminate\Support\Facades\Route;
  * Auth routes with Socialite support
  */
 
+/*
 Auth::routes();
 
 Route::get('/login/{social}','Auth\LoginController@socialLogin')->where('social','facebook|google');
 
 Route::get('/login/{social}/callback','Auth\LoginController@handleProviderCallback')->where('social','facebook|google');
 
+*/
 
+Route::get('{any}', function () {
+    return view('welcome');
+})->where('any', '.*');
+
+
+/*
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/territory/{territory}', 'TerritoryController@show');
 });
+*/
