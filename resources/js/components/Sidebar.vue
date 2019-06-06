@@ -1,5 +1,5 @@
 <template>
-    <ul class="sidebar navbar-nav">
+    <ul class="sidebar navbar-nav" v-if="currentUser">
         <li class="nav-item territory">
             <router-link class="nav-link" to="/">
                 <div class="text-center">
@@ -37,25 +37,28 @@
         </li>
 
         <li class="nav-item active">
-            <a class="nav-link" href="/">
+            <router-link class="nav-link" to="/">
                 <font-awesome-icon icon="tachometer-alt"/>
                 <span>Přehled</span>
-            </a>
+            </router-link>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/reports">
+            <router-link class="nav-link" to="/reports">
                 <font-awesome-icon icon="table"/>
-                <span>Podněty</span></a>
+                <span>Podněty</span>
+            </router-link>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/statistics">
+            <router-link class="nav-link" to="/statistics">
                 <font-awesome-icon icon="chart-area"/>
-                <span>Statistiky</span></a>
+                <span>Statistiky</span>
+            </router-link>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/users">
+            <router-link class="nav-link" to="/users">
                 <font-awesome-icon icon="user"/>
-                <span>Uživatelé</span></a>
+                <span>Uživatelé</span>
+            </router-link>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
@@ -64,13 +67,12 @@
                 <span>Moduly</span>
             </a>
             <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                <h6 class="dropdown-header"></h6>
-                <a class="dropdown-item" href="">Modul 1</a>
-                <a class="dropdown-item" href="">Modul 2</a>
-                <a class="dropdown-item" href="">Modul 3</a>
+                <router-link class="nav-link" to="">Modul 1</router-link>
+                <router-link class="nav-link" to="">Modul 2</router-link>
+                <router-link class="nav-link" to="">Modul 3</router-link>
                 <div class="dropdown-divider"></div>
                 <h6 class="dropdown-header">Ostatní:</h6>
-                <a class="dropdown-item" href="">Nastavení</a>
+                <router-link class="nav-link" to="">Nastavení</router-link>
             </div>
         </li>
         <li class="nav-item">
@@ -85,7 +87,12 @@
 
 <script>
     export default {
-        name: "Sidebar"
+        name: "Sidebar",
+        computed: {
+            currentUser() {
+                return this.$store.getters.currentUser
+            }
+        }
     }
 </script>
 
@@ -97,20 +104,9 @@
 
     .sidebar {
         width: 225px !important;
+        min-width: 225px !important;
         background-color: #00796B;
-    }
-
-    navbar-nav {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        padding-left: 0;
-        margin-bottom: 0;
-        list-style: none
+        margin-top: 55px;
     }
 
     .navbar-nav .nav-link {
@@ -119,8 +115,8 @@
     }
 
     .navbar-nav .dropdown-menu {
-        position:static;
-        float:none
+        position: static;
+        float: none
     }
 
     .sidebar .nav-item .nav-link {
@@ -129,6 +125,10 @@
         text-align: left;
         padding: 1rem;
         color: rgba(255, 255, 255, 0.5);
+    }
+
+    .sidebar .nav-item .nav-link:hover {
+        color: #fff
     }
 
     .sidebar .nav-item .nav-link span {
@@ -171,6 +171,27 @@
 
     .item .item-number {
         font-size: 14px;
+    }
+
+    .dropdown-menu {
+        background-color: #009688;
+    }
+
+    .dropdown-item {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .dropdown-header {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .dropdown-item:hover {
+        color: #fff;
+        background-color: #009688;
+    }
+
+    .dropdown-divider {
+        border-color: rgba(255, 255, 255, 0.7);
     }
 
 </style>

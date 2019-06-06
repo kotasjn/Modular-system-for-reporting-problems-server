@@ -3,7 +3,7 @@
         <Header/>
         <div id="custom-wrapper">
             <Sidebar/>
-            <div class="content">
+            <div id="content">
                 <router-view></router-view>
             </div>
         </div>
@@ -29,5 +29,12 @@
     #custom-wrapper {
         display: flex;
     }
+
+    #content {
+        width: 100%;
+        margin-top: 55px;
+        padding: 1rem;
+    }
+
 
 </style>

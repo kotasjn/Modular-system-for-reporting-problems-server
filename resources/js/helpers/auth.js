@@ -1,11 +1,11 @@
 export function login (credentials) {
     return new Promise((res, rej) => {
-        axios.post('/auth/login', credentials)
+        axios.post('api/auth/login', credentials)
             .then((response) => {
                 res(response.data);
             })
             .catch((err) => {
-                rej("Wrong credentials")
+                rej("Špatné přihlašovací údaje")
             })
     })
 }

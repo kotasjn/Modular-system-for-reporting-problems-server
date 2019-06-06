@@ -10671,3 +10671,56 @@ a.text-dark:focus {
   text-align: center !important;
 }
 
+.no-padding {
+  padding: 0;
+}
+
+div.card {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+div.card-header {
+  padding: 0.75rem 1.25rem;
+  color: white;
+  background-color: #00796B;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.isa_info,
+.isa_success,
+.isa_warning,
+.isa_error {
+  margin: 10px 0px;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.isa_info {
+  color: #00529B;
+  background-color: #BDE5F8;
+}
+
+.isa_success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+
+.isa_warning {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
+
+.isa_error {
+  color: #D8000C;
+  background-color: #FFD2D2;
+}
+
+.isa_info i,
+.isa_success i,
+.isa_warning i,
+.isa_error i {
+  margin: 10px 22px;
+  font-size: 2em;
+  vertical-align: middle;
+}
+

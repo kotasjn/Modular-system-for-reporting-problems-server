@@ -4,7 +4,10 @@ import Home from "./components/Home";
 export const routes = [
     {
         path: '/',
-        component: Home
+        component: Home,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/login',
