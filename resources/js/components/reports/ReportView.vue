@@ -35,7 +35,7 @@
     export default {
         name: "Report",
         created() {
-            axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/reports/${this.$route.params.id}`)
+            axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/reports/${this.$route.params.idReport}`)
                 .then((response) => {
                     this.report = response.data.report
                 })
@@ -48,6 +48,9 @@
         computed: {
             currentUser() {
                 return this.$store.getters.currentUser;
+            },
+            currentTerritory() {
+                return this.$store.getters.currentTerritory;
             }
         },
         methods: {

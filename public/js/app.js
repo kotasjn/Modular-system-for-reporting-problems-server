@@ -12003,7 +12003,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    axios.get("/api/territories/".concat(this.$store.getters.currentTerritory.id, "/reports/").concat(this.$route.params.id)).then(function (response) {
+    axios.get("/api/territories/".concat(this.$store.getters.currentTerritory.id, "/reports/").concat(this.$route.params.idReport)).then(function (response) {
       _this.report = response.data.report;
     });
   },
@@ -12015,6 +12015,9 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     currentUser: function currentUser() {
       return this.$store.getters.currentUser;
+    },
+    currentTerritory: function currentTerritory() {
+      return this.$store.getters.currentTerritory;
     }
   },
   methods: {
