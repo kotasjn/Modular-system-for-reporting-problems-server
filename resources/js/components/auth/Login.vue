@@ -1,60 +1,57 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="card card-login">
-                <div class="card-header">Přihlášení</div>
-                <div class="card-body">
-                    <form @submit.prevent="authenticate">
-                        <div class="form-group">
-                            <div class="form-label-group">
-                                <label for="inputEmail">Email</label>
-                                <input type="email" id="inputEmail"
-                                       class="form-control" name="email"
-                                       placeholder="Email" v-model="form.email" required="required"
-                                       autofocus="autofocus">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-label-group">
-                                <label for="inputPassword">Heslo</label>
-                                <input type="password" id="inputPassword"
-                                       class="form-control"
-                                       name="password" placeholder="Password" v-model="form.password"
-                                       required="required">
-                            </div>
-                        </div>
-
-                        <div class="form-group" v-if="authError">
-                            <div class="isa_error">
-                                <font-awesome-icon icon="times-circle"/>
-                                {{ authError }}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="remember-me"
-                                           name="remember" v-model="form.rememberMe">
-                                    Zapamatovat si heslo
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block btn-shadow"
-                                    style="margin: 1.5em 0 0 0;">
-                                Přihlásit se
-                            </button>
-                        </div>
-                    </form>
-
-                    <div class="form-group text-center" style="margin: 1em 0 0 0;">
-                        Nemáš účet? <router-link to="/register" class="nav-link">Zaregistruj se!</router-link>
+    <div class="card card-login">
+        <div class="card-header">Přihlášení</div>
+        <div class="card-body">
+            <form @submit.prevent="authenticate">
+                <div class="form-group">
+                    <div class="form-label-group">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" id="inputEmail"
+                               class="form-control" name="email"
+                               placeholder="Email" v-model="form.email" required="required"
+                               autofocus="autofocus">
                     </div>
-
                 </div>
+                <div class="form-group">
+                    <div class="form-label-group">
+                        <label for="inputPassword">Heslo</label>
+                        <input type="password" id="inputPassword"
+                               class="form-control"
+                               name="password" placeholder="Password" v-model="form.password"
+                               required="required">
+                    </div>
+                </div>
+
+                <div class="form-group" v-if="authError">
+                    <div class="isa_error">
+                        <font-awesome-icon icon="times-circle"/>
+                        {{ authError }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="remember-me"
+                                   name="remember" v-model="form.rememberMe">
+                            Zapamatovat si heslo
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block btn-shadow"
+                            style="margin: 1.5em 0 0 0;">
+                        Přihlásit se
+                    </button>
+                </div>
+            </form>
+
+            <div class="form-group text-center" style="margin: 1em 0 0 0;">
+                Nemáš účet?
+                <router-link to="/register" class="nav-link">Zaregistruj se!</router-link>
             </div>
+
         </div>
     </div>
 </template>
@@ -134,7 +131,7 @@
         border-radius: 10px;
     }
 
-    .error  p {
+    .error p {
         color: white;
         margin: 0;
     }

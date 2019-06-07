@@ -29,6 +29,10 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth:api'], function () {
 
+    Route::apiResource('/territories', 'TerritoryController');
+    Route::apiResource('/territories/{territory}/reports', 'ReportController');
+    Route::apiResource('/territories/{territory}/modules', 'ModuleController');
+
 });
 
 

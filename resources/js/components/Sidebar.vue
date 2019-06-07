@@ -1,7 +1,7 @@
 <template>
     <ul class="sidebar navbar-nav" v-if="currentUser">
         <li class="nav-item territory">
-            <router-link class="nav-link" to="/">
+            <router-link class="nav-link" :to="`/territories/${currentTerritory.id}`">
                 <div class="text-center">
                     <img src="/storage/images/default-profile.png" alt="Avatar" class="avatar"/>
                     <div class="territory-name">Kroměříž</div>
@@ -43,7 +43,7 @@
             </router-link>
         </li>
         <li class="nav-item">
-            <router-link class="nav-link" to="/reports">
+            <router-link class="nav-link" :to="`/territories/${currentTerritory.id}/reports`">
                 <font-awesome-icon icon="table"/>
                 <span>Podněty</span>
             </router-link>
@@ -75,12 +75,12 @@
                 <router-link class="nav-link" to="">Nastavení</router-link>
             </div>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/bugs">
+        <li class="nav-item last">
+            <router-link class="nav-link" to="/bug">
                 <font-awesome-icon icon="bug"/>
-                <span>Nahlásit chybu</span></a>
+                <span>Nahlásit chybu</span>
+            </router-link>
         </li>
-
 
     </ul>
 </template>
@@ -91,6 +91,9 @@
         computed: {
             currentUser() {
                 return this.$store.getters.currentUser
+            },
+            currentTerritory() {
+                return this.$store.getters.currentTerritory
             }
         }
     }
@@ -104,9 +107,16 @@
 
     .sidebar {
         width: 225px !important;
+        position: fixed;
         min-width: 225px !important;
+        height: calc(100vh - 55px);
         background-color: #00796B;
         margin-top: 55px;
+        z-index: 1;
+        overflow-y: scroll;
+
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+        scrollbar-width: none;
     }
 
     .navbar-nav .nav-link {
@@ -123,7 +133,7 @@
         display: block;
         width: 100%;
         text-align: left;
-        padding: 1rem;
+        padding: .7rem 1rem .7rem 1rem;
         color: rgba(255, 255, 255, 0.5);
     }
 
@@ -133,24 +143,29 @@
 
     .sidebar .nav-item .nav-link span {
         font-size: 1rem;
-        margin-left: 0.5rem;
+        margin-left: .5rem;
         display: inline;
+    }
+
+    .sidebar .nav-item:last-child {
+        padding-bottom: 30px;
     }
 
     .territory {
         background-color: #009688;
+        margin-bottom: .5rem;
     }
 
     .avatar {
         vertical-align: middle;
-        width: 130px;
-        height: 130px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
-        margin: 0.5em 0 0.5em 0;
+        margin: .5em 0 .5em 0;
     }
 
     .territory-name {
-        margin-bottom: 0.5em;
+        margin-bottom: .5em;
         font-size: 24px;
         color: #fff;
     }
@@ -178,7 +193,7 @@
     }
 
     .dropdown-item {
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(255, 255, 255, .7);
     }
 
     .dropdown-header {

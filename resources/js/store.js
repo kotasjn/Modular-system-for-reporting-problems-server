@@ -1,6 +1,9 @@
 import {getLocalUser} from "./helpers/auth";
+import {getLocalTerritory} from "./helpers/territory";
 
 const user = getLocalUser();
+
+const territory = getLocalTerritory();
 
 export default {
     state: {
@@ -8,6 +11,7 @@ export default {
         isLoggedIn: !!user,
         auth_error: null,
         currentUser: user,
+        currentTerritory: territory,
         reports: []
     },
     getters: {
@@ -23,10 +27,15 @@ export default {
         currentUser(state) {
             return state.currentUser;
         },
+        currentTerritory(state) {
+            return state.currentTerritory;
+        },
+        territories(state) {
+            return state.currentUser.territories;
+        },
         reports(state) {
             return state.reports;
         }
-
     },
     mutations: {
         login(state) {
@@ -38,9 +47,10 @@ export default {
             state.auth_error = null;
             state.isLoggedIn = true;
             state.currentUser = Object.assign({}, payload.user, {token: payload.access_token});
+            state.currentTerritory = Object.assign({}, payload.user.territories[0]);
 
             localStorage.setItem("user", JSON.stringify(state.currentUser));
-
+            localStorage.setItem("currentTerritory", JSON.stringify(state.currentTerritory));
         },
         loginFailed(state, payload) {
             state.loading = false;
@@ -50,11 +60,25 @@ export default {
             localStorage.removeItem("user");
             state.isLoggedIn = false;
             state.currentUser = null;
+        },
+        updateTerritory(state, payload) {
+            state.currentTerritory = payload;
+            localStorage.setItem("currentTerritory", JSON.stringify(state.currentTerritory));
+        },
+        updateReports(state, payload) {
+            state.reports = payload;
         }
     },
     actions: {
         login(context) {
             context.commit("login");
+        },
+        getReports(context) {
+            axios.get(`/api/territories/1/reports/`)
+                .then((response) => {
+                context.commit('updateReports', response.data.reports)
+            })
         }
+
     }
 }

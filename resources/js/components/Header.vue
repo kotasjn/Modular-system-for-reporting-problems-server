@@ -68,6 +68,7 @@
         width: 100%;
         height: 55px;
         z-index: 1;
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.3);
     }
 
     #navbarSupportedContent {
