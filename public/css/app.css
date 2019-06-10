@@ -10675,6 +10675,10 @@ a.text-dark:focus {
   padding: 0;
 }
 
+.row {
+  margin: 0;
+}
+
 div.card {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   overflow-x: auto;

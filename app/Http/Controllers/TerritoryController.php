@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Report;
 use App\Territory;
 use Exception;
 use Illuminate\Http\Request;
@@ -60,6 +61,14 @@ class TerritoryController extends Controller
     public function show(Territory $territory)
     {
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
+
+            $territory->waiting_reports = Report::where('territory_id', $territory->id)->where('state', 0)->count();
+            $territory->accepted_reports = Report::where('territory_id', $territory->id)->where('state', 1)->count();
+            $territory->solved_reports = Report::where('territory_id', $territory->id)->where('state', 2)->count();
+            $territory->rejected_reports = Report::where('territory_id', $territory->id)->where('state', 3)->count();
+
+            unset($territory['location'], $territory['created_at'], $territory['updated_at']);
+
             return response()->json([
                 "territory" => $territory
             ], 200);

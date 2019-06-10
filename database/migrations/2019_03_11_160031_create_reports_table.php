@@ -17,7 +17,7 @@ class CreateReportsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('title');
-            $table->string('state')->default(0);
+            $table->integer('state')->default(0);
             $table->point('location', 0); // change to 4326
             $table->string('userNote')->nullable();
             $table->string('employeeNote')->nullable();

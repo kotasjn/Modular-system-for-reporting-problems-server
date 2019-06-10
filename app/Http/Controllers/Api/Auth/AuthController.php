@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Report;
 use App\Supervisor;
 use App\Territory;
 use Illuminate\Http\JsonResponse;
@@ -90,6 +91,14 @@ class AuthController extends Controller
         $territoriesAdmin = Territory::select('id', 'name', 'avatarURL', 'approver_id', 'admin_id')->where('admin_id', Auth::id());
         $user->territories = Territory::select('id', 'name', 'avatarURL', 'approver_id', 'admin_id')->where('approver_id', Auth::id())->union($territoriesAdmin)->get();
 
+        if (count($user->territories)) {
+            foreach ($user->territories as $territory) {
+                $territory->waiting_reports = Report::where('territory_id', $territory->id)->where('state', 0)->count();
+                $territory->accepted_reports = Report::where('territory_id', $territory->id)->where('state', 1)->count();
+                $territory->solved_reports = Report::where('territory_id', $territory->id)->where('state', 2)->count();
+                $territory->rejected_reports = Report::where('territory_id', $territory->id)->where('state', 3)->count();
+            }
+        }
 
         return response()->json([
             'error' => false,

@@ -3,8 +3,8 @@
         <li class="nav-item territory">
             <router-link class="nav-link" :to="`/territories/${currentTerritory.id}`">
                 <div class="text-center">
-                    <img src="/storage/images/default-profile.png" alt="Avatar" class="avatar"/>
-                    <div class="territory-name">Kroměříž</div>
+                    <img :src="`${currentTerritory.avatarURL}`" alt="Avatar" class="avatar"/>
+                    <div class="territory-name">{{currentTerritory.name}}</div>
 
                     <div class="reports">
                         <div class="item">
@@ -12,7 +12,7 @@
                                 ČEKAJÍCÍ
                             </div>
                             <div class="item-number">
-                                5
+                                {{countOfWaitingReports}}
                             </div>
                         </div>
                         <div class="item">
@@ -20,7 +20,7 @@
                                 VYŘEŠENO
                             </div>
                             <div class="item-number">
-                                42
+                                {{countOfSolvedReports}}
                             </div>
                         </div>
                         <div class="item">
@@ -28,7 +28,7 @@
                                 CELKEM
                             </div>
                             <div class="item-number">
-                                105
+                                {{totalCountOfReports}}
                             </div>
                         </div>
                     </div>
@@ -88,12 +88,30 @@
 <script>
     export default {
         name: "Sidebar",
+        mounted() {
+            if (this.currentTerritory.length) {
+                return;
+            }
+
+            this.$store.dispatch('getTerritory');
+        },
         computed: {
             currentUser() {
                 return this.$store.getters.currentUser
             },
             currentTerritory() {
                 return this.$store.getters.currentTerritory
+            },
+            countOfWaitingReports() {
+                return this.$store.getters.currentTerritory.waiting_reports + 0
+            },
+            countOfSolvedReports() {
+                return this.$store.getters.currentTerritory.solved_reports + 0
+            },
+            totalCountOfReports() {
+                const territory = this.$store.getters.currentTerritory;
+
+                return territory.waiting_reports + territory.accepted_reports + territory.solved_reports + territory.rejected_reports;
             }
         }
     }

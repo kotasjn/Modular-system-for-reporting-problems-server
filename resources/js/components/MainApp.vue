@@ -1,19 +1,17 @@
 <template>
-    <div id="main">
-        <Header/>
-        <div id="custom-wrapper">
-            <Sidebar/>
-            <div id="content">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-12 no-padding">
-                            <router-view></router-view>
-                        </div>
-                    </div>
+    <v-app>
+        <div id="main">
+            <Header/>
+            <div id="custom-wrapper">
+                <Sidebar/>
+                <div id="content">
+
+                    <router-view></router-view>
+
                 </div>
             </div>
         </div>
-    </div>
+    </v-app>
 </template>
 
 <script>

@@ -28,10 +28,10 @@
                         <td class="centered-cell">{{ report.category_id }}</td>
                         <td class="centered-cell">{{ report.responsible_id }}</td>
                         <td class="centered-cell">
-                            <font-awesome-icon v-if="report.state === '0'" icon="question-circle" style="color: yellow" title="Čeká na schválení"/>
-                            <font-awesome-icon v-if="report.state === '1'" icon="sync-alt" style="color: mediumblue" title="Schváleno"/>
-                            <font-awesome-icon v-if="report.state === '2'" icon="check-circle" style="color: forestgreen" title="Vyřešeno"/>
-                            <font-awesome-icon v-if="report.state === '3'" icon="times-circle" style="color: red" title="Zamítnuto"/>
+                            <font-awesome-icon v-if="report.state === 0" icon="question-circle" style="color: yellow" title="Čeká na schválení"/>
+                            <font-awesome-icon v-if="report.state === 1" icon="sync-alt" style="color: mediumblue" title="Schváleno"/>
+                            <font-awesome-icon v-if="report.state === 2" icon="check-circle" style="color: forestgreen" title="Vyřešeno"/>
+                            <font-awesome-icon v-if="report.state === 3" icon="times-circle" style="color: red" title="Zamítnuto"/>
                         </td>
                         <td class="centered-cell">
                             <router-link :to="`/territories/${currentTerritory.id}/reports/${report.id}`">Zobrazit</router-link>

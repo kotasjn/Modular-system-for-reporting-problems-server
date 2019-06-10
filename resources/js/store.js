@@ -74,11 +74,16 @@ export default {
             context.commit("login");
         },
         getReports(context) {
-            axios.get(`/api/territories/1/reports/`)
+            axios.get(`/api/territories/${context.state.currentTerritory.id}/reports/`)
                 .then((response) => {
-                context.commit('updateReports', response.data.reports)
-            })
+                    context.commit('updateReports', response.data.reports)
+                })
+        },
+        getTerritory(context) {
+            axios.get(`/api/territories/${context.state.currentTerritory.id}`)
+                .then((response) => {
+                    context.commit('updateTerritory', response.data.territory)
+                })
         }
-
     }
 }

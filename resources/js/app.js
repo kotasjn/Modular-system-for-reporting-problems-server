@@ -12,8 +12,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTachometerAlt, faChartArea, faUser, faTable, faFolder, faBug, faQuestionCircle, faSyncAlt, faCheckCircle, faTimesCircle} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
+
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(Vuetify);
 
 const store = new Vuex.Store(StoreData);
 

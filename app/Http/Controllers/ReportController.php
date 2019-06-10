@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ReportPhoto;
 use App\Territory;
 use Illuminate\Http\Request;
 use App\Report;
@@ -18,7 +19,6 @@ class ReportController extends Controller
      */
     public function index(Territory $territory)
     {
-
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
             return response()->json([
                 "reports" => Report::where('territory_id', $territory->id)->get()
@@ -26,7 +26,6 @@ class ReportController extends Controller
         } else {
             return abort('403');
         }
-
     }
 
 
@@ -52,6 +51,15 @@ class ReportController extends Controller
     {
 
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
+
+            $photos = ReportPhoto::select('url')->where('report_id', '=', $report->id)->get();
+
+            $arrayPhotos = array();
+            for ($i = 0; $i < count($photos); $i++) {
+                array_push($arrayPhotos, json_decode($photos[$i])->url);
+            }
+            $report->photos = $arrayPhotos;
+
             return response()->json([
                 "report" => $report
             ], 200);
