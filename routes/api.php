@@ -33,6 +33,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/territories/{territory}/reports', 'ReportController');
     Route::apiResource('/territories/{territory}/modules', 'ModuleController');
 
+    Route::get('/territories/{territory}/employees', 'TerritoryController@getEmployees');
+
 });
 
 

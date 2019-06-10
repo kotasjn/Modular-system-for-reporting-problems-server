@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ReportPhoto;
 use App\Territory;
+use Exception;
 use Illuminate\Http\Request;
 use App\Report;
 use Illuminate\Http\Response;
@@ -19,7 +20,7 @@ class ReportController extends Controller
      */
     public function index(Territory $territory)
     {
-        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
+        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first() || $territory->problemSolver()->where('user_id', Auth::id())->first()) {
             return response()->json([
                 "reports" => Report::where('territory_id', $territory->id)->get()
             ], 200);
@@ -50,7 +51,7 @@ class ReportController extends Controller
     public function show(Territory $territory, Report $report)
     {
 
-        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
+        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first() || $territory->problemSolver()->where('user_id', Auth::id())->first()) {
 
             $photos = ReportPhoto::select('url')->where('report_id', '=', $report->id)->get();
 
@@ -73,14 +74,14 @@ class ReportController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Territory $territory
      * @param Report $report
      * @return void
      */
     public function update(Territory $territory, Report $report)
     {
 
-        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
+        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->problemSolver()->where('user_id', Auth::id())->where('user_id', $report->responsible_user_id)->first()) {
 
             $report->update(array_merge(request()->validate([
                 'title' => ['required', 'string', 'max:255'],
@@ -105,11 +106,11 @@ class ReportController extends Controller
      * @param Territory $territory
      * @param Report $report
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Territory $territory, Report $report)
     {
-        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
+        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->problemSolver()->where('user_id', Auth::id())->where('user_id', $report->responsible_user_id)->first()) {
 
             $report->delete();
 

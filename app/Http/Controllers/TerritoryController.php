@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Report;
 use App\Territory;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class TerritoryController extends Controller
 {
@@ -123,5 +126,42 @@ class TerritoryController extends Controller
             "error" => false
         ], 200);
 
+    }
+
+
+    public function getEmployees(Territory $territory)
+    {
+        $category_id = Input::get('category_id');
+
+        if (!$category_id) {
+            return response()->json([
+                "error" => true,
+                "message" => "Field category_id is necessarily for this request."
+            ], 400);
+        }
+
+        if (($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id())) {
+
+            $admin = $territory->admin();
+            $approover = $territory->approver();
+
+            $employees = DB::table('users')
+                ->join('problem_solvers', function($join) use ($category_id){
+                    $join->on('users.id', '=', 'problem_solvers.user_id')
+                    ->where('problem_solvers.category_id', '=', $category_id);
+                })
+                ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
+                ->union($admin)
+                ->union($approover)
+                ->get(['users.*']);
+
+
+            return response()->json([
+                "employees" => $employees
+            ], 200);
+
+        } else {
+            return abort(403);
+        }
     }
 }
