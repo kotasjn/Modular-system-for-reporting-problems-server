@@ -66,11 +66,6 @@
                 .then((response) => {
                     this.report = response.data.report;
                 });
-
-            axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/employees`)
-                .then((response) => {
-                    this.employees = response.data.employees
-                })
         },
         data() {
             return {

@@ -18,6 +18,7 @@
                 :items="categories"
                 :rules="[v => !!v || 'Tohle pole je povinné']"
                 label="Kategorie"
+                v-on:change="categoryChanged"
                 required
         ></v-select>
 
@@ -69,16 +70,27 @@
         name: "ReportEdit",
         props: ['report'],
         created() {
-            axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/employees`)
-                .then((response) => {
-                    this.employees = response.data.employees
-                })
+            this.getEmployees(this.$props.report.category_id)
         },
         methods: {
             validate() {
                 if (this.$refs.form.validate()) {
                     this.snackbar = true
                 }
+            },
+            getEmployees($category_id) {
+                axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/employees`, {
+                    params: {
+                        category_id: $category_id
+                    }
+                })
+                    .then((response) => {
+                        this.employees = response.data.employees
+                    })
+            },
+            categoryChanged()
+            {
+                this.getEmployees(this.report.category_id)
             },
             updateReport() {
 
