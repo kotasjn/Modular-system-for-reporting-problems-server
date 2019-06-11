@@ -137,3 +137,12 @@
     }
 
 </style>
+
+<style>
+    #content {
+        position: relative;
+        left: auto;
+        right: auto;
+        margin: 55px auto;
+    }
+</style>

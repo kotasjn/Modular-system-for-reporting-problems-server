@@ -27,7 +27,7 @@
                 item-text="name"
                 item-value="id"
                 :items="states"
-                :rules="[v => !!v || 'Tohle pole je povinné']"
+                :rules="[v => (0 <= v && v <= 3) || 'Tohle pole je povinné']"
                 label="Stav"
                 required
         ></v-select>
@@ -40,20 +40,24 @@
                 label="Řešitel"
         ></v-select>
 
-        <v-text-field
+        <v-textarea
                 v-model="editedReport.userNote"
                 :counter="255"
+                auto-grow
+                rows="1"
                 :rules="noteRules"
                 label="Poznámka uživatele"
                 required
-        ></v-text-field>
+        ></v-textarea>
 
-        <v-text-field
+        <v-textarea
                 v-model="editedReport.employeeNote"
                 :counter="255"
+                auto-grow
+                rows="1"
                 :rules="[v => (v.length <= 255) || 'Poznámka může mít maximálně 255 znaků.']"
                 label="Poznámka zpracovatele"
-        ></v-text-field>
+        ></v-textarea>
 
         <div class="wrapper-button-bottom">
             <div class="leftcolumn">
@@ -79,7 +83,21 @@
         methods: {
             validate() {
                 if (this.$refs.form.validate()) {
-                    this.snackbar = true
+                    axios.put(`/api/territories/${this.$store.getters.currentTerritory.id}/reports/${this.$props.report.id}`, {
+                        title: this.editedReport.title,
+                        category_id: this.editedReport.category_id,
+                        state: this.editedReport.state,
+                        responsible_id: this.editedReport.responsible_id,
+                        userNote: this.editedReport.userNote,
+                        employeeNote: this.editedReport.employeeNote
+                    })
+                        .then(response => {
+                            console.log(response);
+                            this.$emit('report-saved', this.editedReport);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 }
             },
             getEmployees($category_id) {

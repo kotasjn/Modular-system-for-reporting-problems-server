@@ -44,6 +44,9 @@ export const routes = [
     {
         path: '/territories/:idTerritory/reports',
         component: ReportsMain,
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
                 path: '/',

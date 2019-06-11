@@ -1,10 +1,10 @@
 <template>
     <v-app>
         <div id="main">
-            <Header/>
+            <Header></Header>
             <div id="custom-wrapper">
                 <Sidebar/>
-                <div id="content">
+                <div id="content" v-bind:class="[ isLoggedIn ? 'isLogged' : 'isNotLogged' ]">
 
                     <router-view></router-view>
 
@@ -20,15 +20,20 @@
 
     export default {
         name: "main-app",
-        components: {
-            Sidebar,
-            Header,
-            currentUser() {
-                return this.$store.getters.currentUser
-            }
-        },
         mounted() {
             console.log('Component mounted.')
+        },
+        computed: {
+            currentUser() {
+                return this.$store.getters.currentUser
+            },
+            isLoggedIn() {
+                return this.$store.getters.isLoggedIn;
+            }
+        },
+        components: {
+            Sidebar,
+            Header
         }
     }
 </script>
@@ -41,11 +46,19 @@
     }
 
     #content {
+        margin-top: 55px;
+        padding: 1rem;
+    }
+
+    #content.isLogged {
         position: absolute;
         left: 225px;
         right: 0;
-        margin-top: 55px;
-        padding: 1rem;
+    }
+
+    #content.isNotLogged {
+        position: relative;
+        margin: 55px auto;
     }
 
 </style>

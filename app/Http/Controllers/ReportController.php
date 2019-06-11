@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Report;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -21,8 +22,11 @@ class ReportController extends Controller
     public function index(Territory $territory)
     {
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first() || $territory->problemSolver()->where('user_id', Auth::id())->first()) {
+
+            $reports = DB::table('reports')->select('id', 'title', 'state', 'userNote', 'user_id', 'responsible_user_id', 'category_id', 'created_at')->where('territory_id', $territory->id)->get();
+
             return response()->json([
-                "reports" => Report::where('territory_id', $territory->id)->get()
+                "reports" => $reports
             ], 200);
         } else {
             return abort('403');
@@ -91,9 +95,11 @@ class ReportController extends Controller
 
             $report->update(array_merge(request()->validate([
                 'title' => ['required', 'string', 'max:255'],
+                'category_id' => ['required', 'integer'],
+                'state' => ['required', 'integer', 'min:0', 'max:3'],
                 'userNote' => ['required', 'string', 'max:255'],
                 'employeeNote' => ['required', 'string', 'max:255'],
-                'category_id' => ['required', 'integer'],
+                'responsible_id' => ['integer'],
             ])));
 
             return response()->json([

@@ -9,7 +9,7 @@ import MainApp from './components/MainApp.vue';
 import {initialize} from './helpers/general';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTachometerAlt, faChartArea, faUser, faTable, faFolder, faBug, faQuestionCircle, faSyncAlt, faCheckCircle, faTimesCircle} from '@fortawesome/free-solid-svg-icons'
+import { faTachometerAlt, faChartArea, faUser, faTable, faFolder, faBug, faQuestionCircle, faSyncAlt, faCheckCircle, faTimesCircle, faEye} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import Vuetify from 'vuetify'
@@ -30,7 +30,7 @@ initialize(store, router);
 
 // Font-awesome icons
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-library.add(faTachometerAlt, faChartArea, faUser, faTable, faFolder, faBug, faQuestionCircle, faSyncAlt, faCheckCircle, faTimesCircle);
+library.add(faTachometerAlt, faChartArea, faUser, faTable, faFolder, faBug, faQuestionCircle, faSyncAlt, faCheckCircle, faTimesCircle, faEye);
 
 
 const app = new Vue({

@@ -42,6 +42,10 @@
                         <td v-if="report.responsible != null" class="body-1">{{ report.responsible.name }}</td>
                     </tr>
                     <tr>
+                        <th class="subheading">Vytvořeno</th>
+                        <td class="body-1">{{ report.created_at }}</td>
+                    </tr>
+                    <tr>
                         <th class="subheading">Poznámka uživatele</th>
                         <td class="body-1">{{ report.userNote }}</td>
                     </tr>
@@ -69,7 +73,7 @@
             <div class="card-header">Detail podnětu</div>
             <div class="card-body">
 
-                <ReportEdit v-bind:report="report" v-on:cancel-edit="editReport"></ReportEdit>
+                <ReportEdit v-bind:report="report" v-on:cancel-edit="editReport" v-on:report-saved="savedReport"></ReportEdit>
 
             </div>
         </div>
@@ -87,7 +91,6 @@
             axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/reports/${this.$route.params.idReport}`)
                 .then((response) => {
                     this.report = response.data.report;
-
                 });
         },
         data() {
@@ -123,6 +126,11 @@
             editReport() {
                 this.edit = !this.edit;
             },
+            savedReport(newReport)
+            {
+                this.report = newReport;
+                this.edit = !this.edit;
+            },
             back() {
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/reports`);
             }
@@ -144,6 +152,10 @@
     table>tr>td {
         padding-top: 0.5em;
         padding-bottom: 0.5em;
+    }
+
+    table>tr>th {
+        padding-right: 0.5em;
     }
 
     .image {

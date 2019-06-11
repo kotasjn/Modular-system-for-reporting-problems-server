@@ -132,7 +132,6 @@
         margin-top: 55px;
         z-index: 1;
         overflow-y: scroll;
-
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         scrollbar-width: none;
     }
@@ -145,6 +144,10 @@
     .navbar-nav .dropdown-menu {
         position: static;
         float: none
+    }
+
+    .sidebar .nav-item {
+        font-size: 14px;
     }
 
     .sidebar .nav-item .nav-link {
@@ -160,7 +163,6 @@
     }
 
     .sidebar .nav-item .nav-link span {
-        font-size: 1rem;
         margin-left: .5rem;
         display: inline;
     }
@@ -216,6 +218,7 @@
 
     .dropdown-header {
         color: rgba(255, 255, 255, 0.7);
+        padding: 0.5rem 1rem;
     }
 
     .dropdown-item:hover {
