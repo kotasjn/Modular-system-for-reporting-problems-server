@@ -4,7 +4,7 @@
             v-model="valid"
             lazy-validation>
         <v-text-field
-                v-model="report.title"
+                v-model="editedReport.title"
                 :counter="80"
                 :rules="[v => !!v || 'Tohle pole je povinné']"
                 label="Titulek"
@@ -12,7 +12,7 @@
         ></v-text-field>
 
         <v-select
-                v-model="report.category_id"
+                v-model="editedReport.category_id"
                 item-text="name"
                 item-value="id"
                 :items="categories"
@@ -23,7 +23,7 @@
         ></v-select>
 
         <v-select
-                v-model="report.state"
+                v-model="editedReport.state"
                 item-text="name"
                 item-value="id"
                 :items="states"
@@ -33,7 +33,7 @@
         ></v-select>
 
         <v-select
-                v-model="report.responsible_id"
+                v-model="editedReport.responsible_id"
                 item-text="name"
                 item-value="id"
                 :items="employees"
@@ -41,7 +41,7 @@
         ></v-select>
 
         <v-text-field
-                v-model="report.userNote"
+                v-model="editedReport.userNote"
                 :counter="255"
                 :rules="noteRules"
                 label="Poznámka uživatele"
@@ -49,16 +49,20 @@
         ></v-text-field>
 
         <v-text-field
-                v-model="report.employeeNote"
+                v-model="editedReport.employeeNote"
                 :counter="255"
                 :rules="[v => (v.length <= 255) || 'Poznámka může mít maximálně 255 znaků.']"
                 label="Poznámka zpracovatele"
         ></v-text-field>
 
-
-        <v-btn v-on:click="$emit('cancel-edit', null)" >ZRUŠIT</v-btn>
-
-        <v-btn :disabled="!valid" @click="validate" color="teal" class="white--text">ODESLAT</v-btn>
+        <div class="wrapper-button-bottom">
+            <div class="leftcolumn">
+                <v-btn @click="$emit('cancel-edit', null)">ZRUŠIT</v-btn>
+            </div>
+            <div class="rightcolumn">
+                <v-btn :disabled="!valid" @click="validate" color="teal" class="white--text">ODESLAT</v-btn>
+            </div>
+        </div>
 
     </v-form>
 
@@ -140,6 +144,7 @@
                 ],
                 valid: true,
                 employees: [],
+                editedReport: JSON.parse(JSON.stringify(this.$props.report)),
                 titleRules: [
                     v => !!v || 'Tohle pole je povinné',
                     v => (v && v.length <= 80) || 'Titulek může mít maximálně 80 znaků.'

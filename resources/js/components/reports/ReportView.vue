@@ -2,27 +2,48 @@
     <div>
         <div class="card" v-if="!edit">
             <div class="card-header">Detail podnětu</div>
+
+            <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
+
             <div class="card-body">
+
                 <table>
                     <tr>
-                        <th>ID</th>
-                        <td>{{ report.id }}</td>
+                        <th class="subheading">ID</th>
+                        <td class="body-1">{{ report.id }}</td>
                     </tr>
                     <tr>
-                        <th>Titulek</th>
-                        <td>{{ report.title }}</td>
+                        <th class="subheading">Titulek</th>
+                        <td class="body-1">{{ report.title }}</td>
                     </tr>
                     <tr>
-                        <th>Kategorie</th>
-                        <td>{{ report.category_id }}</td>
+                        <th class="subheading">Kategorie</th>
+                        <td v-if="report.category_id === 1" class="body-1">Zeleň</td>
+                        <td v-else-if="report.category_id === 2" class="body-1">Odpad</td>
+                        <td v-else-if="report.category_id === 3" class="body-1">Doprava</td>
+                        <td v-else-if="report.category_id === 4" class="body-1">Mobiliář</td>
+                        <td v-else-if="report.category_id === 5" class="body-1">Veřejné osvětlení</td>
+                        <td v-else class="body-1"></td>
                     </tr>
                     <tr>
-                        <th>Řešitel</th>
-                        <td>{{ report.responsible_id }}</td>
+                        <th class="subheading">Stav</th>
+                        <td v-if="report.state === 0" class="body-1">Čeká na schválení <font-awesome-icon v-if="report.state === 0" icon="question-circle" style="color: yellow" title="Čeká na schválení"/></td>
+                        <td v-else-if="report.state === 1" class="body-1">Schváleno <font-awesome-icon v-if="report.state === 1" icon="sync-alt" style="color: mediumblue" title="Schváleno"/></td>
+                        <td v-else-if="report.state === 2" class="body-1">Vyřešeno <font-awesome-icon v-if="report.state === 2" icon="check-circle" style="color: forestgreen" title="Vyřešeno"/></td>
+                        <td v-else-if="report.state === 3" class="body-1">Zamítnuto <font-awesome-icon v-if="report.state === 3" icon="times-circle" style="color: red" title="Zamítnuto"/></td>
+                        <td v-else class="body-1"></td>
                     </tr>
                     <tr>
-                        <th>Poznámka uživatele</th>
-                        <td>{{ report.userNote }}</td>
+                        <th class="subheading">Zadavatel</th>
+                        <td class="body-1">{{ report.user.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="subheading">Řešitel</th>
+                        <td v-if="report.responsible != null" class="body-1">{{ report.responsible.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="subheading">Poznámka uživatele</th>
+                        <td class="body-1">{{ report.userNote }}</td>
                     </tr>
                 </table>
 
@@ -32,14 +53,15 @@
                                            @close="index = null"></vue-gallery-slideshow>
                 </div>
 
-                <div id="wrapper">
-                    <div id="leftcolumn">
-                        <router-link :to="`/territories/${currentTerritory.id}/reports`">Zpět</router-link>
+                <div class="wrapper-button-bottom">
+                    <div class="leftcolumn">
+                        <v-btn @click="back">ZPĚT</v-btn>
                     </div>
-                    <div id="rightcolumn">
-                        <button v-on:click="editReport">Upravit</button>
+                    <div class="rightcolumn">
+                        <v-btn @click="editReport" color="teal" class="white--text">UPRAVIT</v-btn>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -65,20 +87,28 @@
             axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/reports/${this.$route.params.idReport}`)
                 .then((response) => {
                     this.report = response.data.report;
+
                 });
         },
         data() {
             return {
                 report: {
                     title: '',
-                    state: 0,
-                    category_id: 0,
+                    state: null,
+                    category_id: null,
                     responsible_id: null,
+                    responsible: {
+                        name: '',
+                    },
+                    user: {
+                        name: '',
+                    },
                     userNote: '',
                     employeeNote: ''
                 },
                 index: null,
-                edit: false
+                edit: false,
+                isLoading: true
             }
         },
         computed: {
@@ -93,6 +123,14 @@
             editReport() {
                 this.edit = !this.edit;
             },
+            back() {
+                this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/reports`);
+            }
+        },
+        watch: {
+            report(){
+                this.isLoading = false;
+            }
         },
         components: {
             VueGallerySlideshow,
@@ -103,6 +141,11 @@
 
 <style scoped>
 
+    table>tr>td {
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+    }
+
     .image {
         width: 100px;
         height: 100px;
@@ -111,22 +154,7 @@
         margin: 5px;
         border-radius: 3px;
         border: 1px solid lightgray;
-        object-fit: contain;
-    }
-
-    .wrapper {
-        width: 100%;
-    }
-
-    .leftcolumn {
-        width: 50%;
-        float: left;
-    }
-
-    .rightcolumn {
-        width: 50%;
-        float: right;
-        text-align: right;
+        object-fit: cover;
     }
 
 </style>

@@ -60,6 +60,12 @@ class ReportController extends Controller
                 array_push($arrayPhotos, json_decode($photos[$i])->url);
             }
             $report->photos = $arrayPhotos;
+            $report->user = $report->user()->first();
+            $report->responsible = $report->responsible()->first();
+
+            unset($report['user_id']);
+
+            unset($territory['location'], $territory['created_at'], $territory['updated_at']);
 
             return response()->json([
                 "report" => $report

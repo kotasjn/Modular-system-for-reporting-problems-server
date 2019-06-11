@@ -10691,6 +10691,25 @@ div.card-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
+div.v-progress-linear {
+  margin: 0;
+}
+
+.wrapper-button-bottom {
+  margin-top: 1.25rem;
+}
+
+.leftcolumn {
+  width: 50%;
+  float: left;
+}
+
+.rightcolumn {
+  width: 50%;
+  float: right;
+  text-align: right;
+}
+
 .isa_info,
 .isa_success,
 .isa_warning,

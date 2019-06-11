@@ -11941,6 +11941,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ReportEdit",
   props: ['report'],
@@ -12002,6 +12006,7 @@ __webpack_require__.r(__webpack_exports__);
       }],
       valid: true,
       employees: [],
+      editedReport: JSON.parse(JSON.stringify(this.$props.report)),
       titleRules: [function (v) {
         return !!v || 'Tohle pole je povinné';
       }, function (v) {
@@ -12195,6 +12200,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12210,14 +12237,21 @@ __webpack_require__.r(__webpack_exports__);
     return {
       report: {
         title: '',
-        state: 0,
-        category_id: 0,
+        state: null,
+        category_id: null,
         responsible_id: null,
+        responsible: {
+          name: ''
+        },
+        user: {
+          name: ''
+        },
         userNote: '',
         employeeNote: ''
       },
       index: null,
-      edit: false
+      edit: false,
+      isLoading: true
     };
   },
   computed: {
@@ -12231,6 +12265,14 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     editReport: function editReport() {
       this.edit = !this.edit;
+    },
+    back: function back() {
+      this.$router.push("/territories/".concat(this.$store.getters.currentTerritory.id, "/reports"));
+    }
+  },
+  watch: {
+    report: function report() {
+      this.isLoading = false;
     }
   },
   components: {
@@ -16917,7 +16959,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.image[data-v-4f9c4974] {\n    width: 100px;\n    height: 100px;\n    background-size: cover;\n    cursor: pointer;\n    margin: 5px;\n    border-radius: 3px;\n    border: 1px solid lightgray;\n    -o-object-fit: contain;\n       object-fit: contain;\n}\n.wrapper[data-v-4f9c4974] {\n    width: 100%;\n}\n.leftcolumn[data-v-4f9c4974] {\n    width: 50%;\n    float: left;\n}\n.rightcolumn[data-v-4f9c4974] {\n    width: 50%;\n    float: right;\n    text-align: right;\n}\n\n", ""]);
+exports.push([module.i, "\ntable>tr>td[data-v-4f9c4974] {\n    padding-top: 0.5em;\n    padding-bottom: 0.5em;\n}\n.image[data-v-4f9c4974] {\n    width: 100px;\n    height: 100px;\n    background-size: cover;\n    cursor: pointer;\n    margin: 5px;\n    border-radius: 3px;\n    border: 1px solid lightgray;\n    -o-object-fit: cover;\n       object-fit: cover;\n}\n\n", ""]);
 
 // exports
 
@@ -49577,11 +49619,11 @@ var render = function() {
           required: ""
         },
         model: {
-          value: _vm.report.title,
+          value: _vm.editedReport.title,
           callback: function($$v) {
-            _vm.$set(_vm.report, "title", $$v)
+            _vm.$set(_vm.editedReport, "title", $$v)
           },
-          expression: "report.title"
+          expression: "editedReport.title"
         }
       }),
       _vm._v(" "),
@@ -49600,11 +49642,11 @@ var render = function() {
         },
         on: { change: _vm.categoryChanged },
         model: {
-          value: _vm.report.category_id,
+          value: _vm.editedReport.category_id,
           callback: function($$v) {
-            _vm.$set(_vm.report, "category_id", $$v)
+            _vm.$set(_vm.editedReport, "category_id", $$v)
           },
-          expression: "report.category_id"
+          expression: "editedReport.category_id"
         }
       }),
       _vm._v(" "),
@@ -49622,11 +49664,11 @@ var render = function() {
           required: ""
         },
         model: {
-          value: _vm.report.state,
+          value: _vm.editedReport.state,
           callback: function($$v) {
-            _vm.$set(_vm.report, "state", $$v)
+            _vm.$set(_vm.editedReport, "state", $$v)
           },
-          expression: "report.state"
+          expression: "editedReport.state"
         }
       }),
       _vm._v(" "),
@@ -49638,11 +49680,11 @@ var render = function() {
           label: "Řešitel"
         },
         model: {
-          value: _vm.report.responsible_id,
+          value: _vm.editedReport.responsible_id,
           callback: function($$v) {
-            _vm.$set(_vm.report, "responsible_id", $$v)
+            _vm.$set(_vm.editedReport, "responsible_id", $$v)
           },
-          expression: "report.responsible_id"
+          expression: "editedReport.responsible_id"
         }
       }),
       _vm._v(" "),
@@ -49654,11 +49696,11 @@ var render = function() {
           required: ""
         },
         model: {
-          value: _vm.report.userNote,
+          value: _vm.editedReport.userNote,
           callback: function($$v) {
-            _vm.$set(_vm.report, "userNote", $$v)
+            _vm.$set(_vm.editedReport, "userNote", $$v)
           },
-          expression: "report.userNote"
+          expression: "editedReport.userNote"
         }
       }),
       _vm._v(" "),
@@ -49673,35 +49715,51 @@ var render = function() {
           label: "Poznámka zpracovatele"
         },
         model: {
-          value: _vm.report.employeeNote,
+          value: _vm.editedReport.employeeNote,
           callback: function($$v) {
-            _vm.$set(_vm.report, "employeeNote", $$v)
+            _vm.$set(_vm.editedReport, "employeeNote", $$v)
           },
-          expression: "report.employeeNote"
+          expression: "editedReport.employeeNote"
         }
       }),
       _vm._v(" "),
-      _c(
-        "v-btn",
-        {
-          on: {
-            click: function($event) {
-              return _vm.$emit("cancel-edit", null)
-            }
-          }
-        },
-        [_vm._v("ZRUŠIT")]
-      ),
-      _vm._v(" "),
-      _c(
-        "v-btn",
-        {
-          staticClass: "white--text",
-          attrs: { disabled: !_vm.valid, color: "teal" },
-          on: { click: _vm.validate }
-        },
-        [_vm._v("ODESLAT")]
-      )
+      _c("div", { staticClass: "wrapper-button-bottom" }, [
+        _c(
+          "div",
+          { staticClass: "leftcolumn" },
+          [
+            _c(
+              "v-btn",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.$emit("cancel-edit", null)
+                  }
+                }
+              },
+              [_vm._v("ZRUŠIT")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "rightcolumn" },
+          [
+            _c(
+              "v-btn",
+              {
+                staticClass: "white--text",
+                attrs: { disabled: !_vm.valid, color: "teal" },
+                on: { click: _vm.validate }
+              },
+              [_vm._v("ODESLAT")]
+            )
+          ],
+          1
+        )
+      ])
     ],
     1
   )
@@ -49907,97 +49965,227 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     !_vm.edit
-      ? _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Detail podnětu")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("table", [
-              _c("tr", [
-                _c("th", [_vm._v("ID")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.report.id))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v("Titulek")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.report.title))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v("Kategorie")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.report.category_id))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v("Řešitel")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.report.responsible_id))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v("Poznámka uživatele")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.report.userNote))])
-              ])
+      ? _c(
+          "div",
+          { staticClass: "card" },
+          [
+            _c("div", { staticClass: "card-header" }, [
+              _vm._v("Detail podnětu")
             ]),
             _vm._v(" "),
-            _c(
-              "div",
-              [
-                _vm._l(_vm.report.photos, function(photo, i) {
-                  return _c("img", {
-                    key: i,
-                    staticClass: "image",
-                    attrs: { src: photo },
+            _c("v-progress-linear", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.isLoading,
+                  expression: "isLoading"
+                }
+              ],
+              attrs: { indeterminate: true, height: "5" }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body" }, [
+              _c("table", [
+                _c("tr", [
+                  _c("th", { staticClass: "subheading" }, [_vm._v("ID")]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "body-1" }, [
+                    _vm._v(_vm._s(_vm.report.id))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", { staticClass: "subheading" }, [_vm._v("Titulek")]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "body-1" }, [
+                    _vm._v(_vm._s(_vm.report.title))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", { staticClass: "subheading" }, [
+                    _vm._v("Kategorie")
+                  ]),
+                  _vm._v(" "),
+                  _vm.report.category_id === 1
+                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Zeleň")])
+                    : _vm.report.category_id === 2
+                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Odpad")])
+                    : _vm.report.category_id === 3
+                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Doprava")])
+                    : _vm.report.category_id === 4
+                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Mobiliář")])
+                    : _vm.report.category_id === 5
+                    ? _c("td", { staticClass: "body-1" }, [
+                        _vm._v("Veřejné osvětlení")
+                      ])
+                    : _c("td", { staticClass: "body-1" })
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", { staticClass: "subheading" }, [_vm._v("Stav")]),
+                  _vm._v(" "),
+                  _vm.report.state === 0
+                    ? _c(
+                        "td",
+                        { staticClass: "body-1" },
+                        [
+                          _vm._v("Čeká na schválení "),
+                          _vm.report.state === 0
+                            ? _c("font-awesome-icon", {
+                                staticStyle: { color: "yellow" },
+                                attrs: {
+                                  icon: "question-circle",
+                                  title: "Čeká na schválení"
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    : _vm.report.state === 1
+                    ? _c(
+                        "td",
+                        { staticClass: "body-1" },
+                        [
+                          _vm._v("Schváleno "),
+                          _vm.report.state === 1
+                            ? _c("font-awesome-icon", {
+                                staticStyle: { color: "mediumblue" },
+                                attrs: { icon: "sync-alt", title: "Schváleno" }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    : _vm.report.state === 2
+                    ? _c(
+                        "td",
+                        { staticClass: "body-1" },
+                        [
+                          _vm._v("Vyřešeno "),
+                          _vm.report.state === 2
+                            ? _c("font-awesome-icon", {
+                                staticStyle: { color: "forestgreen" },
+                                attrs: {
+                                  icon: "check-circle",
+                                  title: "Vyřešeno"
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    : _vm.report.state === 3
+                    ? _c(
+                        "td",
+                        { staticClass: "body-1" },
+                        [
+                          _vm._v("Zamítnuto "),
+                          _vm.report.state === 3
+                            ? _c("font-awesome-icon", {
+                                staticStyle: { color: "red" },
+                                attrs: {
+                                  icon: "times-circle",
+                                  title: "Zamítnuto"
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    : _c("td", { staticClass: "body-1" })
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", { staticClass: "subheading" }, [
+                    _vm._v("Zadavatel")
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "body-1" }, [
+                    _vm._v(_vm._s(_vm.report.user.name))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", { staticClass: "subheading" }, [_vm._v("Řešitel")]),
+                  _vm._v(" "),
+                  _vm.report.responsible != null
+                    ? _c("td", { staticClass: "body-1" }, [
+                        _vm._v(_vm._s(_vm.report.responsible.name))
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", { staticClass: "subheading" }, [
+                    _vm._v("Poznámka uživatele")
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "body-1" }, [
+                    _vm._v(_vm._s(_vm.report.userNote))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                [
+                  _vm._l(_vm.report.photos, function(photo, i) {
+                    return _c("img", {
+                      key: i,
+                      staticClass: "image",
+                      attrs: { src: photo },
+                      on: {
+                        click: function($event) {
+                          _vm.index = i
+                        }
+                      }
+                    })
+                  }),
+                  _vm._v(" "),
+                  _c("vue-gallery-slideshow", {
+                    attrs: { images: _vm.report.photos, index: _vm.index },
                     on: {
-                      click: function($event) {
-                        _vm.index = i
+                      close: function($event) {
+                        _vm.index = null
                       }
                     }
                   })
-                }),
-                _vm._v(" "),
-                _c("vue-gallery-slideshow", {
-                  attrs: { images: _vm.report.photos, index: _vm.index },
-                  on: {
-                    close: function($event) {
-                      _vm.index = null
-                    }
-                  }
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c("div", { attrs: { id: "wrapper" } }, [
-              _c(
-                "div",
-                { attrs: { id: "leftcolumn" } },
-                [
-                  _c(
-                    "router-link",
-                    {
-                      attrs: {
-                        to:
-                          "/territories/" + _vm.currentTerritory.id + "/reports"
-                      }
-                    },
-                    [_vm._v("Zpět")]
-                  )
                 ],
-                1
+                2
               ),
               _vm._v(" "),
-              _c("div", { attrs: { id: "rightcolumn" } }, [
-                _c("button", { on: { click: _vm.editReport } }, [
-                  _vm._v("Upravit")
-                ])
+              _c("div", { staticClass: "wrapper-button-bottom" }, [
+                _c(
+                  "div",
+                  { staticClass: "leftcolumn" },
+                  [_c("v-btn", { on: { click: _vm.back } }, [_vm._v("ZPĚT")])],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "rightcolumn" },
+                  [
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "white--text",
+                        attrs: { color: "teal" },
+                        on: { click: _vm.editReport }
+                      },
+                      [_vm._v("UPRAVIT")]
+                    )
+                  ],
+                  1
+                )
               ])
             ])
-          ])
-        ])
+          ],
+          1
+        )
       : _vm._e(),
     _vm._v(" "),
     _vm.edit
