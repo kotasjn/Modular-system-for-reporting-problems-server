@@ -99,7 +99,7 @@
                     title: '',
                     state: null,
                     category_id: null,
-                    responsible_id: null,
+                    responsible_user_id: null,
                     responsible: {
                         name: '',
                     },
@@ -129,6 +129,7 @@
             savedReport(newReport)
             {
                 this.report = newReport;
+                this.$store.commit("updateReport", newReport);
                 this.edit = !this.edit;
             },
             back() {

@@ -11969,13 +11969,13 @@ __webpack_require__.r(__webpack_exports__);
           title: this.editedReport.title,
           category_id: this.editedReport.category_id,
           state: this.editedReport.state,
-          responsible_id: this.editedReport.responsible_id,
+          responsible_user_id: this.editedReport.responsible_user_id,
           userNote: this.editedReport.userNote,
           employeeNote: this.editedReport.employeeNote
         }).then(function (response) {
           console.log(response);
 
-          _this.$emit('report-saved', _this.editedReport);
+          _this.$emit('report-saved', response.data.report);
         })["catch"](function (error) {
           console.log(error);
         });
@@ -11994,8 +11994,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     categoryChanged: function categoryChanged() {
       this.getEmployees(this.report.category_id);
-    },
-    updateReport: function updateReport() {}
+    }
   },
   data: function data() {
     return {
@@ -12114,6 +12113,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ReportList',
   data: function data() {
@@ -12130,7 +12132,7 @@ __webpack_require__.r(__webpack_exports__);
         align: 'center'
       }, {
         text: 'Zodpovědnost',
-        value: 'responsible_id',
+        value: 'responsible_user_id',
         align: 'center'
       }, {
         text: 'Vytvořeno',
@@ -12158,6 +12160,13 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     showDetail: function showDetail(id) {
       this.$router.push("/territories/".concat(this.$store.getters.currentTerritory.id, "/reports/").concat(id));
+    },
+    getName: function getName(id) {
+      var employees = this.currentTerritory.employees;
+
+      for (var i = 0; i < employees.length; i++) {
+        if (employees[i].id === id) return employees[i].name;
+      }
     }
   },
   watch: {
@@ -12315,7 +12324,7 @@ __webpack_require__.r(__webpack_exports__);
         title: '',
         state: null,
         category_id: null,
-        responsible_id: null,
+        responsible_user_id: null,
         responsible: {
           name: ''
         },
@@ -12344,6 +12353,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     savedReport: function savedReport(newReport) {
       this.report = newReport;
+      this.$store.commit("updateReport", newReport);
       this.edit = !this.edit;
     },
     back: function back() {
@@ -12396,8 +12406,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
 //
 //
 //
@@ -49817,11 +49825,11 @@ var render = function() {
           label: "Řešitel"
         },
         model: {
-          value: _vm.editedReport.responsible_id,
+          value: _vm.editedReport.responsible_user_id,
           callback: function($$v) {
-            _vm.$set(_vm.editedReport, "responsible_id", $$v)
+            _vm.$set(_vm.editedReport, "responsible_user_id", $$v)
           },
-          expression: "editedReport.responsible_id"
+          expression: "editedReport.responsible_user_id"
         }
       }),
       _vm._v(" "),
@@ -49981,9 +49989,15 @@ var render = function() {
                         : _c("p", { staticClass: "body-1" })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-center" }, [
-                      _vm._v(_vm._s(props.item.responsible_id))
-                    ]),
+                    props.item.responsible_user_id != null
+                      ? _c("td", { staticClass: "text-xs-center" }, [
+                          _vm._v(
+                            _vm._s(_vm.getName(props.item.responsible_user_id))
+                          )
+                        ])
+                      : _c("td", { staticClass: "text-xs-center" }, [
+                          _vm._v("?")
+                        ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-xs-center" }, [
                       _vm._v(_vm._s(props.item.created_at))
@@ -50417,10 +50431,8 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12 no-padding" }, [_c("router-view")], 1)
-    ])
+  return _c("div", { staticClass: "row justify-content-center" }, [
+    _c("div", { staticClass: "col-md-12 no-padding" }, [_c("router-view")], 1)
   ])
 }
 var staticRenderFns = []
@@ -93686,11 +93698,18 @@ var territory = Object(_helpers_territory__WEBPACK_IMPORTED_MODULE_1__["getLocal
     },
     updateReports: function updateReports(state, payload) {
       state.reports = payload;
+    },
+    updateReport: function updateReport(state, newReport) {
+      state.reports.forEach(function (report, index) {
+        if (report.id === newReport.id) {
+          state.reports[index] = newReport;
+        }
+      });
     }
   },
   actions: {
-    login: function login(context) {
-      context.commit("login");
+    updateReport: function updateReport(context, newReport) {
+      context.commit('updateReport', newReport);
     },
     getReports: function getReports(context) {
       axios.get("/api/territories/".concat(context.state.currentTerritory.id, "/reports/")).then(function (response) {

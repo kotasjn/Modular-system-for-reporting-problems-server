@@ -70,6 +70,18 @@ class TerritoryController extends Controller
             $territory->solved_reports = Report::where('territory_id', $territory->id)->where('state', 2)->count();
             $territory->rejected_reports = Report::where('territory_id', $territory->id)->where('state', 3)->count();
 
+            $admin = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->admin_id);
+            $approover = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->aproover_id);
+
+            $territory->employees = DB::table('users')
+                ->join('problem_solvers', function($join) {
+                    $join->on('users.id', '=', 'problem_solvers.user_id');
+                })
+                ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
+                ->union($admin)
+                ->union($approover)
+                ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone']);
+
             unset($territory['location'], $territory['created_at'], $territory['updated_at']);
 
             return response()->json([
@@ -142,8 +154,8 @@ class TerritoryController extends Controller
 
         if (($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id())) {
 
-            $admin = $territory->admin();
-            $approover = $territory->approver();
+            $admin = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->admin_id);
+            $approover = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->aproover_id);
 
             $employees = DB::table('users')
                 ->join('problem_solvers', function($join) use ($category_id){
@@ -153,8 +165,7 @@ class TerritoryController extends Controller
                 ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
                 ->union($admin)
                 ->union($approover)
-                ->get(['users.*']);
-
+                ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone']);
 
             return response()->json([
                 "employees" => $employees

@@ -67,11 +67,18 @@ export default {
         },
         updateReports(state, payload) {
             state.reports = payload;
+        },
+        updateReport(state, newReport) {
+            state.reports.forEach((report, index) => {
+                if (report.id === newReport.id) {
+                    state.reports[index] = newReport
+                }
+            });
         }
     },
     actions: {
-        login(context) {
-            context.commit("login");
+        updateReport(context, newReport) {
+            context.commit('updateReport', newReport)
         },
         getReports(context) {
             axios.get(`/api/territories/${context.state.currentTerritory.id}/reports/`)

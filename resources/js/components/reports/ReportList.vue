@@ -22,7 +22,10 @@
                         <p v-else class="body-1"></p>
 
                     </td>
-                    <td class="text-xs-center">{{ props.item.responsible_id }}</td>
+
+                    <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{ getName(props.item.responsible_user_id) }}</td>
+                    <td v-else class="text-xs-center">?</td>
+
                     <td class="text-xs-center">{{ props.item.created_at }}</td>
                     <td class="text-xs-center">
 
@@ -71,7 +74,7 @@
                     },
                     {
                         text: 'Zodpovědnost',
-                        value: 'responsible_id',
+                        value: 'responsible_user_id',
                         align: 'center'
                     },
                     {
@@ -103,12 +106,20 @@
         methods: {
             showDetail(id) {
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/reports/${id}`);
+            },
+            getName(id) {
+
+                let employees = this.currentTerritory.employees;
+
+                for(let i = 0; i < employees.length; i++){
+                    if (employees[i].id === id) return employees[i].name;
+                }
             }
         },
         watch: {
             reports() {
                 this.isLoading = false;
-            }
+            },
         },
         computed: {
             reports() {
@@ -116,7 +127,7 @@
             },
             currentTerritory() {
                 return this.$store.getters.currentTerritory;
-            }
+            },
         }
     }
 </script>

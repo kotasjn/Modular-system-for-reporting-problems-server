@@ -33,7 +33,7 @@
         ></v-select>
 
         <v-select
-                v-model="editedReport.responsible_id"
+                v-model="editedReport.responsible_user_id"
                 item-text="name"
                 item-value="id"
                 :items="employees"
@@ -87,13 +87,13 @@
                         title: this.editedReport.title,
                         category_id: this.editedReport.category_id,
                         state: this.editedReport.state,
-                        responsible_id: this.editedReport.responsible_id,
+                        responsible_user_id: this.editedReport.responsible_user_id,
                         userNote: this.editedReport.userNote,
                         employeeNote: this.editedReport.employeeNote
                     })
                         .then(response => {
                             console.log(response);
-                            this.$emit('report-saved', this.editedReport);
+                            this.$emit('report-saved', response.data.report);
                         })
                         .catch(error => {
                             console.log(error);
@@ -114,9 +114,6 @@
             {
                 this.getEmployees(this.report.category_id)
             },
-            updateReport() {
-
-            }
         },
         data() {
             return {

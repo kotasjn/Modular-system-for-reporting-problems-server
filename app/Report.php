@@ -12,7 +12,7 @@ class Report extends Model
     use Filterable;
 
     protected $fillable = [
-        'title', 'state', 'userNote', 'location', 'user_id', 'category_id', 'territory_id','employeeNote', 'address'
+        'title', 'state', 'userNote', 'location', 'user_id', 'category_id', 'territory_id','employeeNote', 'address', 'responsible_user_id'
     ];
 
     protected $spatialFields = [

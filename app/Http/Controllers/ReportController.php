@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ReportPhoto;
 use App\Territory;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use App\Report;
@@ -65,11 +66,11 @@ class ReportController extends Controller
             }
             $report->photos = $arrayPhotos;
             $report->user = $report->user()->first();
-            $report->responsible = $report->responsible()->first();
+            $report->responsible = User::find($report->responsible_user_id);
 
             unset($report['user_id']);
 
-            unset($territory['location'], $territory['created_at'], $territory['updated_at']);
+            unset($territory['updated_at']);
 
             return response()->json([
                 "report" => $report
@@ -98,9 +99,23 @@ class ReportController extends Controller
                 'category_id' => ['required', 'integer'],
                 'state' => ['required', 'integer', 'min:0', 'max:3'],
                 'userNote' => ['required', 'string', 'max:255'],
-                'employeeNote' => ['required', 'string', 'max:255'],
-                'responsible_id' => ['integer'],
+                'employeeNote' => ['nullable', 'string', 'max:255'],
+                'responsible_user_id' => ['nullable', 'integer']
             ])));
+
+            $photos = ReportPhoto::select('url')->where('report_id', '=', $report->id)->get();
+
+            $arrayPhotos = array();
+            for ($i = 0; $i < count($photos); $i++) {
+                array_push($arrayPhotos, json_decode($photos[$i])->url);
+            }
+            $report->photos = $arrayPhotos;
+            $report->user = $report->user()->first();
+            $report->responsible = User::find($report->responsible_user_id);
+
+            unset($report['user_id']);
+
+            unset($territory['updated_at']);
 
             return response()->json([
                 "report" => $report

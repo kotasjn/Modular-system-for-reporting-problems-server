@@ -29,11 +29,11 @@ class User extends Authenticatable
     ];
 
     public function owner() {
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Report::class,'user_id');
     }
 
     public function responsible() {
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Report::class,'responsible_user_id');
     }
 
     public function problemSolver() {
