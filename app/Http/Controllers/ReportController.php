@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ModuleData;
 use App\ReportPhoto;
 use App\Territory;
 use App\User;
@@ -67,6 +68,15 @@ class ReportController extends Controller
             $report->photos = $arrayPhotos;
             $report->user = $report->user()->first();
             $report->responsible = User::find($report->responsible_user_id);
+
+            $report->moduleData = $report->moduleData()
+                ->join('modules', 'modules.id', '=', 'module_data.module_id')
+                ->get(['module_data.id', 'modules.name']);
+
+            foreach ($report->moduleData as $moduleData) {
+                $moduleData->inputData = $moduleData->inputData()->join('inputs', 'inputs.id', '=', 'input_data.input_id')
+                    ->get(['input_data.id', 'inputs.title', 'input_data.data']);
+            }
 
             unset($report['user_id']);
 

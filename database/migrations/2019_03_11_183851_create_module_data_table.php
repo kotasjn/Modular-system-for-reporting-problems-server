@@ -13,7 +13,7 @@ class CreateModuleDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('module_datas', function (Blueprint $table) {
+        Schema::create('module_data', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
 

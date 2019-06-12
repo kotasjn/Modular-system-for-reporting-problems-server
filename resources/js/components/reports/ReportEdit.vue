@@ -55,7 +55,7 @@
                 :counter="255"
                 auto-grow
                 rows="1"
-                :rules="[v => (v.length <= 255) || 'Poznámka může mít maximálně 255 znaků.']"
+                :rules="[v => v == null || (v.length <= 255) || 'Poznámka může mít maximálně 255 znaků.']"
                 label="Poznámka zpracovatele"
         ></v-textarea>
 

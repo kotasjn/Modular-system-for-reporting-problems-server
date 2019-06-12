@@ -49858,7 +49858,11 @@ var render = function() {
           rows: "1",
           rules: [
             function(v) {
-              return v.length <= 255 || "Poznámka může mít maximálně 255 znaků."
+              return (
+                v == null ||
+                v.length <= 255 ||
+                "Poznámka může mít maximálně 255 znaků."
+              )
             }
           ],
           label: "Poznámka zpracovatele"
@@ -93708,6 +93712,9 @@ var territory = Object(_helpers_territory__WEBPACK_IMPORTED_MODULE_1__["getLocal
     }
   },
   actions: {
+    login: function login(context) {
+      context.commit("login");
+    },
     updateReport: function updateReport(context, newReport) {
       context.commit('updateReport', newReport);
     },

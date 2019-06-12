@@ -77,6 +77,9 @@ export default {
         }
     },
     actions: {
+        login(context) {
+            context.commit("login");
+        },
         updateReport(context, newReport) {
             context.commit('updateReport', newReport)
         },

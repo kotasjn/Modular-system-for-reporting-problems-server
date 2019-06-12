@@ -17,4 +17,8 @@ class ModuleData extends Model
     public function module() {
         return $this->belongsTo(Module::class);
     }
+
+    public function inputData() {
+        return $this->hasMany(InputData::class);
+    }
 }

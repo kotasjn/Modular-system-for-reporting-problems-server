@@ -13,7 +13,7 @@ class CreateInputDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('input_datas', function (Blueprint $table) {
+        Schema::create('input_data', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->string('data');
@@ -22,7 +22,7 @@ class CreateInputDataTable extends Migration
             $table->unsignedInteger('module_data_id');
 
             $table->foreign('input_id')->references('id')->on('inputs')->onDelete('cascade');
-            $table->foreign('module_data_id')->references('id')->on('module_datas')->onDelete('cascade');
+            $table->foreign('module_data_id')->references('id')->on('module_data')->onDelete('cascade');
         });
     }
 
