@@ -12307,6 +12307,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -17066,7 +17079,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\ntable>tr>td[data-v-4f9c4974] {\n    padding-top: 0.5em;\n    padding-bottom: 0.5em;\n}\ntable>tr>th[data-v-4f9c4974] {\n    padding-right: 0.5em;\n}\n.image[data-v-4f9c4974] {\n    width: 100px;\n    height: 100px;\n    background-size: cover;\n    cursor: pointer;\n    margin: 5px;\n    border-radius: 3px;\n    border: 1px solid lightgray;\n    -o-object-fit: cover;\n       object-fit: cover;\n}\n\n", ""]);
+exports.push([module.i, "\ntable>tr>td[data-v-4f9c4974] {\n    padding-top: 0.5em;\n    padding-bottom: 0.5em;\n}\ntable>tr>th[data-v-4f9c4974] {\n    padding-right: 0.5em;\n    padding-top: 0.5em;\n    padding-bottom: 0.5em;\n    vertical-align: top;\n}\n.image[data-v-4f9c4974] {\n    width: 100px;\n    height: 100px;\n    background-size: cover;\n    cursor: pointer;\n    margin: 5px;\n    border-radius: 3px;\n    border: 1px solid lightgray;\n    -o-object-fit: cover;\n       object-fit: cover;\n}\n\n", ""]);
 
 // exports
 
@@ -50155,158 +50168,206 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
-              _c("table", [
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [_vm._v("ID")]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "body-1" }, [
-                    _vm._v(_vm._s(_vm.report.id))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [_vm._v("Titulek")]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "body-1" }, [
-                    _vm._v(_vm._s(_vm.report.title))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [
-                    _vm._v("Kategorie")
+              _c(
+                "table",
+                [
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [_vm._v("ID")]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "body-1" }, [
+                      _vm._v(_vm._s(_vm.report.id))
+                    ])
                   ]),
                   _vm._v(" "),
-                  _vm.report.category_id === 1
-                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Zeleň")])
-                    : _vm.report.category_id === 2
-                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Odpad")])
-                    : _vm.report.category_id === 3
-                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Doprava")])
-                    : _vm.report.category_id === 4
-                    ? _c("td", { staticClass: "body-1" }, [_vm._v("Mobiliář")])
-                    : _vm.report.category_id === 5
-                    ? _c("td", { staticClass: "body-1" }, [
-                        _vm._v("Veřejné osvětlení")
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [
+                      _vm._v("Titulek")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "body-1" }, [
+                      _vm._v(_vm._s(_vm.report.title))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [
+                      _vm._v("Kategorie")
+                    ]),
+                    _vm._v(" "),
+                    _vm.report.category_id === 1
+                      ? _c("td", { staticClass: "body-1" }, [_vm._v("Zeleň")])
+                      : _vm.report.category_id === 2
+                      ? _c("td", { staticClass: "body-1" }, [_vm._v("Odpad")])
+                      : _vm.report.category_id === 3
+                      ? _c("td", { staticClass: "body-1" }, [_vm._v("Doprava")])
+                      : _vm.report.category_id === 4
+                      ? _c("td", { staticClass: "body-1" }, [
+                          _vm._v("Mobiliář")
+                        ])
+                      : _vm.report.category_id === 5
+                      ? _c("td", { staticClass: "body-1" }, [
+                          _vm._v("Veřejné osvětlení")
+                        ])
+                      : _c("td", { staticClass: "body-1" })
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [_vm._v("Stav")]),
+                    _vm._v(" "),
+                    _vm.report.state === 0
+                      ? _c(
+                          "td",
+                          { staticClass: "body-1" },
+                          [
+                            _vm._v("Čeká na schválení "),
+                            _vm.report.state === 0
+                              ? _c("font-awesome-icon", {
+                                  staticStyle: { color: "yellow" },
+                                  attrs: {
+                                    icon: "question-circle",
+                                    title: "Čeká na schválení"
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _vm.report.state === 1
+                      ? _c(
+                          "td",
+                          { staticClass: "body-1" },
+                          [
+                            _vm._v("Schváleno "),
+                            _vm.report.state === 1
+                              ? _c("font-awesome-icon", {
+                                  staticStyle: { color: "mediumblue" },
+                                  attrs: {
+                                    icon: "sync-alt",
+                                    title: "Schváleno"
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _vm.report.state === 2
+                      ? _c(
+                          "td",
+                          { staticClass: "body-1" },
+                          [
+                            _vm._v("Vyřešeno "),
+                            _vm.report.state === 2
+                              ? _c("font-awesome-icon", {
+                                  staticStyle: { color: "forestgreen" },
+                                  attrs: {
+                                    icon: "check-circle",
+                                    title: "Vyřešeno"
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _vm.report.state === 3
+                      ? _c(
+                          "td",
+                          { staticClass: "body-1" },
+                          [
+                            _vm._v("Zamítnuto "),
+                            _vm.report.state === 3
+                              ? _c("font-awesome-icon", {
+                                  staticStyle: { color: "red" },
+                                  attrs: {
+                                    icon: "times-circle",
+                                    title: "Zamítnuto"
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _c("td", { staticClass: "body-1" })
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [
+                      _vm._v("Zadavatel")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "body-1" }, [
+                      _vm._v(_vm._s(_vm.report.user.name))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [
+                      _vm._v("Řešitel")
+                    ]),
+                    _vm._v(" "),
+                    _vm.report.responsible != null
+                      ? _c("td", { staticClass: "body-1" }, [
+                          _vm._v(_vm._s(_vm.report.responsible.name))
+                        ])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [
+                      _vm._v("Vytvořeno")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "body-1" }, [
+                      _vm._v(_vm._s(_vm.report.created_at))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "subheading" }, [
+                      _vm._v("Poznámka uživatele")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "body-1" }, [
+                      _vm._v(_vm._s(_vm.report.userNote))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.report.moduleData.length > 0
+                    ? _c("tr", [
+                        _c(
+                          "th",
+                          { staticClass: "subheading font-weight-bold" },
+                          [_vm._v("Data modulů:")]
+                        )
                       ])
-                    : _c("td", { staticClass: "body-1" })
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [_vm._v("Stav")]),
+                    : _vm._e(),
                   _vm._v(" "),
-                  _vm.report.state === 0
-                    ? _c(
+                  _vm._l(_vm.report.moduleData, function(module) {
+                    return _c("tr", [
+                      _c("th", { staticClass: "subheading" }, [
+                        _vm._v(_vm._s(module.name))
+                      ]),
+                      _vm._v(" "),
+                      _c(
                         "td",
                         { staticClass: "body-1" },
-                        [
-                          _vm._v("Čeká na schválení "),
-                          _vm.report.state === 0
-                            ? _c("font-awesome-icon", {
-                                staticStyle: { color: "yellow" },
-                                attrs: {
-                                  icon: "question-circle",
-                                  title: "Čeká na schválení"
-                                }
-                              })
-                            : _vm._e()
-                        ],
-                        1
+                        _vm._l(module.inputData, function(inputData) {
+                          return _c("p", [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(
+                                  inputData.title + ": " + inputData.data
+                                ) +
+                                "\n                        "
+                            )
+                          ])
+                        }),
+                        0
                       )
-                    : _vm.report.state === 1
-                    ? _c(
-                        "td",
-                        { staticClass: "body-1" },
-                        [
-                          _vm._v("Schváleno "),
-                          _vm.report.state === 1
-                            ? _c("font-awesome-icon", {
-                                staticStyle: { color: "mediumblue" },
-                                attrs: { icon: "sync-alt", title: "Schváleno" }
-                              })
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    : _vm.report.state === 2
-                    ? _c(
-                        "td",
-                        { staticClass: "body-1" },
-                        [
-                          _vm._v("Vyřešeno "),
-                          _vm.report.state === 2
-                            ? _c("font-awesome-icon", {
-                                staticStyle: { color: "forestgreen" },
-                                attrs: {
-                                  icon: "check-circle",
-                                  title: "Vyřešeno"
-                                }
-                              })
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    : _vm.report.state === 3
-                    ? _c(
-                        "td",
-                        { staticClass: "body-1" },
-                        [
-                          _vm._v("Zamítnuto "),
-                          _vm.report.state === 3
-                            ? _c("font-awesome-icon", {
-                                staticStyle: { color: "red" },
-                                attrs: {
-                                  icon: "times-circle",
-                                  title: "Zamítnuto"
-                                }
-                              })
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    : _c("td", { staticClass: "body-1" })
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [
-                    _vm._v("Zadavatel")
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "body-1" }, [
-                    _vm._v(_vm._s(_vm.report.user.name))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [_vm._v("Řešitel")]),
-                  _vm._v(" "),
-                  _vm.report.responsible != null
-                    ? _c("td", { staticClass: "body-1" }, [
-                        _vm._v(_vm._s(_vm.report.responsible.name))
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [
-                    _vm._v("Vytvořeno")
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "body-1" }, [
-                    _vm._v(_vm._s(_vm.report.created_at))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("th", { staticClass: "subheading" }, [
-                    _vm._v("Poznámka uživatele")
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "body-1" }, [
-                    _vm._v(_vm._s(_vm.report.userNote))
-                  ])
-                ])
-              ]),
+                    ])
+                  })
+                ],
+                2
+              ),
               _vm._v(" "),
               _c(
                 "div",

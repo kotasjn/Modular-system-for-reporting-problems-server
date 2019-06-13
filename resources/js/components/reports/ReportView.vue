@@ -49,6 +49,19 @@
                         <th class="subheading">Poznámka uživatele</th>
                         <td class="body-1">{{ report.userNote }}</td>
                     </tr>
+
+                    <tr v-if="report.moduleData.length > 0">
+                        <th class="subheading font-weight-bold">Data modulů:</th>
+                    </tr>
+
+                    <tr v-for="module in report.moduleData">
+                        <th class="subheading">{{ module.name }}</th>
+                        <td class="body-1">
+                            <p v-for="inputData in module.inputData">
+                                {{ inputData.title + ": " +  inputData.data }}
+                            </p>
+                        </td>
+                    </tr>
                 </table>
 
                 <div>
@@ -157,6 +170,9 @@
 
     table>tr>th {
         padding-right: 0.5em;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        vertical-align: top;
     }
 
     .image {
