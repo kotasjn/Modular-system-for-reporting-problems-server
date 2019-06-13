@@ -15,9 +15,17 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
+import * as VueGoogleMaps from "vue2-google-maps";
+
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(Vuetify);
+Vue.use(VueGoogleMaps, {
+    load: {
+        key: "AIzaSyBPY3Toodegw-vfeLdiAhBH7ly-C9io_8s",
+        libraries: "places"
+    }
+});
 
 const store = new Vuex.Store(StoreData);
 

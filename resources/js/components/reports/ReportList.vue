@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
 
     <div class="card">
         <div class="card-header">Podněty</div>
@@ -12,18 +12,16 @@
                           class="elevation-1">
                 <template v-slot:items="props">
                     <td class="text-xs-left">{{ props.item.title }}</td>
-                    <td class="text-xs-center">
+                    <td class="text-xs-center" v-if="props.item.category_id === 1">Zeleň</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 2">Odpad</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 3">Doprava</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 4">Mobiliář</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 5">Veřejné osvětlení</td>
+                    <td class="text-xs-center" v-else></td>
 
-                        <p v-if="props.item.category_id === 1" class="body-1">Zeleň</p>
-                        <p v-else-if="props.item.category_id === 2" class="body-1">Odpad</p>
-                        <p v-else-if="props.item.category_id === 3" class="body-1">Doprava</p>
-                        <p v-else-if="props.item.category_id === 4" class="body-1">Mobiliář</p>
-                        <p v-else-if="props.item.category_id === 5" class="body-1">Veřejné osvětlení</p>
-                        <p v-else class="body-1"></p>
-
+                    <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{
+                        getName(props.item.responsible_user_id) }}
                     </td>
-
-                    <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{ getName(props.item.responsible_user_id) }}</td>
                     <td v-else class="text-xs-center">?</td>
 
                     <td class="text-xs-center">{{ props.item.created_at }}</td>
@@ -40,11 +38,9 @@
 
                     </td>
                     <td class="text-xs-center">
-
-                            <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2">
-                                <v-icon>remove_red_eye</v-icon>
-                            </v-btn>
-
+                        <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2">
+                            <v-icon>remove_red_eye</v-icon>
+                        </v-btn>
                     </td>
                 </template>
             </v-data-table>
@@ -111,7 +107,7 @@
 
                 let employees = this.currentTerritory.employees;
 
-                for(let i = 0; i < employees.length; i++){
+                for (let i = 0; i < employees.length; i++) {
                     if (employees[i].id === id) return employees[i].name;
                 }
             }
@@ -134,8 +130,5 @@
 
 <style scoped>
 
-    .centered-cell {
-        text-align: center;
-    }
 
 </style>

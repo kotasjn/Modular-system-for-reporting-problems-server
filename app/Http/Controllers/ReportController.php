@@ -69,6 +69,11 @@ class ReportController extends Controller
             $report->user = $report->user()->first();
             $report->responsible = User::find($report->responsible_user_id);
 
+            $report->location = (object)[
+                'lat' => $report->location->getLat(),
+                'lng' => $report->location->getLng(),
+            ];
+
             $report->moduleData = $report->moduleData()
                 ->join('modules', 'modules.id', '=', 'module_data.module_id')
                 ->get(['module_data.id', 'modules.name']);
@@ -122,6 +127,20 @@ class ReportController extends Controller
             $report->photos = $arrayPhotos;
             $report->user = $report->user()->first();
             $report->responsible = User::find($report->responsible_user_id);
+
+            $report->location = (object)[
+                'lat' => $report->location->getLat(),
+                'lng' => $report->location->getLng(),
+            ];
+
+            $report->moduleData = $report->moduleData()
+                ->join('modules', 'modules.id', '=', 'module_data.module_id')
+                ->get(['module_data.id', 'modules.name']);
+
+            foreach ($report->moduleData as $moduleData) {
+                $moduleData->inputData = $moduleData->inputData()->join('inputs', 'inputs.id', '=', 'input_data.input_id')
+                    ->get(['input_data.id', 'inputs.title', 'input_data.data']);
+            }
 
             unset($report['user_id']);
 

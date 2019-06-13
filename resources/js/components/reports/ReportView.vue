@@ -27,10 +27,22 @@
                     </tr>
                     <tr>
                         <th class="subheading">Stav</th>
-                        <td v-if="report.state === 0" class="body-1">Čeká na schválení <font-awesome-icon v-if="report.state === 0" icon="question-circle" style="color: yellow" title="Čeká na schválení"/></td>
-                        <td v-else-if="report.state === 1" class="body-1">Schváleno <font-awesome-icon v-if="report.state === 1" icon="sync-alt" style="color: mediumblue" title="Schváleno"/></td>
-                        <td v-else-if="report.state === 2" class="body-1">Vyřešeno <font-awesome-icon v-if="report.state === 2" icon="check-circle" style="color: forestgreen" title="Vyřešeno"/></td>
-                        <td v-else-if="report.state === 3" class="body-1">Zamítnuto <font-awesome-icon v-if="report.state === 3" icon="times-circle" style="color: red" title="Zamítnuto"/></td>
+                        <td v-if="report.state === 0" class="body-1">Čeká na schválení
+                            <font-awesome-icon v-if="report.state === 0" icon="question-circle" style="color: yellow"
+                                               title="Čeká na schválení"/>
+                        </td>
+                        <td v-else-if="report.state === 1" class="body-1">Schváleno
+                            <font-awesome-icon v-if="report.state === 1" icon="sync-alt" style="color: mediumblue"
+                                               title="Schváleno"/>
+                        </td>
+                        <td v-else-if="report.state === 2" class="body-1">Vyřešeno
+                            <font-awesome-icon v-if="report.state === 2" icon="check-circle" style="color: forestgreen"
+                                               title="Vyřešeno"/>
+                        </td>
+                        <td v-else-if="report.state === 3" class="body-1">Zamítnuto
+                            <font-awesome-icon v-if="report.state === 3" icon="times-circle" style="color: red"
+                                               title="Zamítnuto"/>
+                        </td>
                         <td v-else class="body-1"></td>
                     </tr>
                     <tr>
@@ -50,6 +62,11 @@
                         <td class="body-1">{{ report.userNote }}</td>
                     </tr>
 
+                    <tr>
+                        <th class="subheading">Poznámka řešitele</th>
+                        <td class="body-1">{{ report.employeeNote }}</td>
+                    </tr>
+
                     <tr v-if="report.moduleData.length > 0">
                         <th class="subheading font-weight-bold">Data modulů:</th>
                     </tr>
@@ -58,17 +75,25 @@
                         <th class="subheading">{{ module.name }}</th>
                         <td class="body-1">
                             <p v-for="inputData in module.inputData">
-                                {{ inputData.title + ": " +  inputData.data }}
+                                {{ inputData.title + ": " + inputData.data }}
                             </p>
                         </td>
                     </tr>
                 </table>
 
-                <div>
+                <div style="margin-bottom: 1em">
                     <img class="image" v-for="(photo, i) in report.photos" :src="photo" :key="i" @click="index = i">
                     <vue-gallery-slideshow :images="report.photos" :index="index"
                                            @close="index = null"></vue-gallery-slideshow>
                 </div>
+
+
+                <gmap-map :center="report.location"
+                          :zoom="15"
+                          style="width:100%;  height: 300px;">
+                    <gmap-marker :position="report.location"></gmap-marker>
+                </gmap-map>
+
 
                 <div class="wrapper-button-bottom">
                     <div class="leftcolumn">
@@ -86,7 +111,8 @@
             <div class="card-header">Detail podnětu</div>
             <div class="card-body">
 
-                <ReportEdit v-bind:report="report" v-on:cancel-edit="editReport" v-on:report-saved="savedReport"></ReportEdit>
+                <ReportEdit v-bind:report="report" v-on:cancel-edit="editReport"
+                            v-on:report-saved="savedReport"></ReportEdit>
 
             </div>
         </div>
@@ -112,6 +138,10 @@
                     title: '',
                     state: null,
                     category_id: null,
+                    location: {
+                        lat: 0,
+                        lng: 0
+                    },
                     responsible_user_id: null,
                     responsible: {
                         name: '',
@@ -120,11 +150,22 @@
                         name: '',
                     },
                     userNote: '',
-                    employeeNote: ''
+                    employeeNote: '',
+                    moduleData: [{
+                        id: null,
+                        name: '',
+                        inputData: [{
+                            id: null,
+                            title: '',
+                            data: ''
+                        }]
+                    }]
                 },
                 index: null,
-                edit: false,
-                isLoading: true
+                edit:
+                    false,
+                isLoading:
+                    true
             }
         },
         computed: {
@@ -139,8 +180,7 @@
             editReport() {
                 this.edit = !this.edit;
             },
-            savedReport(newReport)
-            {
+            savedReport(newReport) {
                 this.report = newReport;
                 this.$store.commit("updateReport", newReport);
                 this.edit = !this.edit;
@@ -150,7 +190,7 @@
             }
         },
         watch: {
-            report(){
+            report() {
                 this.isLoading = false;
             }
         },
@@ -163,12 +203,12 @@
 
 <style scoped>
 
-    table>tr>td {
+    table > tr > td {
         padding-top: 0.5em;
         padding-bottom: 0.5em;
     }
 
-    table>tr>th {
+    table > tr > th {
         padding-right: 0.5em;
         padding-top: 0.5em;
         padding-bottom: 0.5em;
