@@ -1,51 +1,46 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-
     <div class="card">
         <div class="card-header">Podněty</div>
 
         <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
 
-        <div class="card-body">
+        <v-data-table :headers="headers"
+                      :items="reports"
+                      class="elevation-1">
+            <template v-slot:items="props">
+                <td class="text-xs-left">{{ props.item.title }}</td>
+                <td class="text-xs-center" v-if="props.item.category_id === 1">Zeleň</td>
+                <td class="text-xs-center" v-else-if="props.item.category_id === 2">Odpad</td>
+                <td class="text-xs-center" v-else-if="props.item.category_id === 3">Doprava</td>
+                <td class="text-xs-center" v-else-if="props.item.category_id === 4">Mobiliář</td>
+                <td class="text-xs-center" v-else-if="props.item.category_id === 5">Veřejné osvětlení</td>
+                <td class="text-xs-center" v-else></td>
 
-            <v-data-table :headers="headers"
-                          :items="reports"
-                          class="elevation-1">
-                <template v-slot:items="props">
-                    <td class="text-xs-left">{{ props.item.title }}</td>
-                    <td class="text-xs-center" v-if="props.item.category_id === 1">Zeleň</td>
-                    <td class="text-xs-center" v-else-if="props.item.category_id === 2">Odpad</td>
-                    <td class="text-xs-center" v-else-if="props.item.category_id === 3">Doprava</td>
-                    <td class="text-xs-center" v-else-if="props.item.category_id === 4">Mobiliář</td>
-                    <td class="text-xs-center" v-else-if="props.item.category_id === 5">Veřejné osvětlení</td>
-                    <td class="text-xs-center" v-else></td>
+                <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{
+                    getName(props.item.responsible_user_id) }}
+                </td>
+                <td v-else class="text-xs-center">?</td>
 
-                    <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{
-                        getName(props.item.responsible_user_id) }}
-                    </td>
-                    <td v-else class="text-xs-center">?</td>
+                <td class="text-xs-center">{{ props.item.created_at }}</td>
+                <td class="text-xs-center">
 
-                    <td class="text-xs-center">{{ props.item.created_at }}</td>
-                    <td class="text-xs-center">
+                    <font-awesome-icon v-if="props.item.state === 0" icon="question-circle" style="color: yellow"
+                                       title="Čeká na schválení"/>
+                    <font-awesome-icon v-if="props.item.state === 1" icon="sync-alt" style="color: mediumblue"
+                                       title="Schváleno"/>
+                    <font-awesome-icon v-if="props.item.state === 2" icon="check-circle" style="color: forestgreen"
+                                       title="Vyřešeno"/>
+                    <font-awesome-icon v-if="props.item.state === 3" icon="times-circle" style="color: red"
+                                       title="Zamítnuto"/>
 
-                        <font-awesome-icon v-if="props.item.state === 0" icon="question-circle" style="color: yellow"
-                                           title="Čeká na schválení"/>
-                        <font-awesome-icon v-if="props.item.state === 1" icon="sync-alt" style="color: mediumblue"
-                                           title="Schváleno"/>
-                        <font-awesome-icon v-if="props.item.state === 2" icon="check-circle" style="color: forestgreen"
-                                           title="Vyřešeno"/>
-                        <font-awesome-icon v-if="props.item.state === 3" icon="times-circle" style="color: red"
-                                           title="Zamítnuto"/>
-
-                    </td>
-                    <td class="text-xs-center">
-                        <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2">
-                            <v-icon>remove_red_eye</v-icon>
-                        </v-btn>
-                    </td>
-                </template>
-            </v-data-table>
-
-        </div>
+                </td>
+                <td class="text-xs-center">
+                    <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2">
+                        <v-icon>remove_red_eye</v-icon>
+                    </v-btn>
+                </td>
+            </template>
+        </v-data-table>
     </div>
 
 </template>
@@ -58,7 +53,7 @@
                 isLoading: true,
                 headers: [
                     {
-                        text: 'Title',
+                        text: 'Titulek',
                         align: 'left',
                         sortable: false,
                         value: 'title'

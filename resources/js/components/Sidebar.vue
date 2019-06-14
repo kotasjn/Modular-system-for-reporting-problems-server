@@ -61,19 +61,10 @@
             </router-link>
         </li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
+            <router-link class="nav-link" :to="`/territories/${currentTerritory.id}/modules`">
                 <font-awesome-icon icon="folder"/>
                 <span>Moduly</span>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                <router-link class="nav-link" to="">Modul 1</router-link>
-                <router-link class="nav-link" to="">Modul 2</router-link>
-                <router-link class="nav-link" to="">Modul 3</router-link>
-                <div class="dropdown-divider"></div>
-                <h6 class="dropdown-header">Ostatní:</h6>
-                <router-link class="nav-link" to="">Nastavení</router-link>
-            </div>
+            </router-link>
         </li>
         <li class="nav-item last">
             <router-link class="nav-link" to="/bug">

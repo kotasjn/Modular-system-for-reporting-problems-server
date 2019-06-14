@@ -64,7 +64,8 @@
                 <v-btn @click="$emit('cancel-edit', null)">ZRUŠIT</v-btn>
             </div>
             <div class="rightcolumn">
-                <v-btn :disabled="!valid" @click="validate" color="teal" class="white--text">ODESLAT</v-btn>
+                <v-btn :disabled="!valid" @click="" color="red darken-4" class="white--text">ODSTRANIT</v-btn>
+                <v-btn :disabled="!valid" @click="validate" color="teal" class="white--text">ULOŽIT</v-btn>
             </div>
         </div>
 

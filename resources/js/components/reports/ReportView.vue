@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="card" v-if="!edit">
+    <div class="card">
+        <div v-if="!edit">
             <div class="card-header">Detail podnětu</div>
 
             <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
@@ -9,15 +9,11 @@
 
                 <table>
                     <tr>
-                        <th class="subheading">ID</th>
-                        <td class="body-1">{{ report.id }}</td>
-                    </tr>
-                    <tr>
-                        <th class="subheading">Titulek</th>
+                        <th class="subheading">Titulek:</th>
                         <td class="body-1">{{ report.title }}</td>
                     </tr>
                     <tr>
-                        <th class="subheading">Kategorie</th>
+                        <th class="subheading">Kategorie:</th>
                         <td v-if="report.category_id === 1" class="body-1">Zeleň</td>
                         <td v-else-if="report.category_id === 2" class="body-1">Odpad</td>
                         <td v-else-if="report.category_id === 3" class="body-1">Doprava</td>
@@ -26,7 +22,7 @@
                         <td v-else class="body-1"></td>
                     </tr>
                     <tr>
-                        <th class="subheading">Stav</th>
+                        <th class="subheading">Stav:</th>
                         <td v-if="report.state === 0" class="body-1">Čeká na schválení
                             <font-awesome-icon v-if="report.state === 0" icon="question-circle" style="color: yellow"
                                                title="Čeká na schválení"/>
@@ -46,24 +42,24 @@
                         <td v-else class="body-1"></td>
                     </tr>
                     <tr>
-                        <th class="subheading">Zadavatel</th>
+                        <th class="subheading">Zadavatel:</th>
                         <td class="body-1">{{ report.user.name }}</td>
                     </tr>
                     <tr>
-                        <th class="subheading">Řešitel</th>
+                        <th class="subheading">Řešitel:</th>
                         <td v-if="report.responsible != null" class="body-1">{{ report.responsible.name }}</td>
                     </tr>
                     <tr>
-                        <th class="subheading">Vytvořeno</th>
+                        <th class="subheading">Vytvořeno:</th>
                         <td class="body-1">{{ report.created_at }}</td>
                     </tr>
                     <tr>
-                        <th class="subheading">Poznámka uživatele</th>
+                        <th class="subheading">Poznámka uživatele:</th>
                         <td class="body-1">{{ report.userNote }}</td>
                     </tr>
 
                     <tr>
-                        <th class="subheading">Poznámka řešitele</th>
+                        <th class="subheading">Poznámka řešitele:</th>
                         <td class="body-1">{{ report.employeeNote }}</td>
                     </tr>
 
@@ -74,9 +70,11 @@
                     <tr v-for="module in report.moduleData">
                         <th class="subheading">{{ module.name }}</th>
                         <td class="body-1">
-                            <p v-for="inputData in module.inputData">
-                                {{ inputData.title + ": " + inputData.data }}
-                            </p>
+                            <ul>
+                                <li v-for="inputData in module.inputData">
+                                    {{ inputData.title + ": " + inputData.data }}
+                                </li>
+                            </ul>
                         </td>
                     </tr>
                 </table>
@@ -107,12 +105,12 @@
             </div>
         </div>
 
-        <div class="card" v-if="edit">
-            <div class="card-header">Detail podnětu</div>
+        <div v-if="edit">
+            <div class="card-header">Úprava podnětu</div>
             <div class="card-body">
 
                 <ReportEdit v-bind:report="report" v-on:cancel-edit="editReport"
-                            v-on:report-saved="savedReport"></ReportEdit>
+                            v-on:report-saved="saveReport"></ReportEdit>
 
             </div>
         </div>
@@ -162,10 +160,8 @@
                     }]
                 },
                 index: null,
-                edit:
-                    false,
-                isLoading:
-                    true
+                edit: false,
+                isLoading: true
             }
         },
         computed: {
@@ -180,7 +176,7 @@
             editReport() {
                 this.edit = !this.edit;
             },
-            savedReport(newReport) {
+            saveReport(newReport) {
                 this.report = newReport;
                 this.$store.commit("updateReport", newReport);
                 this.edit = !this.edit;

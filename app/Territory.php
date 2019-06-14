@@ -33,11 +33,11 @@ class Territory extends Model
         return $this->hasMany(ProblemSolver::class);
     }
 
-    public function report() {
+    public function reports() {
         return $this->hasMany(Report::class);
     }
 
-    public function activeModule() {
-        return $this->hasMany(ActiveModule::class);
+    public function modules() {
+        return $this->hasMany(Module::class);
     }
 }

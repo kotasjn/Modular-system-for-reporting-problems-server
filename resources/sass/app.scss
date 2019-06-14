@@ -27,8 +27,8 @@
 }
 
 div.card {
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   overflow-x: auto;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12) !important;
 }
 
 
@@ -45,6 +45,11 @@ div.v-progress-linear {
 }
 
 .wrapper-button-bottom {
+   margin-top: 1.25rem;
+   overflow: hidden;
+ }
+
+.wrapper-button-top {
   margin-top: 1.25rem;
 }
 

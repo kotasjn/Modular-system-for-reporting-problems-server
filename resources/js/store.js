@@ -12,7 +12,8 @@ export default {
         auth_error: null,
         currentUser: user,
         currentTerritory: territory,
-        reports: []
+        reports: [],
+        modules: []
     },
     getters: {
         isLoading(state) {
@@ -35,6 +36,9 @@ export default {
         },
         reports(state) {
             return state.reports;
+        },
+        modules(state) {
+            return state.modules;
         }
     },
     mutations: {
@@ -74,6 +78,19 @@ export default {
                     state.reports[index] = newReport
                 }
             });
+        },
+        updateModules(state, payload) {
+            state.modules = payload;
+        },
+        updateModule(state, newModule) {
+            state.modules.forEach((module, index) => {
+                if (module.id === newModule.id) {
+                    state.modules[index] = newModule
+                }
+            });
+        },
+        authError(state, bool) {
+            state.auth_error = bool;
         }
     },
     actions: {
@@ -93,6 +110,12 @@ export default {
             axios.get(`/api/territories/${context.state.currentTerritory.id}`)
                 .then((response) => {
                     context.commit('updateTerritory', response.data.territory)
+                })
+        },
+        getModules(context) {
+            axios.get(`/api/territories/${context.state.currentTerritory.id}/modules/`)
+                .then((response) => {
+                    context.commit('updateModules', response.data.modules)
                 })
         }
     }
