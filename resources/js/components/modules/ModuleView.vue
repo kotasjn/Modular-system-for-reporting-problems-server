@@ -10,7 +10,18 @@
 
             <div class="card-body">
 
-                <h6 class="title">{{ module.name }}</h6>
+                <table>
+                    <tr>
+                        <th class="subheading">Název modulu:</th>
+                        <td class="body-1">{{ module.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="subheading">Stav:</th>
+                        <td class="body-1">{{ module.active ? "Aktivní" : "Neaktivní"}}</td>
+                    </tr>
+                </table>
+
+                <v-divider></v-divider>
 
                 <div v-for="(input, index) in module.inputs" :key="index">
 
@@ -121,6 +132,7 @@
             },
             deleteModule(index) {
                 this.modules.splice(index,1);
+                this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules`);
             },
             back() {
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules`);

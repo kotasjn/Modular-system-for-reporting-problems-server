@@ -16,14 +16,14 @@ class CreateModulesTable extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->boolean('active')->default(false);
 
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('territory_id');
 
-            $table->foreign('category_id')->references('id')->on('categories')->onDelere('cascade');
-            $table->foreign('territory_id')->references('id')->on('territories')->onDelere('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('territory_id')->references('id')->on('territories')->onDelete('cascade');
         });
     }
 

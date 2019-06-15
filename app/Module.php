@@ -21,4 +21,8 @@ class Module extends Model
     public function moduleData() {
         return $this->hasMany(ModuleData::class);
     }
+
+    public function inputs() {
+        return $this->hasMany(Input::class);
+    }
 }

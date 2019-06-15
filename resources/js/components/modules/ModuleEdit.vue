@@ -34,15 +34,6 @@
                     required
             ></v-text-field>
 
-            <v-textarea
-                    v-model="input.hint"
-                    :counter="255"
-                    auto-grow
-                    rows="1"
-                    :rules="hintRules"
-                    label="Nápověda"
-            ></v-textarea>
-
             <v-select
                     v-model="input.inputType"
                     item-text="name"
@@ -80,9 +71,26 @@
 
             </div>
 
-            <v-divider v-if="inputIndex + 1 < editedModule.inputs.length" :key="`divider-${inputIndex}`"></v-divider>
+            <v-textarea
+                    v-model="input.hint"
+                    :counter="255"
+                    auto-grow
+                    rows="1"
+                    :rules="hintRules"
+                    label="Nápověda"
+            ></v-textarea>
+
+            <v-btn flat icon @click="deleteInput(inputIndex)" color="red darken-4" class="add_item">
+                <v-icon>close</v-icon> Odebrat input
+            </v-btn>
+
+            <v-divider></v-divider>
 
         </div>
+
+        <v-btn flat icon @click="addInput" color="teal" class="add_item">
+            <v-icon>add</v-icon> Přidat input
+        </v-btn>
 
         <div class="wrapper-button-bottom">
             <div class="leftcolumn">
@@ -103,37 +111,96 @@
         name: "ModuleEdit",
         props: ['module'],
         methods: {
-            saveModule() {
+            async saveModule() {
                 if (this.$refs.form.validate()) {
-                    axios.put(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$props.module.id}`, {})
+
+                    let res = await this.$dialog.warning({
+                        text: 'Opravdu chcete upravit modul? Pokud tak učiníte, přijdete o všechna dosud uložená data tohoto modulu.',
+                        title: 'Varování',
+                        actions: {
+                            false: 'Zpět',
+                            true: {
+                                color: 'red darken-4',
+                                text: 'Ano',
+                                handle: () => {
+                                    return new Promise(resolve => {
+                                        setTimeout(resolve, 100)
+                                    })
+                                }
+                            }
+                        }
+                    });
+
+                    if (res) {
+
+                        axios.put(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$props.module.id}`, {
+                            module: this.editedModule
+                        })
+                            .then(response => {
+                                console.log(response);
+                                this.$dialog.notify.success('Modul byl úspěšně uložen');
+                                this.$emit('module-saved', response.data.module);
+                            })
+                            .catch(error => {
+                                this.$dialog.notify.error('Modul se nepodařilo uložit');
+                                console.log(error);
+                            });
+                    }
+                }
+            },
+            async deleteModule() {
+
+                let res = await this.$dialog.warning({
+                    text: 'Opravdu chcete odstranit modul? Pokud tak učiníte, přijdete o všechna dosud uložená data tohoto modulu.',
+                    title: 'Varování',
+                    actions: {
+                        false: 'Zpět',
+                        true: {
+                            color: 'red darken-4',
+                            text: 'Ano',
+                            handle: () => {
+                                return new Promise(resolve => {
+                                    setTimeout(resolve, 100)
+                                })
+                            }
+                        }
+                    }
+                });
+
+                if (res) {
+
+                    axios.delete(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$props.module.id}`)
                         .then(response => {
                             console.log(response);
-                            this.$emit('module-saved', response.data.module);
+                            this.$dialog.notify.success('Modul byl úspěšně smazán');
+                            this.$emit('module-deleted', this.$props.module.id);
                         })
                         .catch(error => {
+                            this.$dialog.notify.error('Modul se nepodařilo smazat');
                             console.log(error);
                         });
                 }
-            },
-            deleteModule() {
-                axios.delete(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$props.module.id}`)
-                    .then(response => {
-                        console.log(response);
-                        this.$emit('module-deleted', this.$props.module.id);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            },
-            deleteItem(inputIndex, itemIndex) {
-                this.editedModule.inputs[inputIndex].items.splice(itemIndex,1);
             },
             addItem(inputIndex) {
                 this.editedModule.inputs[inputIndex].items.push({
                     text: ''
                 });
+            },
+            deleteItem(inputIndex, itemIndex) {
+                this.editedModule.inputs[inputIndex].items.splice(itemIndex,1);
+            },
+            addInput() {
+                this.editedModule.inputs.push({
+                    title: '',
+                    inputType: '',
+                    characters: null,
+                    hint: null,
+                    items: []
+                });
+            },
+            deleteInput(inputIndex) {
+                this.editedModule.inputs.splice(inputIndex,1);
             }
-
         },
         data() {
             return {
@@ -161,7 +228,7 @@
                 ],
                 inputTypes: [
                     {
-                        name: 'Spinner',
+                        name: 'Výběr z několika položek',
                         id: 'spinner',
                     },
                     {
@@ -218,6 +285,12 @@
     .delete-icon {
         float: right;
         width: 3em;
+    }
+
+    .add_item {
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0;
     }
 
 </style>
