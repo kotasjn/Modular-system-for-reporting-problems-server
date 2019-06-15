@@ -7,14 +7,13 @@ import TerritoryList from "./components/territories/TerritoryList";
 import TerritoryView from "./components/territories/TerritoryView";
 
 import ReportsMain from "./components/reports/ReportMain";
-import ReportEdit from "./components/reports/ReportEdit";
 import Reports from "./components/reports/ReportList";
 import Report from "./components/reports/ReportView";
 
 import ModulesMain from "./components/modules/ModuleMain";
-import ModuleEdit from "./components/modules/ModuleEdit";
 import Modules from "./components/modules/ModuleList";
 import Module from "./components/modules/ModuleView";
+import ModuleNew from "./components/modules/ModuleNew";
 
 export const routes = [
     {
@@ -72,6 +71,10 @@ export const routes = [
             {
                 path: '/',
                 component: Modules
+            },
+            {
+                path: 'create',
+                component: ModuleNew,
             },
             {
                 path: ':idModule',

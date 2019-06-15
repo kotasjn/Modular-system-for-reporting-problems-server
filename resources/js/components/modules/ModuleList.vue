@@ -4,9 +4,10 @@
 
         <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
 
-        <div class="wrapper-button-top">
-            <v-btn @click="" color="teal" class="white--text btn-margin-right">+ NOVÝ MODUL</v-btn>
-        </div>
+        <v-btn flat icon @click="$router.push(`/territories/${currentTerritory.id}/modules/create`)" color="teal" class="add_item">
+            <v-icon>add</v-icon>
+            Přidat modul
+        </v-btn>
 
 
         <v-data-table :headers="headers"
@@ -111,9 +112,16 @@
     .elevation-1 {
         box-shadow: none;
     }
-    div.btn-margin-right {
+
+    div.wrapper-button-top button {
+        margin: 0;
+    }
+
+    .add_item {
+        width: calc(100% - 2.5rem);
+        margin-top: 1.25rem;
         margin-right: 1.25rem;
-        overflow: hidden;
+        margin-left: 1.25rem;
     }
 
 </style>

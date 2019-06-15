@@ -97,7 +97,6 @@
                 <v-btn @click="$emit('cancel-edit', null)">ZRUŠIT</v-btn>
             </div>
             <div class="rightcolumn">
-                <v-btn :disabled="!valid" @click="deleteModule" color="red darken-4" class="white--text">ODSTRANIT</v-btn>
                 <v-btn :disabled="!valid" @click="saveModule" color="teal" class="white--text">ULOŽIT</v-btn>
             </div>
         </div>
@@ -146,39 +145,6 @@
                                 console.log(error);
                             });
                     }
-                }
-            },
-            async deleteModule() {
-
-                let res = await this.$dialog.warning({
-                    text: 'Opravdu chcete odstranit modul? Pokud tak učiníte, přijdete o všechna dosud uložená data tohoto modulu.',
-                    title: 'Varování',
-                    actions: {
-                        false: 'Zpět',
-                        true: {
-                            color: 'red darken-4',
-                            text: 'Ano',
-                            handle: () => {
-                                return new Promise(resolve => {
-                                    setTimeout(resolve, 100)
-                                })
-                            }
-                        }
-                    }
-                });
-
-                if (res) {
-
-                    axios.delete(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$props.module.id}`)
-                        .then(response => {
-                            console.log(response);
-                            this.$dialog.notify.success('Modul byl úspěšně smazán');
-                            this.$emit('module-deleted', this.$props.module.id);
-                        })
-                        .catch(error => {
-                            this.$dialog.notify.error('Modul se nepodařilo smazat');
-                            console.log(error);
-                        });
                 }
             },
             addItem(inputIndex) {
@@ -247,7 +213,7 @@
                     v => (v && v.length <= 80) || 'Maximální délka je 80 znaků.'
                 ],
                 hintRules: [
-                    v => (v && v.length <= 255) || 'Poznámka může mít maximálně 255 znaků.'
+                    v => (null || v.length <= 255) || 'Poznámka může mít maximálně 255 znaků.'
                 ]
             }
         },

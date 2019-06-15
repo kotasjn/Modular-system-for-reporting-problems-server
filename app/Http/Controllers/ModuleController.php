@@ -318,6 +318,29 @@ class ModuleController extends Controller
     }
 
     /**
+     * Activate module.
+     *
+     * @param Territory $territory
+     * @param Module $module
+     * @return void
+     * @throws Exception
+     */
+    public function activate(Territory $territory, Module $module)
+    {
+        if ($territory->admin_id === Auth::id()) {
+
+            $module->active = !$module->active;
+            $module->update();
+
+            return response()->json([
+                'error' => false,
+            ], 200);
+        }
+
+        return abort('403');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Territory $territory

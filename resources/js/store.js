@@ -89,6 +89,9 @@ export default {
                 }
             });
         },
+        saveModule(state, newModule) {
+            state.modules.push(newModule);
+        },
         authError(state, bool) {
             state.auth_error = bool;
         }

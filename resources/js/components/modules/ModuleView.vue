@@ -19,6 +19,17 @@
                         <th class="subheading">Stav:</th>
                         <td class="body-1">{{ module.active ? "Aktivní" : "Neaktivní"}}</td>
                     </tr>
+                    <tr>
+                        <th class="subheading">Kategorie:</th>
+
+                        <td class="body-1" v-if="module.category_id === 1">Zeleň</td>
+                        <td class="body-1" v-else-if="module.category_id === 2">Odpad</td>
+                        <td class="body-1" v-else-if="module.category_id === 3">Doprava</td>
+                        <td class="body-1" v-else-if="module.category_id === 4">Mobiliář</td>
+                        <td class="body-1" v-else-if="module.category_id === 5">Veřejné osvětlení</td>
+                        <td class="body-1" v-else></td>
+
+                    </tr>
                 </table>
 
                 <v-divider></v-divider>
@@ -66,12 +77,10 @@
                 </div>
 
                 <div class="wrapper-button-bottom">
-                    <div class="leftcolumn">
                         <v-btn @click="back">ZPĚT</v-btn>
-                    </div>
-                    <div class="rightcolumn">
-                        <v-btn @click="editModule" color="teal" class="white--text">UPRAVIT</v-btn>
-                    </div>
+                        <v-btn @click="editModule" color="teal" class="white--text float-right">UPRAVIT</v-btn>
+                        <v-btn @click="activateModule" color="orange" class="white--text float-right">{{ module.active ? "DEAKTIVOVAT" : "AKTIVOVAT"}}</v-btn>
+                        <v-btn @click="deleteModule" color="red darken-4" class="white--text float-right">ODSTRANIT</v-btn>
                 </div>
             </div>
         </div>
@@ -82,7 +91,7 @@
             <div class="card-body">
 
                 <ModuleEdit v-bind:module="module" v-on:cancel-edit="editModule"
-                            v-on:module-saved="saveModule" v-on:module-deleted="deleteModule"></ModuleEdit>
+                            v-on:module-saved="saveModule"></ModuleEdit>
 
             </div>
         </div>
@@ -130,9 +139,79 @@
                 this.$store.commit("updateModule", newModule);
                 this.edit = !this.edit;
             },
-            deleteModule(index) {
-                this.modules.splice(index,1);
-                this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules`);
+            async deleteModule(index) {
+
+                let res = await this.$dialog.warning({
+                    text: 'Opravdu chcete odstranit modul? Pokud tak učiníte, přijdete o všechna dosud uložená data tohoto modulu.',
+                    title: 'Varování',
+                    actions: {
+                        false: 'Zpět',
+                        true: {
+                            color: 'red darken-4',
+                            text: 'Ano',
+                            handle: () => {
+                                return new Promise(resolve => {
+                                    setTimeout(resolve, 100)
+                                })
+                            }
+                        }
+                    }
+                });
+
+                if (res) {
+
+                    axios.delete(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$route.params.idModule}`)
+                        .then(response => {
+                            console.log(response);
+                            this.$dialog.notify.success('Modul byl úspěšně smazán');
+                            this.modules.splice(index, 1);
+                            this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules`);
+                        })
+                        .catch(error => {
+                            this.$dialog.notify.error('Modul se nepodařilo smazat');
+                            console.log(error);
+                        });
+                }
+            },
+            async activateModule() {
+
+                let message = (this.module.active) ? "Opravdu chcete deaktivovat modul? Pokud tak učiníte, modul již nebude viditelný pro ostatní uživatele." : "Opravdu chcete aktivovat modul? Pokud tak učiníte, modul bude viditelný pro všechny uživatele.";
+
+                let res = await this.$dialog.warning({
+                        text: message,
+                        title: 'Varování',
+                        actions: {
+                            false: 'Zpět',
+                            true: {
+                                color: 'red darken-4',
+                                text: 'Ano',
+                                handle: () => {
+                                    return new Promise(resolve => {
+                                        setTimeout(resolve, 100)
+                                    })
+                                }
+                            }
+                        }
+                    });
+
+                if (res) {
+
+                    axios.put(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$route.params.idModule}/activate`)
+                        .then(response => {
+                            console.log(response);
+                            if(this.module.active) {
+                                this.$dialog.notify.success('Modul byl úspěšně deaktivován');
+                                this.module.active = false;
+                            } else {
+                                this.$dialog.notify.success('Modul byl úspěšně aktivován');
+                                this.module.active = true;
+                            }
+                        })
+                        .catch(error => {
+                            this.$dialog.notify.error('Modul se nepodařilo aktivovat');
+                            console.log(error);
+                        });
+                }
             },
             back() {
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules`);
