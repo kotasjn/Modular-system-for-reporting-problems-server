@@ -4,7 +4,7 @@
 
         <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
 
-        <v-data-table :headers="headers"
+        <v-data-table v-if="currentTerritory" :headers="headers"
                       :items="reports"
                       class="elevation-1">
             <template v-slot:items="props">
@@ -92,7 +92,10 @@
                 return;
             }
 
-            this.$store.dispatch('getReports');
+            this.$store.dispatch('getReports').then(() =>{},error => {
+                this.$dialog.notify.error('Podněty se nepodařilo načíst. Zkuste prosím znovu načíst stránku.');
+                console.log(error);
+            });
         },
         methods: {
             showDetail(id) {

@@ -136,7 +136,7 @@ class AuthController extends Controller
 
         return response()->json([
             'error' => false,
-            'message' => 'Uživatel byl úspěšně odhlážen!'
+            'message' => 'Uživatel byl úspěšně odhlášen!'
         ], 200);
     }
 

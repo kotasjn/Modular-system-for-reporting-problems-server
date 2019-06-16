@@ -4,7 +4,7 @@
             <Header></Header>
             <div id="custom-wrapper">
                 <Sidebar/>
-                <div id="content" v-bind:class="[ isLoggedIn ? 'isLogged' : 'isNotLogged' ]">
+                <div id="content" v-bind:class="[ currentUser ? 'isLogged' : 'isNotLogged' ]">
 
                     <router-view></router-view>
 
@@ -24,8 +24,8 @@
             console.log('Component mounted.')
         },
         computed: {
-            isLoggedIn() {
-                return this.$store.getters.isLoggedIn;
+            currentUser() {
+                return this.$store.getters.currentUser;
             }
         },
         components: {

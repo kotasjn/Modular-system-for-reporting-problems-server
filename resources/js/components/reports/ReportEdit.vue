@@ -64,7 +64,6 @@
                 <v-btn @click="$emit('cancel-edit', null)">ZRUŠIT</v-btn>
             </div>
             <div class="rightcolumn">
-                <v-btn :disabled="!valid" @click="" color="red darken-4" class="white--text">ODSTRANIT</v-btn>
                 <v-btn :disabled="!valid" @click="validate" color="teal" class="white--text">ULOŽIT</v-btn>
             </div>
         </div>
@@ -91,14 +90,12 @@
                         responsible_user_id: this.editedReport.responsible_user_id,
                         userNote: this.editedReport.userNote,
                         employeeNote: this.editedReport.employeeNote
-                    })
-                        .then(response => {
-                            console.log(response);
-                            this.$emit('report-saved', response.data.report);
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
+                    }).then(response => {
+                        console.log(response);
+                        this.$emit('report-saved', response.data.report);
+                    }).catch(error => {
+                        console.log(error);
+                    });
                 }
             },
             getEmployees($category_id) {
@@ -106,13 +103,14 @@
                     params: {
                         category_id: $category_id
                     }
+                }).then(response => {
+                    this.employees = response.data.employees
+                }).catch(error => {
+                    this.$dialog.notify.error('Nepodařilo se načíst zaměstnane obce');
+                    console.log(error);
                 })
-                    .then((response) => {
-                        this.employees = response.data.employees
-                    })
             },
-            categoryChanged()
-            {
+            categoryChanged() {
                 this.getEmployees(this.report.category_id)
             },
         },

@@ -1,26 +1,26 @@
 import { setAuthorization } from "./general";
 
 export function login (credentials) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         axios.post('api/auth/login', credentials)
-            .then((response) => {
+            .then(response => {
                 setAuthorization(response.data.access_token);
-                res(response.data);
+                resolve(response.data);
             })
-            .catch((err) => {
-                rej("Špatné přihlašovací údaje")
+            .catch(error => {
+                reject(error);
             })
     })
 }
 
 export function register (credentials) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         axios.post('api/auth/register', credentials)
-            .then((response) => {
-                res(response.data);
+            .then(response => {
+                resolve(response.data);
             })
-            .catch((err) => {
-                rej("Špatné nebo chybějící údaje")
+            .catch(error => {
+                reject(error);
             })
     })
 }

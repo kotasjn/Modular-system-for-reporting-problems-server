@@ -1,5 +1,5 @@
 <template>
-    <ul class="sidebar navbar-nav" v-if="isLoggedIn">
+    <ul class="sidebar navbar-nav" v-if="currentUser">
         <li class="nav-item territory" v-if="currentTerritory">
             <router-link class="nav-link" :to="`/territories/${currentTerritory.id}`">
                 <div class="text-center">
@@ -60,7 +60,7 @@
                 <span>Uživatelé</span>
             </router-link>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item" v-if="currentUser.isAdmin">
             <router-link class="nav-link" :to="`/territories/${currentTerritory.id}/modules`">
                 <font-awesome-icon icon="folder"/>
                 <span>Moduly</span>
@@ -80,17 +80,18 @@
     export default {
         name: "Sidebar",
         mounted() {
-            if (this.currentTerritory.length) {
+            if (this.currentTerritory !== null && this.currentTerritory.length) {
                 return;
             }
 
-            if(this.isLoggedIn)
-                this.$store.dispatch('getTerritory');
+            if(this.currentUser) {
+                this.$store.dispatch('getTerritory').then(() => {}, error => {
+                    this.$dialog.notify.error('Nepodařilo se načíst data obce');
+                    console.log(error);
+                });
+            }
         },
         computed: {
-            isLoggedIn() {
-                return this.$store.getters.isLoggedIn
-            },
             currentUser() {
                 return this.$store.getters.currentUser
             },
@@ -134,11 +135,6 @@
     .navbar-nav .nav-link {
         padding-right: 0;
         padding-left: 0
-    }
-
-    .navbar-nav .dropdown-menu {
-        position: static;
-        float: none
     }
 
     .sidebar .nav-item {
@@ -201,28 +197,6 @@
 
     .item .item-number {
         font-size: 14px;
-    }
-
-    .dropdown-menu {
-        background-color: #009688;
-    }
-
-    .dropdown-item {
-        color: rgba(255, 255, 255, .7);
-    }
-
-    .dropdown-header {
-        color: rgba(255, 255, 255, 0.7);
-        padding: 0.5rem 1rem;
-    }
-
-    .dropdown-item:hover {
-        color: #fff;
-        background-color: #009688;
-    }
-
-    .dropdown-divider {
-        border-color: rgba(255, 255, 255, 0.7);
     }
 
 </style>

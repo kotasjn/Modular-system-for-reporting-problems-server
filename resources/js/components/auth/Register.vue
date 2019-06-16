@@ -119,12 +119,16 @@
                 if (this.$refs.form.validate()) {
 
                     register(this.$data.form)
-                        .then((res) => {
+                        .then(() => {
                             this.$dialog.notify.success('Registrace proběhla úspěšně');
                             this.$router.push({path: '/login'});
                         })
-                        .catch((error) => {
-                            this.$dialog.notify.error(`Registrace se nezdařila.\n${error}`);
+                        .catch(error => {
+                            if(error.response.status === 422) {
+                                this.$dialog.notify.error(`Registrace se nezdařila.\nÚčet pro daný email již existuje`);
+                            } else {
+                                this.$dialog.notify.error(`Registrace se nezdařila.`);
+                            }
                             console.log(error);
                         })
                 }

@@ -10,7 +10,7 @@
         <!-- Navbar -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                <template v-if="!isLoggedIn">
+                <template v-if="!currentUser">
                     <li>
                         <router-link to="/login" class="nav-link">Login</router-link>
                     </li>
@@ -41,17 +41,18 @@
         name: "app-header",
         methods: {
             logout() {
-                this.$store.commit('logout');
-                this.$dialog.notify.success('Odhlášení proběhlo úspěšně');
-                this.$router.push('/login');
+                this.$store.dispatch('logout').then(() => {
+                    this.$dialog.notify.success('Odhlášení proběhlo úspěšně');
+                    this.$router.push(`/login`);
+                }, error => {
+                    this.$dialog.notify.error('Odhlášení uživatele se nezdařilo');
+                    console.log(error);
+                });
             }
         },
         computed: {
             currentUser() {
                 return this.$store.getters.currentUser
-            },
-            isLoggedIn() {
-                return this.$store.getters.isLoggedIn
             }
         }
     }
@@ -77,7 +78,7 @@
     }
 
     #navbarSupportedContent {
-        width:100%;
+        width: 100%;
     }
 
     #navbarSupportedContent {

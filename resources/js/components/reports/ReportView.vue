@@ -92,14 +92,10 @@
                     <gmap-marker :position="report.location"></gmap-marker>
                 </gmap-map>
 
-
                 <div class="wrapper-button-bottom">
-                    <div class="leftcolumn">
-                        <v-btn @click="back">ZPĚT</v-btn>
-                    </div>
-                    <div class="rightcolumn">
-                        <v-btn @click="editReport" color="teal" class="white--text">UPRAVIT</v-btn>
-                    </div>
+                    <v-btn @click="back">ZPĚT</v-btn>
+                    <v-btn @click="editReport" color="teal" class="white--text float-right">UPRAVIT</v-btn>
+                    <v-btn @click="deleteReport" color="red darken-4" class="white--text float-right">ODSTRANIT</v-btn>
                 </div>
 
             </div>
@@ -125,10 +121,14 @@
     export default {
         name: "Report",
         created() {
-            axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/reports/${this.$route.params.idReport}`)
-                .then((response) => {
-                    this.report = response.data.report;
-                });
+            this.$store.dispatch('getReport', this.$route.params.idReport).then(response => {
+                console.log(response);
+                this.report = response.data.report;
+            }, error => {
+                this.$dialog.notify.error('Neexistující podnět');
+                console.log(error);
+                this.back();
+            })
         },
         data() {
             return {
@@ -182,7 +182,17 @@
 
                 this.report = newReport;
                 this.$store.commit("updateReport", newReport);
+                this.$dialog.notify.success('Podnět úspěšně uložen');
                 this.edit = !this.edit;
+            },
+            deleteReport() {
+                this.$store.dispatch("deleteReport", this.report).then(response => {
+                    this.$dialog.notify.success('Podnět byl úspěšně smazán');
+                    this.back();
+                }, error => {
+                    this.$dialog.notify.error('Podnět se nepodařilo odstranit');
+                    console.log(error);
+                })
             },
             changeCountOfReports(oldState, newState) {
                 if (oldState === 0) this.$store.commit("updateNumberOfWaitingReports", this.currentTerritory.waiting_reports - 1);

@@ -84,7 +84,15 @@
                 return;
             }
 
-            this.$store.dispatch('getModules');
+            this.$store.dispatch('getModules').then(() => {}, error => {
+                if(error.response.status === 403) {
+                    this.$dialog.notify.error('Nemáte oprávnění spravovat moduly obce');
+                    this.$router.push(`/`);
+                } else {
+                    this.$dialog.notify.error('Nepodařilo se načíst moduly obce');
+                }
+                console.log(error);
+            });
         },
         methods: {
             showDetail(id) {
