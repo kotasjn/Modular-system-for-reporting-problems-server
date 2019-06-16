@@ -13,6 +13,18 @@ export function login (credentials) {
     })
 }
 
+export function register (credentials) {
+    return new Promise((res, rej) => {
+        axios.post('api/auth/register', credentials)
+            .then((response) => {
+                res(response.data);
+            })
+            .catch((err) => {
+                rej("Špatné přihlašovací údaje")
+            })
+    })
+}
+
 export function getLocalUser () {
     const userStr = localStorage.getItem("user");
 

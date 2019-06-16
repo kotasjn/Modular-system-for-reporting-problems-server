@@ -9,7 +9,6 @@
                         :rules="[rules.required, rules.validEmail]"
                         label="Email"
                         color="teal"
-                        @input="dismissError"
                         required
                 ></v-text-field>
 
@@ -21,7 +20,6 @@
                         name="input-10-1"
                         label="Heslo"
                         color="teal"
-                        @input="dismissError"
                         @click:append="show = !show"
                 ></v-text-field>
 
@@ -32,19 +30,13 @@
                         class="no-margin-bottom-top"
                 ></v-checkbox>
 
-                <div class="form-group" v-if="authError">
-                    <div class="isa_error">
-                        <font-awesome-icon icon="times-circle"/>
-                        {{ authError }}
-                    </div>
-                </div>
 
                 <v-btn color="teal" class="white--text btn-full-width" @click="authenticate">Přihlásit se</v-btn>
             </v-form>
 
             <div class="form-group text-center" style="margin: 1em 0 0 0;">
-                Nemáš účet?
-                <router-link to="/register" class="nav-link">Zaregistruj se!</router-link>
+                Nemáte účet?
+                <router-link to="/register" class="nav-link">Zaregistrujte se!</router-link>
             </div>
 
         </div>
@@ -66,7 +58,7 @@
                 show: false,
                 rules: {
                     required: value => !!value || 'Povinné pole.',
-                    validEmail: value => /.+@.+/.test(value) || 'E-mail musí být ve správném formátu.'
+                    validEmail: value => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'E-mail musí být ve správném formátu.'
                 }
             }
         },
@@ -77,15 +69,14 @@
                 login(this.$data.login)
                     .then((res) => {
                         this.$store.commit("loginSuccess", res);
+                        this.$dialog.notify.success('Přihlášení proběhlo úspěšně');
                         this.$router.push({path: '/'});
                     })
                     .catch((error) => {
+                        this.$dialog.notify.error('Přihlášení se nezdařilo\nNeexistující kombinace přihlašovacích údajů');
                         this.$store.commit("loginFailed", {error});
                     })
             },
-            dismissError() {
-                this.$store.commit("authError", false);
-            }
         },
         computed: {
             authError() {

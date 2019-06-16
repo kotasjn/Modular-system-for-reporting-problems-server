@@ -1,4 +1,5 @@
-import Login from './components/auth/Login.vue';
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register"
 import Home from "./components/Home";
 import NotFound from "./components/NotFound";
 
@@ -26,6 +27,10 @@ export const routes = [
     {
         path: '/login',
         component: Login
+    },
+    {
+        path: '/register',
+        component: Register
     },
     {
         path: '/territories',

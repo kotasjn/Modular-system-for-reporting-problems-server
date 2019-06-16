@@ -42,6 +42,7 @@
         methods: {
             logout() {
                 this.$store.commit('logout');
+                this.$dialog.notify.success('Odhlášení proběhlo úspěšně');
                 this.$router.push('/login');
             }
         },
