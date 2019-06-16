@@ -128,9 +128,9 @@
                         module: this.newModule
                     }).then(response => {
                         console.log(response);
-                        this.$store.commit("saveModule", this.newModule);
+                        this.$store.commit("saveModule", response.data.module);
                         this.$dialog.notify.success('Modul byl úspěšně uložen');
-                        this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules/${response.module.id}`);
+                        this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules/${response.data.module.id}`);
                     })
                         .catch(error => {
                             this.$dialog.notify.error('Modul se nepodařilo uložit');
