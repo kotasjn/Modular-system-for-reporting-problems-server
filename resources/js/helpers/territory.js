@@ -1,9 +1,9 @@
 export function getLocalTerritory () {
-    const territory = localStorage.getItem("territory");
+    const territoryStr = localStorage.getItem("territory");
 
-    if(!territory) {
+    if(!territoryStr) {
         return null;
     }
 
-    return JSON.parse(territory);
+    return JSON.parse(territoryStr);
 }

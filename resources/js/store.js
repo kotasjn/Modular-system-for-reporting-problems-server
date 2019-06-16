@@ -54,7 +54,7 @@ export default {
             state.currentTerritory = Object.assign({}, payload.user.territories[0]);
 
             localStorage.setItem("user", JSON.stringify(state.currentUser));
-            localStorage.setItem("currentTerritory", JSON.stringify(state.currentTerritory));
+            localStorage.setItem("territory", JSON.stringify(state.currentTerritory));
         },
         loginFailed(state, payload) {
             state.loading = false;
@@ -64,6 +64,7 @@ export default {
             localStorage.removeItem("user");
             state.isLoggedIn = false;
             state.currentUser = null;
+            state.currentTerritory = null;
         },
         updateTerritory(state, payload) {
             state.currentTerritory = payload;

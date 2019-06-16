@@ -3,7 +3,9 @@
         <div class="card-header">Přihlášení</div>
         <div class="card-body">
 
-            <v-form ref="form" lazy-validation>
+            <v-form ref="form"
+                    v-model="valid"
+                    lazy-validation>
                 <v-text-field
                         v-model="login.email"
                         :rules="[rules.required, rules.validEmail]"
@@ -56,6 +58,7 @@
                     rememberMe: false
                 },
                 show: false,
+                valid: true,
                 rules: {
                     required: value => !!value || 'Povinné pole.',
                     validEmail: value => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'E-mail musí být ve správném formátu.'
@@ -64,19 +67,35 @@
         },
         methods: {
             authenticate() {
-                this.$store.dispatch('login');
 
-                login(this.$data.login)
-                    .then((res) => {
-                        this.$store.commit("loginSuccess", res);
-                        this.$dialog.notify.success('Přihlášení proběhlo úspěšně');
-                        this.$router.push({path: '/'});
-                    })
-                    .catch((error) => {
-                        this.$dialog.notify.error('Přihlášení se nezdařilo\nNeexistující kombinace přihlašovacích údajů');
-                        this.$store.commit("loginFailed", {error});
-                    })
+                if (this.$refs.form.validate()) {
+
+                    this.$store.dispatch('login');
+
+                    login(this.$data.login)
+                        .then(res => {
+
+                            if (this.isEmpty(Object.assign({}, res.user.territories[0]))) {
+                                this.$dialog.notify.error('Uživatel není autorizován. Požádejte administrátora území, aby vás přidal do systému.');
+                            } else {
+                                this.$store.commit("loginSuccess", res);
+                                this.$dialog.notify.success('Přihlášení proběhlo úspěšně');
+                                this.$router.push({path: '/'});
+                            }
+                        })
+                        .catch(error => {
+                            this.$dialog.notify.error('Přihlášení se nezdařilo\nNeexistující kombinace přihlašovacích údajů');
+                            this.$store.commit("loginFailed", {error});
+                        })
+                }
             },
+            isEmpty(obj) {
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key))
+                        return false;
+                }
+                return true;
+            }
         },
         computed: {
             authError() {

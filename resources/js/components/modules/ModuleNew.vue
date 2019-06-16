@@ -204,7 +204,7 @@
                     inputs: [{
                         title: '',
                         inputType: null,
-                        characters: null,
+                        characters: '',
                         hint: '',
                         items: []
                     }]

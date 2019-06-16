@@ -159,8 +159,8 @@
                 this.editedModule.inputs.push({
                     title: '',
                     inputType: '',
-                    characters: null,
-                    hint: null,
+                    characters: '',
+                    hint: '',
                     items: []
                 });
             },

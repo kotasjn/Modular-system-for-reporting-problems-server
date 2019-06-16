@@ -10,7 +10,7 @@
         <!-- Navbar -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                <template v-if="!currentUser">
+                <template v-if="!isLoggedIn">
                     <li>
                         <router-link to="/login" class="nav-link">Login</router-link>
                     </li>
@@ -49,6 +49,9 @@
         computed: {
             currentUser() {
                 return this.$store.getters.currentUser
+            },
+            isLoggedIn() {
+                return this.$store.getters.isLoggedIn
             }
         }
     }

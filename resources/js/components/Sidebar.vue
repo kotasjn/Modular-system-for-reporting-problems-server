@@ -1,6 +1,6 @@
 <template>
-    <ul class="sidebar navbar-nav" v-if="currentUser">
-        <li class="nav-item territory">
+    <ul class="sidebar navbar-nav" v-if="isLoggedIn">
+        <li class="nav-item territory" v-if="currentTerritory">
             <router-link class="nav-link" :to="`/territories/${currentTerritory.id}`">
                 <div class="text-center">
                     <img :src="`${currentTerritory.avatarURL}`" alt="Avatar" class="avatar"/>
@@ -84,9 +84,13 @@
                 return;
             }
 
-            this.$store.dispatch('getTerritory');
+            if(this.isLoggedIn)
+                this.$store.dispatch('getTerritory');
         },
         computed: {
+            isLoggedIn() {
+                return this.$store.getters.isLoggedIn
+            },
             currentUser() {
                 return this.$store.getters.currentUser
             },

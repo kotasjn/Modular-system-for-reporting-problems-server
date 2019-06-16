@@ -3,9 +3,11 @@
         <div class="card-header">Registrace</div>
         <div class="card-body">
 
-            <v-form ref="form" lazy-validation>
+            <v-form ref="form"
+                    v-model="valid"
+                    lazy-validation>
                 <v-text-field
-                        v-model="register.name"
+                        v-model="form.name"
                         :rules="[rules.required]"
                         label="Jméno"
                         color="teal"
@@ -13,26 +15,44 @@
                 ></v-text-field>
 
                 <v-text-field
-                        v-model="register.email"
+                        v-model="form.email"
                         :rules="[rules.required, rules.validEmail]"
                         label="Email"
+                        type="email"
                         color="teal"
                         required
                 ></v-text-field>
 
+                <div class="input_row">
+                    <div class="phone">
+
+                        <span class="subheading">+420</span>
+
+                        <v-text-field
+                                v-model="form.telephone"
+                                :rules="[rules.required, rules.telephone, rules.number, rules.number_positive]"
+                                label="Telefon"
+                                autocomplete="new-password"
+                                color="teal"
+                                class="phone_input"
+                                required
+                        ></v-text-field>
+                    </div>
+                </div>
+
                 <v-text-field
-                        v-model="register.password"
+                        v-model="form.password"
                         :append-icon="show_password ? 'visibility' : 'visibility_off'"
                         :rules="[rules.required, rules.password]"
                         :type="show_password ? 'text' : 'password'"
-                        name="input-10-1"
+                        autocomplete="new-password"
                         label="Heslo"
                         color="teal"
                         @click:append="show_password = !show_password"
                 ></v-text-field>
 
                 <v-text-field
-                        v-model="register.password_confirmation"
+                        v-model="form.password_confirmation"
                         :append-icon="show_password_confirmation ? 'visibility' : 'visibility_off'"
                         :rules="[rules.required, rules.passwordConfirm]"
                         :type="show_password_confirmation ? 'text' : 'password'"
@@ -70,37 +90,44 @@
         name: "Register",
         data() {
             return {
-                register: {
+                form: {
                     name: '',
                     email: '',
                     password: '',
                     password_confirmation: '',
-                    telephone: null
+                    telephone: ''
                 },
                 confirmation: false,
                 show_password: false,
                 show_password_confirmation: false,
+                valid: true,
                 rules: {
                     required: v => !!v || 'Povinné pole',
                     validEmail: v => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail musí být ve správném formátu',
                     password: v => v.length >= 8 || 'Heslo musí mít alespoň 8 znaků',
-                    passwordConfirm: v => v === this.register.password || 'Zadaná hesla se neshodují',
-                    checkbox: v => v || 'Pro odeslání registrace musíte souhlasit s podmínkami'
+                    passwordConfirm: v => v === this.form.password || 'Zadaná hesla se neshodují',
+                    checkbox: v => v || 'Pro odeslání registrace musíte souhlasit s podmínkami',
+                    telephone: v => v.length === 9 || 'Telefoní číslo musí mít 9 číslic',
+                    number: v => /\d/.test(v) || 'Nejedná se o číslo',
+                    number_positive: v => v > 0 || 'Číslo musí být kladné'
                 }
             }
         },
         methods: {
             register() {
 
-                register(this.$data.register)
-                    .then((res) => {
-                        this.$dialog.notify.success('Registrace proběhla úspěšně');
-                        this.$router.push({path: '/login'});
-                    })
-                    .catch((error) => {
-                        this.$dialog.notify.error('Registrace se nezdařila');
-                        console.log(error);
-                    })
+                if (this.$refs.form.validate()) {
+
+                    register(this.$data.form)
+                        .then((res) => {
+                            this.$dialog.notify.success('Registrace proběhla úspěšně');
+                            this.$router.push({path: '/login'});
+                        })
+                        .catch((error) => {
+                            this.$dialog.notify.error(`Registrace se nezdařila.\n${error}`);
+                            console.log(error);
+                        })
+                }
             },
         }
     }
@@ -131,6 +158,35 @@
     .margin-bottom {
         margin-top: 0;
         margin-bottom: 1rem;
+    }
+
+    .input_row {
+        width: 100%;
+        align-items: flex-start;
+        display: flex;
+        flex: 1 1 auto;
+        font-size: 16px;
+        flex-wrap: wrap;
+        flex-direction: column;
+        text-align: left;
+    }
+
+    .phone {
+        position: relative;
+        width: 100%;
+    }
+
+    .phone span {
+        position: absolute;
+        width: 2.5em;
+        left: 0;
+        top: 48%;
+        transform: translateY(-52%);
+    }
+
+    .phone .phone_input {
+        float: right;
+        width: calc(100% - 2.5em);
     }
 
 </style>

@@ -24,9 +24,6 @@
             console.log('Component mounted.')
         },
         computed: {
-            currentUser() {
-                return this.$store.getters.currentUser
-            },
             isLoggedIn() {
                 return this.$store.getters.isLoggedIn;
             }

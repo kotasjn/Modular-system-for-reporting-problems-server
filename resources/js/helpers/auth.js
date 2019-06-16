@@ -20,7 +20,7 @@ export function register (credentials) {
                 res(response.data);
             })
             .catch((err) => {
-                rej("Špatné přihlašovací údaje")
+                rej("Špatné nebo chybějící údaje")
             })
     })
 }
