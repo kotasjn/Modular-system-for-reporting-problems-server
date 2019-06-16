@@ -95,7 +95,19 @@ export default {
         },
         authError(state, bool) {
             state.auth_error = bool;
-        }
+        },
+        updateNumberOfWaitingReports(state, value) {
+            state.currentTerritory.waiting_reports = value;
+        },
+        updateNumberOfAcceptedReports(state, value) {
+            state.currentTerritory.accepted_reports = value;
+        },
+        updateNumberOfSolvedReports(state, value) {
+            state.currentTerritory.solved_reports = value;
+        },
+        updateNumberOfRejectedReports(state, value) {
+            state.currentTerritory.rejected_reports = value;
+        },
     },
     actions: {
         login(context) {

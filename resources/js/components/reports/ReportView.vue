@@ -177,9 +177,23 @@
                 this.edit = !this.edit;
             },
             saveReport(newReport) {
+                if (this.report.state !== newReport.state)
+                    this.changeCountOfReports(this.report.state, newReport.state);
+
                 this.report = newReport;
                 this.$store.commit("updateReport", newReport);
                 this.edit = !this.edit;
+            },
+            changeCountOfReports(oldState, newState) {
+                if (oldState === 0) this.$store.commit("updateNumberOfWaitingReports", this.currentTerritory.waiting_reports - 1);
+                else if (oldState === 1) this.$store.commit("updateNumberOfAcceptedReports", this.currentTerritory.accepted_reports - 1);
+                else if (oldState === 2) this.$store.commit("updateNumberOfSolvedReports", this.currentTerritory.solved_reports - 1);
+                else if (oldState === 3) this.$store.commit("updateNumberOfRejectedReports", this.currentTerritory.rejected_reports - 1);
+
+                if (newState === 0) this.$store.commit("updateNumberOfWaitingReports", this.currentTerritory.waiting_reports + 1);
+                else if (newState === 1) this.$store.commit("updateNumberOfAcceptedReports", this.currentTerritory.accepted_reports + 1);
+                else if (newState === 2) this.$store.commit("updateNumberOfSolvedReports", this.currentTerritory.solved_reports + 1);
+                else if (newState === 3) this.$store.commit("updateNumberOfRejectedReports", this.currentTerritory.rejected_reports + 1);
             },
             back() {
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/reports`);
