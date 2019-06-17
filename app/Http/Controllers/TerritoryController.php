@@ -72,19 +72,33 @@ class TerritoryController extends Controller
             $territory->solved_reports = Report::where('territory_id', $territory->id)->where('state', 2)->count();
             $territory->rejected_reports = Report::where('territory_id', $territory->id)->where('state', 3)->count();
 
-            $admin = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->admin_id);
-            $approover = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->aproover_id);
+            unset($territory['location'], $territory['created_at'], $territory['updated_at']);
 
-            $territory->employees = DB::table('users')
-                ->join('problem_solvers', function ($join) {
+            $admin = DB::table('users')
+                ->select('users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone')
+                ->where('id', $territory->admin_id);
+
+            $approver = DB::table('users')
+                ->select('users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone')
+                ->where('id', $territory->approver_id);
+
+            $supervisors = DB::table('users')
+                ->select('users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone')
+                ->join('supervisors', function($join) {
+                    $join->on('users.id', '=', 'supervisors.user_id');
+                })
+                ->join('territories', 'territories.id', '=', 'supervisors.territory_id');
+
+            $territory->employees =  DB::table('users')
+                ->join('problem_solvers', function($join) {
                     $join->on('users.id', '=', 'problem_solvers.user_id');
                 })
                 ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
+                ->union($supervisors)
                 ->union($admin)
-                ->union($approover)
+                ->union($approver)
                 ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone']);
 
-            unset($territory['location'], $territory['created_at'], $territory['updated_at']);
 
             return response()->json([
                 "territory" => $territory

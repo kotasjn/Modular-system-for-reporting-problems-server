@@ -76,6 +76,9 @@ class AuthController extends Controller
 
         $user = $request->user();
 
+        unset($user['email_verified_at'], $user['created_at'], $user['updated_at']);
+
+
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
 
@@ -85,29 +88,52 @@ class AuthController extends Controller
         $token->save();
 
         $user->isSuperAdmin = ($user->isSuperAdmin) ? true : false;
-        $user->isEmployee = ($user->isEmployee) ? true : false;
-        $user->isSupervisor = ($user->isSupervisor) ? true : false;
 
-        $territoriesAdmin = Territory::select('id', 'name', 'avatarURL', 'approver_id', 'admin_id')->where('admin_id', Auth::id());
-        $user->territories = Territory::select('id', 'name', 'avatarURL', 'approver_id', 'admin_id')->where('approver_id', Auth::id())->union($territoriesAdmin)->get();
+        $territoriesAdmin = DB::table('territories')->select('id', 'avatarURL', 'name', 'approver_id', 'admin_id')->where('admin_id', Auth::id());
+        $territoriesApprover = DB::table('territories')->select('id', 'avatarURL', 'name', 'approver_id', 'admin_id')->where('approver_id', Auth::id());
 
-        if (count($user->territories)) {
+        $territories = DB::table('territories')
+            ->join('problem_solvers', function ($join) {
+                $join->on('territories.id', '=', 'problem_solvers.territory_id');
+            })
+            ->join('supervisors', function ($join) {
+                $join->on('territories.id', '=', 'supervisors.territory_id');
+            })
+            ->union($territoriesAdmin)
+            ->union($territoriesApprover)
+            ->get(['territories.id', 'territories.avatarURL', 'territories.name', 'territories.approver_id', 'territories.admin_id']);
+
+        if (count($territories)) {
+            $user->territories = $territories;
             foreach ($user->territories as $territory) {
                 $territory->waiting_reports = Report::where('territory_id', $territory->id)->where('state', 0)->count();
                 $territory->accepted_reports = Report::where('territory_id', $territory->id)->where('state', 1)->count();
                 $territory->solved_reports = Report::where('territory_id', $territory->id)->where('state', 2)->count();
                 $territory->rejected_reports = Report::where('territory_id', $territory->id)->where('state', 3)->count();
 
-                $admin = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->admin_id);
-                $approover = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->aproover_id);
+                $admin = DB::table('users')
+                    ->select('users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone')
+                    ->where('id', $territory->admin_id);
 
-                $territory->employees  = DB::table('users')
+                $approver = DB::table('users')
+                    ->select('users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone')
+                    ->where('id', $territory->approver_id);
+
+                $supervisors = DB::table('users')
+                    ->select('users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone')
+                    ->join('supervisors', function($join) {
+                        $join->on('users.id', '=', 'supervisors.user_id');
+                    })
+                    ->join('territories', 'territories.id', '=', 'supervisors.territory_id');
+
+                $territory->employees =  DB::table('users')
                     ->join('problem_solvers', function($join) {
                         $join->on('users.id', '=', 'problem_solvers.user_id');
                     })
                     ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
+                    ->union($supervisors)
                     ->union($admin)
-                    ->union($approover)
+                    ->union($approver)
                     ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone']);
             }
         }

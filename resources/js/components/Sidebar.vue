@@ -55,9 +55,9 @@
             </router-link>
         </li>
         <li class="nav-item">
-            <router-link class="nav-link" to="/users">
+            <router-link class="nav-link" :to="`/territories/${currentTerritory.id}/employees`">
                 <font-awesome-icon icon="user"/>
-                <span>Uživatelé</span>
+                <span>Zaměstnanci</span>
             </router-link>
         </li>
         <li class="nav-item" v-if="currentUser.isAdmin">

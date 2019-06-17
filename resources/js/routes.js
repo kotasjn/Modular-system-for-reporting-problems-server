@@ -16,6 +16,11 @@ import Modules from "./components/modules/ModuleList";
 import Module from "./components/modules/ModuleView";
 import ModuleNew from "./components/modules/ModuleNew";
 
+import EmployeeMain from "./components/employees/EmployeeMain";
+import Employees from "./components/employees/EmployeeList";
+import Employee from "./components/employees/EmployeeView";
+import EmployeeNew from "./components/employees/EmployeeNew";
+
 export const routes = [
     {
         path: '/',
@@ -84,6 +89,27 @@ export const routes = [
             {
                 path: ':idModule',
                 component: Module,
+            }
+        ]
+    },
+    {
+        path: '/territories/:idTerritory/employees',
+        component: EmployeeMain,
+        meta: {
+            requiresAuth: true
+        },
+        children: [
+            {
+                path: '/',
+                component: Employees
+            },
+            {
+                path: 'add',
+                component: EmployeeNew,
+            },
+            {
+                path: ':idEmployee',
+                component: Employee,
             }
         ]
     },

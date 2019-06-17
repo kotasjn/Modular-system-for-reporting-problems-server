@@ -11,7 +11,8 @@ export default {
         currentUser: user,
         currentTerritory: territory,
         reports: [],
-        modules: []
+        modules: [],
+        employees: []
     },
     getters: {
         isLoading(state) {
@@ -34,6 +35,9 @@ export default {
         },
         modules(state) {
             return state.modules;
+        },
+        employees(state) {
+            return state.employees;
         }
     },
     mutations: {
@@ -97,6 +101,23 @@ export default {
         saveModule(state, newModule) {
             state.modules.push(newModule);
         },
+        updateEmployees(state, payload) {
+            state.employees = payload;
+        },
+        updateEmployee(state, newEmployee) {
+            state.employees.forEach((employee, index) => {
+                if (employee.id === newEmployee.id) {
+                    state.employees[index] = newEmployee
+                }
+            });
+        },
+
+        /*
+        saveEmployee(state, newEmployee) {
+            state.employees.push(newEmployee);
+        },
+        */
+
         authError(state, bool) {
             state.auth_error = bool;
         },
@@ -194,6 +215,17 @@ export default {
                 axios.get(`/api/territories/${context.state.currentTerritory.id}/modules/`)
                     .then((response) => {
                         context.commit('updateModules', response.data.modules)
+                    })
+                    .catch(error => {
+                        reject(error);
+                    })
+            })
+        },
+        getEmployees(context) {
+            return new Promise((resolve, reject) => {
+                axios.get(`/api/territories/${context.state.currentTerritory.id}/employees/`)
+                    .then((response) => {
+                        context.commit('updateEmployees', response.data.employees)
                     })
                     .catch(error => {
                         reject(error);

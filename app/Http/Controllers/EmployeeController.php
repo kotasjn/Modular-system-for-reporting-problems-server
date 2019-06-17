@@ -99,20 +99,20 @@ class EmployeeController extends Controller
 
             unset($employee['email_verified_at'], $employee['created_at'], $employee['updated_at'], $employee['isSuperAdmin']);
 
-            $employee->isAdmin = $territory->admin_id === Auth::id();
-            $employee->isApprover = $territory->approver_id === Auth::id();
+            $employee->isAdmin = $territory->admin_id === $employee->id;
+            $employee->isApprover = $territory->approver_id === $employee->id;
 
             $employee->problem_solver = new stdClass();
             $employee->problem_solver->categories_assigned = DB::table('problem_solvers')
-                ->where('user_id', Auth::id())
+                ->where('user_id', $employee->id)
                 ->pluck('category_id')
                 ->toArray();
 
-            $employee->isSupervisor = $territory->supervisor()->where('user_id', Auth::id())->first() ? true : false;
+            $employee->isSupervisor = $territory->supervisor()->where('user_id', $employee->id)->first() ? true : false;
 
             $employee->reports_assigned = $territory->reports()
                 ->select('id', 'created_at', 'title', 'state', 'userNote', 'employeeNote', 'address', 'user_id', 'category_id')
-                ->where('responsible_user_id', Auth::id())
+                ->where('responsible_user_id', $employee->id)
                 ->get();
 
             return response()->json([
