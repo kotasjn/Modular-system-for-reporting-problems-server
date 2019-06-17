@@ -63,7 +63,9 @@ class TerritoryController extends Controller
      */
     public function show(Territory $territory)
     {
-        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first()) {
+        if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id()
+            || $territory->supervisor()->where('user_id', Auth::id())->first()
+            || $territory->problemSolver()->where('user_id', Auth::id())->first()) {
 
             $territory->waiting_reports = Report::where('territory_id', $territory->id)->where('state', 0)->count();
             $territory->accepted_reports = Report::where('territory_id', $territory->id)->where('state', 1)->count();
@@ -74,7 +76,7 @@ class TerritoryController extends Controller
             $approover = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->aproover_id);
 
             $territory->employees = DB::table('users')
-                ->join('problem_solvers', function($join) {
+                ->join('problem_solvers', function ($join) {
                     $join->on('users.id', '=', 'problem_solvers.user_id');
                 })
                 ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
@@ -137,42 +139,5 @@ class TerritoryController extends Controller
         return response()->json([
             "error" => false
         ], 200);
-
-    }
-
-
-    public function getEmployees(Territory $territory)
-    {
-        $category_id = Input::get('category_id');
-
-        if (!$category_id) {
-            return response()->json([
-                "error" => true,
-                "message" => "Field category_id is necessarily for this request."
-            ], 400);
-        }
-
-        if (($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id())) {
-
-            $admin = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->admin_id);
-            $approover = DB::table('users')->select('id', 'avatarURL', 'name', 'email', 'telephone')->where('id', $territory->aproover_id);
-
-            $employees = DB::table('users')
-                ->join('problem_solvers', function($join) use ($category_id){
-                    $join->on('users.id', '=', 'problem_solvers.user_id')
-                    ->where('problem_solvers.category_id', '=', $category_id);
-                })
-                ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
-                ->union($admin)
-                ->union($approover)
-                ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone']);
-
-            return response()->json([
-                "employees" => $employees
-            ], 200);
-
-        } else {
-            return abort(403);
-        }
     }
 }

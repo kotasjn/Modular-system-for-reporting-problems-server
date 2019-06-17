@@ -21,8 +21,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->unsignedBigInteger('telephone');
             $table->boolean('isSuperAdmin')->default(false);
-            $table->boolean('isEmployee')->default(false);
-            $table->boolean('isSupervisor')->default(false);
             $table->string('password');
             
             $table->rememberToken();

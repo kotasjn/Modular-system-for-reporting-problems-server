@@ -21,6 +21,8 @@ class CreateProblemSolversTable extends Migration
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('territory_id');
 
+            $table->unique(['user_id', 'category_id', 'territory_id']);
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('territory_id')->references('id')->on('territories')->onDelete('cascade');

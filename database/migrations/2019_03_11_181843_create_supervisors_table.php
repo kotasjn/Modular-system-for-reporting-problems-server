@@ -19,6 +19,8 @@ class CreateSupervisorsTable extends Migration
             $table->unsignedInteger('territory_id');
             $table->unsignedInteger('user_id');
 
+            $table->unique(['user_id', 'territory_id']);
+
             $table->foreign('territory_id')->references('id')->on('territories')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
