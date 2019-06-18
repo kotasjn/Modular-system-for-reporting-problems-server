@@ -125,7 +125,11 @@
                 console.log(response);
                 this.report = response.data.report;
             }, error => {
-                this.$dialog.notify.error('Neexistující podnět');
+                if(error.response.status === 404) {
+                    this.$dialog.notify.error('Neexistující podnět');
+                } else {
+                    this.$dialog.notify.error('Nepodařilo se načíst podnět');
+                }
                 console.log(error);
                 this.back();
             })
