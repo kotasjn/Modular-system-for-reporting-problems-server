@@ -34,7 +34,8 @@
             </template>
         </v-data-table>
 
-        <v-data-table :headers="headers_approver"
+        <v-data-table v-if="employees.approver.length"
+                        :headers="headers_approver"
                       :items="employees.approver"
                       class="elevation table_margin_bottom"
                       hide-actions>
@@ -59,7 +60,8 @@
         </v-data-table>
 
 
-        <v-data-table :headers="headers_problem_solvers"
+        <v-data-table v-if="employees.problem_solvers.length"
+                      :headers="headers_problem_solvers"
                       :items="employees.problem_solvers"
                       class="elevation table_margin_bottom"
                       hide-actions>
@@ -84,7 +86,8 @@
         </v-data-table>
 
 
-        <v-data-table :headers="headers_supervisor"
+        <v-data-table v-if="employees.supervisors.length"
+                      :headers="headers_supervisor"
                       :items="employees.supervisors"
                       class="elevation table_margin_bottom"
                       hide-actions>
