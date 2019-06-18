@@ -210,7 +210,7 @@
                 else if (newState === 3) this.$store.commit("updateNumberOfRejectedReports", this.currentTerritory.rejected_reports + 1);
             },
             back() {
-                this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/reports`);
+                this.$router.go(-1);
             }
         },
         watch: {

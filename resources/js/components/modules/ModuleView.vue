@@ -214,7 +214,7 @@
                 }
             },
             back() {
-                this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules`);
+                this.$router.go(-1);
             }
         },
         watch: {

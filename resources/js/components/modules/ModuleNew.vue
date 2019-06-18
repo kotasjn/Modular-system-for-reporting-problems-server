@@ -103,7 +103,7 @@
 
             <div class="wrapper-button-bottom">
                 <div class="leftcolumn">
-                    <v-btn @click="$router.push(`/territories/${currentTerritory.id}/modules`)">ZRUŠIT</v-btn>
+                    <v-btn @click="$router.go(-1)">ZRUŠIT</v-btn>
                 </div>
                 <div class="rightcolumn">
                     <v-btn :disabled="!valid" @click="saveModule" color="teal" class="white--text">ULOŽIT</v-btn>

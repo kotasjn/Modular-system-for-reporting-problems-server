@@ -19,6 +19,7 @@ import * as VueGoogleMaps from "vue2-google-maps";
 
 import VuetifyDialog from 'vuetify-dialog'
 
+
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(Vuetify);

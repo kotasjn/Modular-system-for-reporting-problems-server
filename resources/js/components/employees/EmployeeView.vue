@@ -9,15 +9,12 @@
 
             <div class="card-body">
 
+                <img :src="employee.avatarURL" :alt="employee.name" class="avatar">
+
                 <table>
                     <tr>
                         <th class="subheading">Zaměstnanec:</th>
-                        <td class="body-1">
-                            <v-avatar style="margin: 5px">
-                                <img :src="employee.avatarURL">
-                            </v-avatar>
-                            {{ employee.name }}
-                        </td>
+                        <td class="body-1">{{ employee.name }}</td>
                     </tr>
                     <tr>
                         <th class="subheading">Role:</th>
@@ -43,7 +40,7 @@
                     </tr>
                 </table>
 
-                <v-data-table v-if="currentTerritory" :headers="headers"
+                <v-data-table v-if="employee.reports_assigned.length" :headers="headers"
                               :items="employee.reports_assigned"
                               class="elevation-1">
                     <template v-slot:items="props">
@@ -82,11 +79,13 @@
 
                 <div class="wrapper-button-bottom">
                     <v-btn @click="back">ZPĚT</v-btn>
-                    <v-btn @click="editEmployee" v-if="employee.isAdmin" color="teal" class="white--text float-right">
+                    <v-btn @click="editEmployee" v-if="currentTerritory.admin_id === currentUser.id" color="teal"
+                           class="white--text float-right">
                         UPRAVIT
                     </v-btn>
-                    <v-btn @click="deleteEmployee" v-if="employee.isAdmin" color="red darken-4"
-                           class="white--text float-right">ODSTRANIT
+                    <v-btn @click="deleteEmployee" v-if="currentTerritory.admin_id === currentUser.id"
+                           color="red darken-4"
+                           class="white--text float-right">ODEBRAT
                     </v-btn>
                 </div>
             </div>
@@ -216,13 +215,13 @@
                         });
                 }
             },
-            role: function() {
+            role: function () {
                 if (this.employee.isAdmin) return "Administrátor";
                 else if (this.employee.isApprover) return "Schvalovatel";
                 else if (this.employee.problem_solver.categories_assigned.length) return "Řešitel";
                 else if (this.employee.isSupervisor) return "Supervizor";
             },
-            category: function(category) {
+            category: function (category) {
                 if (category === 1) return "Zeleň";
                 else if (category === 2) return "Odpad";
                 else if (category === 3) return "Doprava";
@@ -233,27 +232,26 @@
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/reports/${id}`);
             },
             back() {
-                this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/employees`);
+                this.$router.go(-1);
             }
         },
         watch: {
             employee() {
                 this.isLoading = false;
             }
-        }
-        ,
+        },
         computed: {
             employees() {
                 this.isLoading = false;
                 return this.$store.getters.employees;
-            }
-            ,
+            },
             currentTerritory() {
                 return this.$store.getters.currentTerritory;
+            },
+            currentUser() {
+                return this.$store.getters.currentUser;
             }
-            ,
-        }
-        ,
+        },
         components: {
             EmployeeEdit
         }
@@ -272,6 +270,14 @@
         padding-top: 0.5em;
         padding-bottom: 0.5em;
         vertical-align: top;
+    }
+
+    .avatar {
+        display: block;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: .5em auto .5em auto;
     }
 
 </style>
