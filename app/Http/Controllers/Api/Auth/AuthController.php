@@ -68,7 +68,7 @@ class AuthController extends Controller
 
         $credentials = request(['email', 'password']);
 
-        if(!Auth::attempt($credentials))
+        if (!Auth::attempt($credentials))
             return response()->json([
                 'error' => true,
                 'message' => 'Uživatel není autorizován!'
@@ -89,19 +89,31 @@ class AuthController extends Controller
 
         $user->isSuperAdmin = ($user->isSuperAdmin) ? true : false;
 
-        $territoriesAdmin = DB::table('territories')->select('id', 'avatarURL', 'name', 'approver_id', 'admin_id')->where('admin_id', Auth::id());
-        $territoriesApprover = DB::table('territories')->select('id', 'avatarURL', 'name', 'approver_id', 'admin_id')->where('approver_id', Auth::id());
+        $territoriesAdmin = DB::table('territories')
+            ->select('id', 'avatarURL', 'name', 'approver_id', 'admin_id')
+            ->where('admin_id', Auth::id());
+
+        $territoriesApprover = DB::table('territories')
+            ->select('id', 'avatarURL', 'name', 'approver_id', 'admin_id')
+            ->where('approver_id', Auth::id());
+
+        $territoriesSolvers = DB::table('territories')
+            ->join('problem_solvers', function ($join) {
+                $join->on('territories.id', '=', 'problem_solvers.territory_id')
+                    ->where('problem_solvers.user_id', Auth::id());
+            })
+            ->select('territories.id', 'territories.avatarURL', 'territories.name', 'territories.approver_id', 'territories.admin_id');
 
         $territories = DB::table('territories')
-            ->join('problem_solvers', function ($join) {
-                $join->on('territories.id', '=', 'problem_solvers.territory_id');
-            })
             ->join('supervisors', function ($join) {
-                $join->on('territories.id', '=', 'supervisors.territory_id');
+                $join->on('territories.id', '=', 'supervisors.territory_id')
+                    ->where('supervisors.user_id', Auth::id());
             })
             ->union($territoriesAdmin)
             ->union($territoriesApprover)
+            ->union($territoriesSolvers)
             ->get(['territories.id', 'territories.avatarURL', 'territories.name', 'territories.approver_id', 'territories.admin_id']);
+
 
         if (count($territories)) {
             $user->territories = $territories;
@@ -121,13 +133,13 @@ class AuthController extends Controller
 
                 $supervisors = DB::table('users')
                     ->select('users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone')
-                    ->join('supervisors', function($join) {
+                    ->join('supervisors', function ($join) {
                         $join->on('users.id', '=', 'supervisors.user_id');
                     })
                     ->join('territories', 'territories.id', '=', 'supervisors.territory_id');
 
-                $territory->employees =  DB::table('users')
-                    ->join('problem_solvers', function($join) {
+                $territory->employees = DB::table('users')
+                    ->join('problem_solvers', function ($join) {
                         $join->on('users.id', '=', 'problem_solvers.user_id');
                     })
                     ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
