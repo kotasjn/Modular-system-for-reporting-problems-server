@@ -4,11 +4,47 @@
 
         <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
 
-        <v-btn flat icon @click="$router.push(`/territories/${currentTerritory.id}/employees/add`)" color="teal"
+        <v-btn v-if="!search && (currentUser.id === currentTerritory.admin_id)" flat icon @click="search = !search"
+               color="teal"
                class="add_item">
             <v-icon>add</v-icon>
             Přidat zaměstnance
         </v-btn>
+
+        <v-form v-if="search && (currentUser.id === currentTerritory.admin_id)"
+                ref="form"
+                class="form">
+            <v-text-field type="text"
+                          v-model.lazy="email"
+                          :rules="[rules.validEmail]"
+                          color="teal"
+                          label="Zadejte email uživatele">
+            </v-text-field>
+        </v-form>
+
+        <v-data-table v-if="users.length"
+                      :items="users"
+                      class="elevation table_margin_bottom"
+                      hide-headers
+                      hide-actions>
+            <template v-slot:items="props">
+                <td class="text-xs-left">
+                    <v-avatar style="margin: 5px">
+                        <img :src="props.item.avatarURL">
+                    </v-avatar>
+                    {{ props.item.name }}
+                </td>
+
+                <td class="text-xs-center"> {{ props.item.email }}</td>
+
+                <td class="text-xs-right">
+                    <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2" style="margin-right: 0">
+                        <v-icon>add</v-icon>
+                    </v-btn>
+                </td>
+            </template>
+        </v-data-table>
+
 
         <v-data-table :headers="headers_admin"
                       :items="employees.admin"
@@ -24,7 +60,7 @@
 
                 <td class="text-xs-center"> {{ props.item.email }}</td>
 
-                <td class="text-xs-center"> {{  "+420" + props.item.telephone }}</td>
+                <td class="text-xs-center"> {{ "+420" + props.item.telephone }}</td>
 
                 <td class="text-xs-right">
                     <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2" style="margin-right: 0">
@@ -35,7 +71,7 @@
         </v-data-table>
 
         <v-data-table v-if="employees.approver.length"
-                        :headers="headers_approver"
+                      :headers="headers_approver"
                       :items="employees.approver"
                       class="elevation table_margin_bottom"
                       hide-actions>
@@ -49,7 +85,7 @@
 
                 <td class="text-xs-center"> {{ props.item.email }}</td>
 
-                <td class="text-xs-center"> {{  "+420" + props.item.telephone }}</td>
+                <td class="text-xs-center"> {{ "+420" + props.item.telephone }}</td>
 
                 <td class="text-xs-right">
                     <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2" style="margin-right: 0">
@@ -75,7 +111,7 @@
 
                 <td class="text-xs-center"> {{ props.item.email }}</td>
 
-                <td class="text-xs-center"> {{  "+420" + props.item.telephone }}</td>
+                <td class="text-xs-center"> {{ "+420" + props.item.telephone }}</td>
 
                 <td class="text-xs-right">
                     <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2" style="margin-right: 0">
@@ -101,7 +137,7 @@
 
                 <td class="text-xs-center"> {{ props.item.email }}</td>
 
-                <td class="text-xs-center"> {{  "+420" + props.item.telephone }}</td>
+                <td class="text-xs-center"> {{ "+420" + props.item.telephone }}</td>
 
                 <td class="text-xs-right">
                     <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2" style="margin-right: 0">
@@ -110,7 +146,6 @@
                 </td>
             </template>
         </v-data-table>
-
     </div>
 </template>
 
@@ -120,6 +155,12 @@
         data() {
             return {
                 isLoading: true,
+                search: false,
+                email: null,
+                users: [],
+                rules: {
+                    validEmail: value => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'E-mail není ve správném formátu.'
+                },
                 headers_admin: [
                     {
                         text: 'Administrátor',
@@ -230,12 +271,32 @@
         methods: {
             showDetail(id) {
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/employees/${id}`);
+            },
+            searchUser() {
+                axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/search/`, {params: {email: this.email}})
+                    .then(response => {
+                        this.users = response.data;
+                        if (!this.users.length)
+                            this.$dialog.notify.error('Nepodařilo se vyhledat uživatele pro daný email');
+                    })
+                    .catch(error => {
+                        if (error.response.status === 403) {
+                            this.$dialog.notify.error('Nemáte oprávnění k vyhledávání uživatelů');
+                            this.$router.push(`/`);
+                        } else {
+                            this.$dialog.notify.error('Nepodařilo se vyhledat uživatele');
+                        }
+                    });
             }
         },
         watch: {
             employees() {
                 this.isLoading = false;
             },
+            email(after, before) {
+                if (this.$refs.form.validate())
+                    this.searchUser();
+            }
         },
         computed: {
             employees() {
@@ -244,6 +305,9 @@
             currentTerritory() {
                 return this.$store.getters.currentTerritory;
             },
+            currentUser() {
+                return this.$store.getters.currentUser;
+            }
         }
     }
 </script>
@@ -267,6 +331,10 @@
         margin-top: 1.25rem;
         margin-right: 1.25rem;
         margin-left: 1.25rem;
+    }
+
+    .form {
+        margin: 1.25em 1.25em 0 1.25em;
     }
 
 </style>

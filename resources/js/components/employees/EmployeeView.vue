@@ -79,11 +79,14 @@
 
                 <div class="wrapper-button-bottom">
                     <v-btn @click="back">ZPĚT</v-btn>
-                    <v-btn @click="editEmployee" v-if="currentTerritory.admin_id === currentUser.id" color="teal"
+                    <v-btn @click="editEmployee"
+                           v-if="(currentTerritory.admin_id === currentUser.id) && (currentTerritory.admin_id !== employee.id)"
+                           color="teal"
                            class="white--text float-right">
                         UPRAVIT
                     </v-btn>
-                    <v-btn @click="deleteEmployee" v-if="currentTerritory.admin_id === currentUser.id"
+                    <v-btn @click="deleteEmployee"
+                           v-if="(currentTerritory.admin_id === currentUser.id) && (currentTerritory.admin_id !== employee.id)"
                            color="red darken-4"
                            class="white--text float-right">ODEBRAT
                     </v-btn>

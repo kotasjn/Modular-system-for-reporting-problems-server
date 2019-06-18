@@ -12,7 +12,12 @@ export default {
         currentTerritory: territory,
         reports: [],
         modules: [],
-        employees: []
+        employees: {
+            admin: [],
+            approver: [],
+            supervisors: [],
+            problem_solvers: []
+        }
     },
     getters: {
         isLoading(state) {

@@ -137,4 +137,16 @@ class EmployeeController extends Controller
     {
         //
     }
+
+
+    public function search(Request $request, Territory $territory)
+    {
+        if ($territory->admin_id === Auth::id()) {
+            $users =  User::where('email','LIKE','%'.$request->email.'%')->get();
+
+            return response()->json($users);
+        } else {
+            return abort(403);
+        }
+    }
 }

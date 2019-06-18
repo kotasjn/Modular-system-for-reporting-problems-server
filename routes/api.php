@@ -38,6 +38,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::apiResource('/territories/{territory}/employees', 'EmployeeController');
 
+    Route::get('/territories/{territory}/search', 'UserSearchController@search');
+
 });
 
 
