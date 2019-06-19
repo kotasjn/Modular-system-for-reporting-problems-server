@@ -22,6 +22,11 @@
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                            data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+
+                            <v-avatar style="margin-right: 8px" size="35">
+                                <img :src="currentUser.avatarURL">
+                            </v-avatar>
+
                             {{ currentUser.name }} <span class="caret"></span>
                         </a>
 
