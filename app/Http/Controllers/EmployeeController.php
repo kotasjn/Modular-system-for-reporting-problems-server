@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\ProblemSolver;
+use App\Report;
 use App\Supervisor;
 use App\Territory;
 use App\User;
@@ -100,18 +102,20 @@ class EmployeeController extends Controller
 
             $validatorModule = Validator::make($newEmployee, $employeeRules);
             if ($validatorModule->passes()) {
-                if($newEmployee['role'] == 1) {
+                if ($newEmployee['role'] == 1) {
                     $territory->update(['approver_id' => $newEmployee['user_id']]);
                     ProblemSolver::where('user_id', $newEmployee['user_id'])->delete();
                     Supervisor::where('user_id', $newEmployee['user_id'])->delete();
-                } else if($newEmployee['role'] == 2 && !empty($newEmployee['responsibilities'])) {
+                } else if ($newEmployee['role'] == 2) {
                     foreach ($newEmployee['responsibilities'] as $category) {
                         ProblemSolver::create(['user_id' => $newEmployee['user_id'], 'category_id' => $category, 'territory_id' => $territory->id]);
                     }
                     Supervisor::where('user_id', $newEmployee['user_id'])->delete();
+                    if($territory->approver_id == $newEmployee['user_id']) $territory->update(['approver_id' => null]);
                 } else if ($newEmployee['role'] == 3) {
                     Supervisor::create(['user_id' => $newEmployee['user_id'], 'territory_id' => $territory->id]);
                     ProblemSolver::where('user_id', $newEmployee['user_id'])->delete();
+                    if($territory->approver_id == $newEmployee['user_id']) $territory->update(['approver_id' => null]);
                 }
             }
 
@@ -177,7 +181,86 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Territory $territory, User $employee)
     {
-        //
+        if ($territory->admin_id === Auth::id()) {
+
+            $newEmployee = $request->employee;
+
+            $employeeRules = [
+                'role' => 'required|integer|min:1|max:3'
+            ];
+
+            $validatorModule = Validator::make($newEmployee, $employeeRules);
+            if ($validatorModule->passes()) {
+                if ($newEmployee['role'] == 1) {
+                    $territory->update(['approver_id' => $employee->id]);
+                    Supervisor::where('user_id', $employee->id)->delete();
+                    ProblemSolver::where('user_id', $employee->id)->delete();
+                    Report::where('responsible_user_id', $employee->id)->update(['responsible_user_id' => null]);
+                } else if ($newEmployee['role'] == 2) {
+
+                    $categories = DB::table('categories')
+                        ->join('problem_solvers', 'problem_solvers.category_id', '=', 'categories.id')
+                        ->where('problem_solvers.user_id', $employee->id)
+                        ->get(['categories.id']);
+
+                    $categoryArray = array();
+                    foreach ($categories as $category) {
+                        array_push($categoryArray, $category->id);
+                    }
+
+                    $responsibilitiesToDel = array_diff($categoryArray, $newEmployee['responsibilities']);
+
+                    foreach ($responsibilitiesToDel as $responsibility) {
+                        ProblemSolver::where('user_id', $employee->id)->where('category_id', $responsibility)->delete();
+                        Report::where('responsible_user_id', $employee->id)->where('category_id', $responsibility)->update(['responsible_user_id' => null]);
+                    }
+
+                    $responsibilitiesToAdd = array_diff($newEmployee['responsibilities'], $categoryArray);
+
+                    foreach ($responsibilitiesToAdd as $responsibility) {
+                        ProblemSolver::create(['user_id' => $employee->id, 'category_id' => $responsibility, 'territory_id' => $territory->id]);
+                    }
+
+                    Supervisor::where('user_id', $employee->id)->delete();
+
+                    if($territory->approver_id == $employee->id)
+                        $territory->update(['approver_id' => null]);
+
+                } else if ($newEmployee['role'] == 3) {
+                    Supervisor::create(['user_id' => $employee->id, 'territory_id' => $territory->id]);
+
+                    ProblemSolver::where('user_id', $employee->id)->delete();
+                    Report::where('responsible_user_id', $employee->id)->update(['responsible_user_id' => null]);
+                    if($territory->approver_id == $employee->id)
+                        $territory->update(['approver_id' => null]);
+                }
+            }
+
+            unset($employee['email_verified_at'], $employee['created_at'], $employee['updated_at'], $employee['isSuperAdmin']);
+
+            $employee->isAdmin = $territory->admin_id === $employee->id;
+            $employee->isApprover = $territory->approver_id === $employee->id;
+
+            $employee->problem_solver = new stdClass();
+            $employee->problem_solver->categories_assigned = DB::table('problem_solvers')
+                ->where('user_id', $employee->id)
+                ->pluck('category_id')
+                ->toArray();
+
+            $employee->isSupervisor = $territory->supervisor()->where('user_id', $employee->id)->first() ? true : false;
+
+            $employee->reports_assigned = $territory->reports()
+                ->select('id', 'created_at', 'title', 'state', 'userNote', 'employeeNote', 'address', 'user_id', 'category_id')
+                ->where('responsible_user_id', $employee->id)
+                ->get();
+
+            return response()->json([
+                "employee" => $employee
+            ], 200);
+
+        } else {
+            return abort(403);
+        }
     }
 
 
@@ -193,7 +276,7 @@ class EmployeeController extends Controller
         if ($territory->admin_id === Auth::id()) {
             ProblemSolver::where('user_id', $employee->id)->delete();
             Supervisor::where('user_id', $employee->id)->delete();
-            if($territory->approver_id == $employee->id)
+            if ($territory->approver_id == $employee->id)
                 $territory->update(['approver_id' => null]);
 
             return response()->json([
