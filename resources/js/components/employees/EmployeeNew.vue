@@ -25,7 +25,7 @@
 
                 <v-select
                         v-model="employee.role"
-                        :items="roles"
+                        :items="items"
                         item-text="name"
                         item-value="id"
                         :rules="[v => !!v || 'Tohle pole je povinné']"
@@ -64,6 +64,9 @@
     export default {
         name: "EmployeeNew",
         props: ['user'],
+        created () {
+            this.checkApprover();
+        },
         data() {
             return {
                 categories: [
@@ -142,6 +145,13 @@
             parseResponsibility(item, index) {
                 if (item) this.employee.responsibilities.push(index);
             },
+            checkApprover() {
+                if(this.currentTerritory.approver_id != null) {
+                    this.roles.slice(0, 1);
+                    console.log('jsem tu');
+                }
+
+            },
             back() {
                 this.$router.go(-1);
             }
@@ -151,6 +161,10 @@
             currentTerritory() {
                 return this.$store.getters.currentTerritory;
             },
+            items() {
+                if(this.currentTerritory.approver_id != null) return this.roles.slice(1, 3);
+                else return this.roles.slice(0, 3);
+            }
         }
     }
 </script>

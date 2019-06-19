@@ -172,11 +172,35 @@ class EmployeeController extends Controller
      *
      * @param Request $request
      * @param Territory $territory
-     * @param User $user
+     * @param User $employee
      * @return void
      */
-    public function update(Request $request, Territory $territory, User $user)
+    public function update(Request $request, Territory $territory, User $employee)
     {
         //
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Territory $territory
+     * @param User $employee
+     * @return void
+     */
+    public function destroy(Territory $territory, User $employee)
+    {
+        if ($territory->admin_id === Auth::id()) {
+            ProblemSolver::where('user_id', $employee->id)->delete();
+            Supervisor::where('user_id', $employee->id)->delete();
+            if($territory->approver_id == $employee->id)
+                $territory->update(['approver_id' => null]);
+
+            return response()->json([
+                "error" => false
+            ], 200);
+        } else {
+            return abort(403);
+        }
     }
 }

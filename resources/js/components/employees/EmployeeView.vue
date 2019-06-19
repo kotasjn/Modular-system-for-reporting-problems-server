@@ -119,7 +119,7 @@
                     avatarURL: '',
                     name: '',
                     email: '',
-                    telephone: null,
+                    telephone: '',
                     isAdmin: false,
                     isApprover: false,
                     problem_solver: {
@@ -214,9 +214,9 @@
                     axios.delete(`/api/territories/${this.$store.getters.currentTerritory.id}/employees/${this.$route.params.idEmployee}`)
                         .then(response => {
                             console.log(response);
-                            this.$dialog.notify.success('Zaměstnance byl úspěšně odebrán');
-                            this.employees.splice(index, 1);
+                            this.$store.commit("deleteEmployee", this.employee);
                             this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/employees`);
+                            this.$dialog.notify.success('Zaměstnance byl úspěšně odebrán');
                         })
                         .catch(error => {
                             this.$dialog.notify.error('Zaměstnance se nepodařilo odebrat');
