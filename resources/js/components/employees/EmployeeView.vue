@@ -130,6 +130,7 @@
                 },
                 edit: false,
                 isLoading: true,
+                prevRoute: null,
                 headers: [
                     {
                         text: 'Podněty',
@@ -160,6 +161,11 @@
                 ]
             }
         },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.prevRoute = from
+            })
+        },
         created() {
             axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/employees/${this.$route.params.idEmployee}`)
                 .then(response => {
@@ -179,9 +185,9 @@
             editEmployee() {
                 this.edit = !this.edit;
             },
-            saveEmployee(newEmployee) {
+            saveEmployee(newEmployee, role) {
                 this.employee = newEmployee;
-                this.$store.commit("updateEmployee", newEmployee);
+                this.$store.commit("updateEmployee", newEmployee, role);
                 this.edit = !this.edit;
             },
             async deleteEmployee(index) {
@@ -235,7 +241,10 @@
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/reports/${id}`);
             },
             back() {
-                this.$router.go(-1);
+                if(this.prevRoute.path === `/territories/${this.$store.getters.currentTerritory.id}/employees/add`)
+                    this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/employees`);
+                else
+                    this.$router.go(-1);
             }
         },
         watch: {

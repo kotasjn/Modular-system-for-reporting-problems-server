@@ -16,6 +16,7 @@
                 class="form">
             <v-text-field type="text"
                           v-model.lazy="email"
+                          debounce="500"
                           :rules="[rules.validEmail]"
                           color="teal"
                           label="Zadejte email uživatele">
@@ -38,7 +39,8 @@
                 <td class="text-xs-center"> {{ props.item.email }}</td>
 
                 <td class="text-xs-right">
-                    <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2" style="margin-right: 0">
+                    <v-btn flat icon @click="createEmployee" color="indigo accent-2"
+                           style="margin-right: 0">
                         <v-icon>add</v-icon>
                     </v-btn>
                 </td>
@@ -273,9 +275,11 @@
                 this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/employees/${id}`);
             },
             searchUser() {
+                this.isLoading = true;
                 axios.get(`/api/territories/${this.$store.getters.currentTerritory.id}/search/`, {params: {email: this.email}})
                     .then(response => {
                         this.users = response.data;
+                        this.isLoading = false;
                         if (!this.users.length)
                             this.$dialog.notify.error('Nepodařilo se vyhledat uživatele pro daný email');
                     })
@@ -286,7 +290,19 @@
                         } else {
                             this.$dialog.notify.error('Nepodařilo se vyhledat uživatele');
                         }
+                        this.isLoading = false;
                     });
+            },
+            createEmployee() {
+                let user = this.users[0];
+                this.$router.push({ name: 'EmployeeNew', params: { user } });
+            },
+            exist(email) {
+                let i;
+                for (i = 0; i < this.currentTerritory.employees.length; i++) {
+                    if (this.currentTerritory.employees[i].email === email) return true;
+                }
+                return false;
             }
         },
         watch: {
@@ -294,8 +310,13 @@
                 this.isLoading = false;
             },
             email(after, before) {
-                if (this.$refs.form.validate())
-                    this.searchUser();
+                if (this.$refs.form.validate()) {
+                    if(!this.exist(this.email)) {
+                        this.searchUser();
+                    } else {
+                        this.$dialog.notify.error('Tento uživatel již je zaměstnancem dané obce');
+                    }
+                }
             }
         },
         computed: {

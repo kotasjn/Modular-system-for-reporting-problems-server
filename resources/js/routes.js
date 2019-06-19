@@ -105,7 +105,9 @@ export const routes = [
             },
             {
                 path: 'add',
+                name: "EmployeeNew",
                 component: EmployeeNew,
+                props: true
             },
             {
                 path: ':idEmployee',

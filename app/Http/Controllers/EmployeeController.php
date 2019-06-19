@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\ProblemSolver;
+use App\Supervisor;
 use App\Territory;
 use App\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use stdClass;
 
 class EmployeeController extends Controller
@@ -61,7 +65,10 @@ class EmployeeController extends Controller
                         $join->on('users.id', '=', 'problem_solvers.user_id');
                     })
                     ->join('territories', 'territories.id', '=', 'problem_solvers.territory_id')
-                    ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone', 'problem_solvers.category_id']);
+                    ->groupBy('users.email')
+                    ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone']);
+
+
             }
 
             return response()->json([
@@ -77,11 +84,46 @@ class EmployeeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     * @param Territory $territory
      * @return void
      */
-    public function store(Request $request)
+    public function store(Request $request, Territory $territory)
     {
-        //
+        if ($territory->admin_id === Auth::id()) {
+
+            $newEmployee = $request->employee;
+
+            $employeeRules = [
+                'user_id' => 'required|integer',
+                'role' => 'required|integer|min:1|max:3'
+            ];
+
+            $validatorModule = Validator::make($newEmployee, $employeeRules);
+            if ($validatorModule->passes()) {
+                if($newEmployee['role'] == 1) {
+                    $territory->update(['approver_id' => $newEmployee['user_id']]);
+                    ProblemSolver::where('user_id', $newEmployee['user_id'])->delete();
+                    Supervisor::where('user_id', $newEmployee['user_id'])->delete();
+                } else if($newEmployee['role'] == 2 && !empty($newEmployee['responsibilities'])) {
+                    foreach ($newEmployee['responsibilities'] as $category) {
+                        ProblemSolver::create(['user_id' => $newEmployee['user_id'], 'category_id' => $category, 'territory_id' => $territory->id]);
+                    }
+                    Supervisor::where('user_id', $newEmployee['user_id'])->delete();
+                } else if ($newEmployee['role'] == 3) {
+                    Supervisor::create(['user_id' => $newEmployee['user_id'], 'territory_id' => $territory->id]);
+                    ProblemSolver::where('user_id', $newEmployee['user_id'])->delete();
+                }
+            }
+
+            $employee = User::where('id', $newEmployee['user_id'])->first(['id', 'avatarURL', 'name', 'email', 'telephone']);
+
+            return response()->json([
+                'employee' => $employee,
+            ], 200);
+
+        } else {
+            return abort(403);
+        }
     }
 
     /**
@@ -136,17 +178,5 @@ class EmployeeController extends Controller
     public function update(Request $request, Territory $territory, User $user)
     {
         //
-    }
-
-
-    public function search(Request $request, Territory $territory)
-    {
-        if ($territory->admin_id === Auth::id()) {
-            $users =  User::where('email','LIKE','%'.$request->email.'%')->get();
-
-            return response()->json($users);
-        } else {
-            return abort(403);
-        }
     }
 }

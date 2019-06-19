@@ -18,7 +18,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
-        'avatarURL' => "https://res.cloudinary.com/kotik/image/upload/v1548981829/Images/default-profile.jpg",
+        'avatarURL' => "https://res.cloudinary.com/kotik/image/upload/v1560814782/Images/default-profile.png",
         'telephone' => mt_rand(100000000,999999999),
         'password' => bcrypt('password'),
         'remember_token' => str_random(10),

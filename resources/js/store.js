@@ -109,20 +109,35 @@ export default {
         updateEmployees(state, payload) {
             state.employees = payload;
         },
-        updateEmployee(state, newEmployee) {
-            state.employees.forEach((employee, index) => {
+        updateEmployee(state, newEmployee, role) {
+
+            if(role === 1) state.employees.approver[0] = newEmployee;
+            else if(role === 2) {
+                state.employees.problem_solvers.forEach((employee, index) => {
+                    if (employee.id === newEmployee.id) {
+                        state.employees.problem_solvers[index] = newEmployee;
+                    }
+                });
+            } else if(role === 3) {
+                state.employees.supervisors.forEach((employee, index) => {
+                    if (employee.id === newEmployee.id) {
+                        state.employees.supervisors[index] = newEmployee;
+                    }
+                });
+            }
+
+            state.currentTerritory.employees.forEach((employee, index) => {
                 if (employee.id === newEmployee.id) {
-                    state.employees[index] = newEmployee
+                    state.currentTerritory[index] = newEmployee;
                 }
             });
         },
-
-        /*
-        saveEmployee(state, newEmployee) {
-            state.employees.push(newEmployee);
+        saveEmployee(state, newEmployee, role) {
+            if(role === 1) state.employees.approver[0] = newEmployee;
+            else if(role === 2) state.employees.problem_solvers.push(newEmployee);
+            else if(role === 3) state.employees.supervisors.push(newEmployee);
+            state.currentTerritory.employees.push(newEmployee);
         },
-        */
-
         authError(state, bool) {
             state.auth_error = bool;
         },

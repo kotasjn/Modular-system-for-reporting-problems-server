@@ -146,6 +146,7 @@ class AuthController extends Controller
                     ->union($supervisors)
                     ->union($admin)
                     ->union($approver)
+                    ->groupBy('users.email')
                     ->get(['users.id', 'users.avatarURL', 'users.name', 'users.email', 'users.telephone']);
             }
         }
