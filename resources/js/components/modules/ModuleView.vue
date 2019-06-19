@@ -8,7 +8,7 @@
 
             <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
 
-            <div class="card-body">
+            <div class="card-body" v-if="!isLoading">
 
                 <table>
                     <tr>
@@ -162,7 +162,6 @@
 
                     axios.delete(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$route.params.idModule}`)
                         .then(response => {
-                            console.log(response);
                             this.$dialog.notify.success('Modul byl úspěšně smazán');
                             this.modules.splice(index, 1);
                             this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/modules`);
@@ -198,7 +197,6 @@
 
                     axios.put(`/api/territories/${this.$store.getters.currentTerritory.id}/modules/${this.$route.params.idModule}/activate`)
                         .then(response => {
-                            console.log(response);
                             if(this.module.active) {
                                 this.$dialog.notify.success('Modul byl úspěšně deaktivován');
                                 this.module.active = false;

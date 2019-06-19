@@ -7,7 +7,7 @@
 
             <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
 
-            <div class="card-body">
+            <div class="card-body" v-if="!isLoading">
 
                 <img :src="employee.avatarURL" :alt="employee.name" class="avatar">
 
@@ -213,7 +213,6 @@
 
                     axios.delete(`/api/territories/${this.$store.getters.currentTerritory.id}/employees/${this.$route.params.idEmployee}`)
                         .then(response => {
-                            console.log(response);
                             this.$store.commit("deleteEmployee", this.employee);
                             this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/employees`);
                             this.$dialog.notify.success('Zaměstnance byl úspěšně odebrán');

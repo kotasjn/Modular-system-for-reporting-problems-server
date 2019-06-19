@@ -5,7 +5,7 @@
 
             <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
 
-            <div class="card-body">
+            <div class="card-body" v-if="!isLoading">
 
                 <table>
                     <tr>
@@ -122,7 +122,6 @@
         name: "Report",
         created() {
             this.$store.dispatch('getReport', this.$route.params.idReport).then(response => {
-                console.log(response);
                 this.report = response.data.report;
             }, error => {
                 if(error.response.status === 404) {
