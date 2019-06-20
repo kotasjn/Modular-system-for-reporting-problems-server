@@ -64,9 +64,6 @@
     export default {
         name: "EmployeeNew",
         props: ['user'],
-        created () {
-            this.checkApprover();
-        },
         data() {
             return {
                 categories: [
@@ -114,14 +111,7 @@
                     role: null,
                     responsibilities: [],
                 },
-                responsibilities: [],
-                titleRules: [
-                    v => !!v || 'Tohle pole je povinné',
-                    v => (v && v.length <= 80) || 'Maximální délka je 80 znaků.'
-                ],
-                hintRules: [
-                    v => (null || v.length <= 255) || 'Poznámka může mít maximálně 255 znaků.'
-                ]
+                responsibilities: []
             }
         },
         methods: {
@@ -132,25 +122,17 @@
                     axios.post(`/api/territories/${this.$store.getters.currentTerritory.id}/employees`, {
                         employee: this.employee
                     }).then(response => {
-                        console.log(response);
                         this.$store.commit("saveEmployee", response.data.employee, this.employee.role);
                         this.$dialog.notify.success('Zaměstnanec byl úspěšně uložen');
                         this.$router.push(`/territories/${this.$store.getters.currentTerritory.id}/employees/${response.data.employee.id}`);
                     }).catch(error => {
-                        this.$dialog.notify.error('Zaměstnanece se nepodařilo uložit');
+                        this.$dialog.notify.error('Zaměstnance se nepodařilo uložit');
                         console.log(error);
                     });
                 }
             },
             parseResponsibility(item, index) {
                 if (item) this.employee.responsibilities.push(index);
-            },
-            checkApprover() {
-                if(this.currentTerritory.approver_id != null) {
-                    this.roles.slice(0, 1);
-                    console.log('jsem tu');
-                }
-
             },
             back() {
                 this.$router.go(-1);

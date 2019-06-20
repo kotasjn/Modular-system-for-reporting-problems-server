@@ -109,49 +109,31 @@ export default {
         updateEmployees(state, payload) {
             state.employees = payload;
         },
-        updateEmployee(state, newEmployee, role) {
-
-            if (role === 1) state.employees.approver[0] = newEmployee;
-            else if (role === 2) {
-                state.employees.problem_solvers.forEach((employee, index) => {
-                    if (employee.id === newEmployee.id) {
-                        state.employees.problem_solvers[index] = newEmployee;
-                    }
-                });
-            } else if (role === 3) {
-                state.employees.supervisors.forEach((employee, index) => {
-                    if (employee.id === newEmployee.id) {
-                        state.employees.supervisors[index] = newEmployee;
-                    }
-                });
-            }
-
-            state.currentTerritory.employees.forEach((employee, index) => {
-                if (employee.id === newEmployee.id) {
-                    state.currentTerritory[index] = newEmployee;
-                }
-            });
-        },
         saveEmployee(state, newEmployee, role) {
             if (role === 1) state.employees.approver[0] = newEmployee;
             else if (role === 2) state.employees.problem_solvers.push(newEmployee);
             else if (role === 3) state.employees.supervisors.push(newEmployee);
             state.currentTerritory.employees.push(newEmployee);
+            localStorage.setItem("currentTerritory", JSON.stringify(state.currentTerritory));
         },
         deleteEmployee(state, employee) {
-            if (state.employees.approver[0].id === employee.id) state.employees.approver[0] = null;
+            if (state.employees.approver.length !== 0 && state.employees.approver[0].id === employee.id) state.employees.approver[0] = null;
 
-            state.employees.problem_solvers.forEach((saved_employee, index) => {
-                if (saved_employee.id === employee.id) {
-                    state.employees.problem_solvers.splice(index, 1);
-                }
-            });
+            if (state.employees.problem_solvers !== 0) {
+                state.employees.problem_solvers.forEach((saved_employee, index) => {
+                    if (saved_employee.id === employee.id) {
+                        state.employees.problem_solvers.splice(index, 1);
+                    }
+                });
+            }
 
-            state.employees.supervisors.forEach((saved_employee, index) => {
-                if (saved_employee.id === employee.id) {
-                    state.employees.supervisors.splice(index, 1);
-                }
-            });
+            if(state.employees.supervisors.length !== 0) {
+                state.employees.supervisors.forEach((saved_employee, index) => {
+                    if (saved_employee.id === employee.id) {
+                        state.employees.supervisors.splice(index, 1);
+                    }
+                });
+            }
 
             if (state.currentTerritory.approver_id === employee.id) {
                 state.currentTerritory.approver_id = null;
@@ -166,7 +148,6 @@ export default {
             });
 
             state.currentTerritory.employees = empl;
-
 
             localStorage.setItem("currentTerritory", JSON.stringify(state.currentTerritory));
         },

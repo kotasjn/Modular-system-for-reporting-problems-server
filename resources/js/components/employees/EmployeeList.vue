@@ -29,7 +29,7 @@
                       hide-headers
                       hide-actions>
             <template v-slot:items="props">
-                <td class="text-xs-left">
+                <td class="text-xs-left" style="white-space: nowrap;">
                     <v-avatar style="margin: 5px">
                         <img :src="props.item.avatarURL">
                     </v-avatar>
@@ -48,12 +48,13 @@
         </v-data-table>
 
 
-        <v-data-table :headers="headers_admin"
+        <v-data-table v-if="employees.admin !== null && employees.admin.length"
+                      :headers="headers_admin"
                       :items="employees.admin"
                       class="elevation table_margin_bottom"
                       hide-actions>
-            <template v-slot:items="props">
-                <td class="text-xs-left">
+            <template v-slot:items="props" style="white-space: nowrap;">
+                <td class="text-xs-left" style="white-space: nowrap;">
                     <v-avatar style="margin: 5px">
                         <img :src="props.item.avatarURL">
                     </v-avatar>
@@ -72,13 +73,13 @@
             </template>
         </v-data-table>
 
-        <v-data-table v-if="employees.approver.length"
+        <v-data-table v-if="employees.approver !== null && employees.approver.length"
                       :headers="headers_approver"
                       :items="employees.approver"
                       class="elevation table_margin_bottom"
                       hide-actions>
             <template v-slot:items="props">
-                <td class="text-xs-left">
+                <td class="text-xs-left" style="white-space: nowrap;">
                     <v-avatar style="margin: 5px">
                         <img :src="props.item.avatarURL">
                     </v-avatar>
@@ -97,14 +98,13 @@
             </template>
         </v-data-table>
 
-
-        <v-data-table v-if="employees.problem_solvers.length"
+        <v-data-table v-if="employees.problem_solvers !== null && employees.problem_solvers.length"
                       :headers="headers_problem_solvers"
                       :items="employees.problem_solvers"
                       class="elevation table_margin_bottom"
                       hide-actions>
             <template v-slot:items="props">
-                <td class="text-xs-left">
+                <td class="text-xs-left" style="white-space: nowrap;">
                     <v-avatar style="margin: 5px">
                         <img :src="props.item.avatarURL">
                     </v-avatar>
@@ -124,13 +124,13 @@
         </v-data-table>
 
 
-        <v-data-table v-if="employees.supervisors.length"
+        <v-data-table v-if="employees.supervisors !== null && employees.supervisors.length"
                       :headers="headers_supervisor"
                       :items="employees.supervisors"
                       class="elevation table_margin_bottom"
                       hide-actions>
             <template v-slot:items="props">
-                <td class="text-xs-left">
+                <td class="text-xs-left" style="white-space: nowrap;">
                     <v-avatar style="margin: 5px">
                         <img :src="props.item.avatarURL">
                     </v-avatar>
@@ -295,7 +295,7 @@
             },
             createEmployee() {
                 let user = this.users[0];
-                this.$router.push({ name: 'EmployeeNew', params: { user } });
+                this.$router.push({name: 'EmployeeNew', params: {user}});
             },
             exist(email) {
                 let i;
@@ -311,7 +311,7 @@
             },
             email(after, before) {
                 if (this.$refs.form.validate()) {
-                    if(!this.exist(this.email)) {
+                    if (!this.exist(this.email)) {
                         this.searchUser();
                     } else {
                         this.$dialog.notify.error('Tento uživatel již je zaměstnancem dané obce');

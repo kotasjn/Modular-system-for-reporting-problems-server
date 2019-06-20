@@ -28,11 +28,11 @@
                         <th class="subheading">Telefon:</th>
                         <td class="body-1">{{ "+420" + employee.telephone }}</td>
                     </tr>
-                    <tr v-if="role() === 'Řešitel'">
+                    <tr v-if="employee.role === 2">
                         <th class="subheading">Kategorie:</th>
                         <td class="body-1">
                             <ul>
-                                <li v-for="cat in employee.problem_solver.categories_assigned" :key="cat">
+                                <li v-for="cat in employee.responsibilities" :key="cat">
                                     {{ category(cat) }}
                                 </li>
                             </ul>
@@ -40,7 +40,7 @@
                     </tr>
                 </table>
 
-                <v-data-table v-if="employee.reports_assigned.length" :headers="headers"
+                <v-data-table v-if="employee.role === 2 && employee.reports_assigned.length" :headers="headers"
                               :items="employee.reports_assigned"
                               class="elevation-1">
                     <template v-slot:items="props">
@@ -94,13 +94,13 @@
             </div>
         </div>
 
-        <div v-if="edit && employee.isAdmin">
+        <div v-if="edit && currentTerritory.admin_id === currentUser.id">
 
             <div class="card-header">Úprava zaměstnance</div>
             <div class="card-body">
 
                 <EmployeeEdit v-bind:employee="employee" v-on:cancel-edit="editEmployee"
-                              v-on:module-saved="saveEmployee"></EmployeeEdit>
+                              v-on:employee-saved="saveEmployee"></EmployeeEdit>
 
             </div>
         </div>
@@ -120,12 +120,8 @@
                     name: '',
                     email: '',
                     telephone: '',
-                    isAdmin: false,
-                    isApprover: false,
-                    problem_solver: {
-                        categories_assigned: []
-                    },
-                    isSupervisor: false,
+                    role: '',
+                    responsibilities: [],
                     reports_assigned: []
                 },
                 edit: false,
@@ -185,9 +181,8 @@
             editEmployee() {
                 this.edit = !this.edit;
             },
-            saveEmployee(newEmployee, role) {
+            saveEmployee(newEmployee) {
                 this.employee = newEmployee;
-                this.$store.commit("updateEmployee", newEmployee, role);
                 this.edit = !this.edit;
             },
             async deleteEmployee(index) {
@@ -224,10 +219,10 @@
                 }
             },
             role: function () {
-                if (this.employee.isAdmin) return "Administrátor";
-                else if (this.employee.isApprover) return "Schvalovatel";
-                else if (this.employee.problem_solver.categories_assigned.length) return "Řešitel";
-                else if (this.employee.isSupervisor) return "Supervizor";
+                if (this.employee.role === 0) return "Administrátor";
+                else if (this.employee.role === 1) return "Schvalovatel";
+                else if (this.employee.role === 2) return "Řešitel";
+                else if (this.employee.role === 3) return "Supervizor";
             },
             category: function (category) {
                 if (category === 1) return "Zeleň";

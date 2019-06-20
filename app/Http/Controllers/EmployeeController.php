@@ -145,21 +145,22 @@ class EmployeeController extends Controller
 
             unset($employee['email_verified_at'], $employee['created_at'], $employee['updated_at'], $employee['isSuperAdmin']);
 
-            $employee->isAdmin = $territory->admin_id === $employee->id;
-            $employee->isApprover = $territory->approver_id === $employee->id;
+            if ($territory->admin_id == $employee->id) $employee->role = 0;
+            else if ($territory->approver_id == $employee->id) $employee->role = 1;
+            else if ($territory->problemSolver()->where('user_id', $employee->id)->first()) $employee->role = 2;
+            else if ($territory->supervisor()->where('user_id', $employee->id)->first()) $employee->role = 3;
 
-            $employee->problem_solver = new stdClass();
-            $employee->problem_solver->categories_assigned = DB::table('problem_solvers')
-                ->where('user_id', $employee->id)
-                ->pluck('category_id')
-                ->toArray();
+            if ($employee->role == 2) {
+                $employee->responsibilities = DB::table('problem_solvers')
+                    ->where('user_id', $employee->id)
+                    ->pluck('category_id')
+                    ->toArray();
 
-            $employee->isSupervisor = $territory->supervisor()->where('user_id', $employee->id)->first() ? true : false;
-
-            $employee->reports_assigned = $territory->reports()
-                ->select('id', 'created_at', 'title', 'state', 'userNote', 'employeeNote', 'address', 'user_id', 'category_id')
-                ->where('responsible_user_id', $employee->id)
-                ->get();
+                $employee->reports_assigned = $territory->reports()
+                    ->select('id', 'created_at', 'title', 'state', 'userNote', 'employeeNote', 'address', 'user_id', 'category_id')
+                    ->where('responsible_user_id', $employee->id)
+                    ->get();
+            }
 
             return response()->json([
                 "employee" => $employee
@@ -226,7 +227,7 @@ class EmployeeController extends Controller
                     if($territory->approver_id == $employee->id)
                         $territory->update(['approver_id' => null]);
 
-                } else if ($newEmployee['role'] == 3) {
+                } else if ($newEmployee['role'] == 3 && !$territory->supervisor()->where('user_id', $employee->id)->first()) {
                     Supervisor::create(['user_id' => $employee->id, 'territory_id' => $territory->id]);
 
                     ProblemSolver::where('user_id', $employee->id)->delete();
@@ -238,21 +239,22 @@ class EmployeeController extends Controller
 
             unset($employee['email_verified_at'], $employee['created_at'], $employee['updated_at'], $employee['isSuperAdmin']);
 
-            $employee->isAdmin = $territory->admin_id === $employee->id;
-            $employee->isApprover = $territory->approver_id === $employee->id;
+            if ($territory->admin_id == $employee->id) $employee->role = 0;
+            else if ($territory->approver_id == $employee->id) $employee->role = 1;
+            else if ($territory->problemSolver()->where('user_id', $employee->id)->first()) $employee->role = 2;
+            else if ($territory->supervisor()->where('user_id', $employee->id)->first()) $employee->role = 3;
 
-            $employee->problem_solver = new stdClass();
-            $employee->problem_solver->categories_assigned = DB::table('problem_solvers')
-                ->where('user_id', $employee->id)
-                ->pluck('category_id')
-                ->toArray();
+            if ($employee->role == 2) {
+                $employee->responsibilities = DB::table('problem_solvers')
+                    ->where('user_id', $employee->id)
+                    ->pluck('category_id')
+                    ->toArray();
 
-            $employee->isSupervisor = $territory->supervisor()->where('user_id', $employee->id)->first() ? true : false;
-
-            $employee->reports_assigned = $territory->reports()
-                ->select('id', 'created_at', 'title', 'state', 'userNote', 'employeeNote', 'address', 'user_id', 'category_id')
-                ->where('responsible_user_id', $employee->id)
-                ->get();
+                $employee->reports_assigned = $territory->reports()
+                    ->select('id', 'created_at', 'title', 'state', 'userNote', 'employeeNote', 'address', 'user_id', 'category_id')
+                    ->where('responsible_user_id', $employee->id)
+                    ->get();
+            }
 
             return response()->json([
                 "employee" => $employee
