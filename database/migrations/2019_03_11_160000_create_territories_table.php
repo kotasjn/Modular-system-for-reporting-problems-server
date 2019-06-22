@@ -18,11 +18,8 @@ class CreateTerritoriesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('avatarURL');
-            $table->multipolygon('location', 4326);
             $table->unsignedInteger('approver_id')->nullable();
             $table->unsignedInteger('admin_id');
-
-            $table->spatialIndex('location');
 
             $table->foreign('approver_id')->references('id')->on('users');
             $table->foreign('admin_id')->references('id')->on('users');

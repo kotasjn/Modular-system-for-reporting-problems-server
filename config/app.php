@@ -168,6 +168,7 @@ return [
 
         Laravel\Socialite\SocialiteServiceProvider::class,
         Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
+        Yab\MySQLScout\Providers\MySQLScoutServiceProvider::class,
 
         /*
          * Application Service Providers...

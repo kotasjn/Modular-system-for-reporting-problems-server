@@ -12,10 +12,10 @@
             <ul class="navbar-nav ml-auto">
                 <template v-if="!currentUser">
                     <li>
-                        <router-link to="/login" class="nav-link">Login</router-link>
+                        <router-link to="/login" class="nav-link">Přihlášení</router-link>
                     </li>
                     <li>
-                        <router-link to="/register" class="nav-link">Register</router-link>
+                        <router-link to="/register" class="nav-link">Registrace</router-link>
                     </li>
                 </template>
                 <template v-else>
@@ -31,7 +31,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a href="#!" @click.prevent="logout" class="dropdown-item">Logout</a>
+                            <a href="#!" @click.prevent="logout" class="dropdown-item">Odhlásit se</a>
                         </div>
                     </li>
                 </template>

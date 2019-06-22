@@ -33,7 +33,7 @@
                 ></v-checkbox>
 
 
-                <v-btn color="teal" class="white--text btn-full-width" @click="authenticate">Přihlásit se</v-btn>
+                <v-btn color="teal" class="white--text btn-full-width" :disabled="btn_clicked" @click="authenticate">Přihlásit se</v-btn>
             </v-form>
 
             <div class="form-group text-center" style="margin: 1em 0 0 0;">
@@ -59,6 +59,7 @@
                 },
                 show: false,
                 valid: true,
+                btn_clicked: false,
                 rules: {
                     required: value => !!value || 'Povinné pole.',
                     validEmail: value => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'E-mail musí být ve správném formátu.'
@@ -70,11 +71,13 @@
 
                 if (this.$refs.form.validate()) {
 
+                    this.btn_clicked = true;
+
                     this.$store.dispatch('login');
 
                     login(this.$data.login)
                         .then(res => {
-
+                            this.btn_clicked = false;
                             if (this.isEmpty(Object.assign({}, res.user.territories[0]))) {
                                 this.$dialog.notify.error('Uživatel není autorizován. Požádejte administrátora území, aby vás přidal do systému.');
                             } else {
@@ -84,6 +87,7 @@
                             }
                         })
                         .catch(error => {
+                            this.btn_clicked = false;
                             this.$dialog.notify.error('Přihlášení se nezdařilo\nNeexistující kombinace přihlašovacích údajů');
                             this.$store.commit("loginFailed", {error});
                         })

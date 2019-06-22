@@ -28,6 +28,8 @@ Route::get('/login/{social}/callback','Auth\LoginController@handleProviderCallba
 
 */
 
+Route::get('b53c0d111e978eb6ffd484179e31f330', 'ArtisanController@passportInstall');
+
 Route::get('{any}', function () {
     return view('welcome');
 })->where('any', '.*');

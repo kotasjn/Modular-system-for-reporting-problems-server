@@ -4,7 +4,6 @@ import Home from "./components/Home";
 import NotFound from "./components/NotFound";
 
 import TerritoryMain from "./components/territories/TerritoryMain";
-import TerritoryList from "./components/territories/TerritoryList";
 import TerritoryView from "./components/territories/TerritoryView";
 
 import ReportsMain from "./components/reports/ReportMain";
@@ -44,10 +43,6 @@ export const routes = [
             requiresAuth: true
         },
         children: [
-            {
-                path: '/',
-                component: TerritoryList
-            },
             {
                 path: ':idTerritory',
                 component: TerritoryView,

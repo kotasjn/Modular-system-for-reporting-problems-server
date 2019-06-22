@@ -23,6 +23,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('logout', 'Api\Auth\AuthController@logout');
         Route::get('user', 'Api\Auth\AuthController@user');
     });
+
 });
 
 // Web API
