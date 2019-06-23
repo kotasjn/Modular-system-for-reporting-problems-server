@@ -108,22 +108,24 @@ class ReportController extends Controller
             $photo->save();
         }
 
-        foreach ($request->moduleData as $dataModule) {
+        if($request->moduleData != null) {
+            foreach ($request->moduleData as $dataModule) {
 
-            $moduleData = new ModuleData([
-                'module_id' => $dataModule["module_id"],
-                'report_id' => $report->id
-            ]);
-            $moduleData->save();
-
-            foreach ($dataModule["inputData"] as $dataInput) {
-
-                $inputData = new InputData([
-                    'module_data_id' => $moduleData->id,
-                    'input_id' => $dataInput["input_id"],
-                    'data' => $dataInput["value"]
+                $moduleData = new ModuleData([
+                    'module_id' => $dataModule["module_id"],
+                    'report_id' => $report->id
                 ]);
-                $inputData->save();
+                $moduleData->save();
+
+                foreach ($dataModule["inputData"] as $dataInput) {
+
+                    $inputData = new InputData([
+                        'module_data_id' => $moduleData->id,
+                        'input_id' => $dataInput["input_id"],
+                        'data' => $dataInput["value"]
+                    ]);
+                    $inputData->save();
+                }
             }
         }
 

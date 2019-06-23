@@ -14,11 +14,9 @@
         "grimzy/laravel-mysql-spatial": "^1.0",
         "laravel/framework": "^5.8.0",
         "laravel/passport": "^7.1",
-        "laravel/scout": "^7.1",
         "laravel/socialite": "^3.2.0",
         "laravel/telescope": "^2.0",
-        "laravel/tinker": "^1.0",
-        "yab/laravel-scout-mysql-driver": "^2.3"
+        "laravel/tinker": "^1.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

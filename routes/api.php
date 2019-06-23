@@ -26,6 +26,8 @@ Route::group(['prefix' => 'auth'], function () {
 
 });
 
+Route::post('bugs', 'BugController@store');
+
 // Web API
 
 Route::group(['middleware' => 'auth:api'], function () {
@@ -41,6 +43,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/territories/{territory}/search', 'UserSearchController@search');
 
+    Route::get('bugs', 'BugController@index');
 });
 
 

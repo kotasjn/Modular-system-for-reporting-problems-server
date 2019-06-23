@@ -13,7 +13,8 @@ class UserSearchController extends Controller
     public function search(Request $request, Territory $territory)
     {
         if ($territory->admin_id === Auth::id()) {
-            $users = User::search($request->email)->get(['id AS user_id', 'avatarURL', 'email', 'name']);
+
+            $users = User::where("email", $request->email)->get(['id AS user_id', 'avatarURL', 'email', 'name']);
 
             return response()->json($users);
         } else {
