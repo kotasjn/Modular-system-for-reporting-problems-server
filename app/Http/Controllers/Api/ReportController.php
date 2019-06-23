@@ -41,20 +41,9 @@ class ReportController extends Controller
             ], 400);
         }
 
-        $location = new Point($request->input('lat'), $request->input('lng'));
-        $point1 = 'POINT(' . $location->getLat() . ', ' . $location->getLng() . ')';
-
-        $reports = Report::filter($filters)->orderByDistance('location', $location, 'asc')->limit(($request->has('page_size')) ? $request->input('page_size') : config('app.page_size'))->get();
+        $reports = Report::filter($filters)->limit(($request->has('page_size')) ? $request->input('page_size') : config('app.page_size'))->get();
 
         foreach ($reports as $report) {
-
-            $point2 = 'POINT(' . $report->location->getLat() . ', ' . $report->location->getLng() . ')';
-            $value = DB::select('SELECT ST_Distance( ' . $point1 . ', ' . $point2 . ') AS distance');
-
-            if ($value != null)
-                $report->distance = $value[0]->distance;
-            else
-                $report->distance = null;
 
             $photos = ReportPhoto::select('url')->where('report_id', '=', $report->id)->get();
 
