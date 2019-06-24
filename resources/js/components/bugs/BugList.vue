@@ -34,15 +34,18 @@
                 headers: [
                     {
                         text: 'ID',
+                        value: 'id',
                         align: 'left',
                     },
                     {
                         text: 'Popis',
+                        value: 'description',
                         align: 'center',
                         sortable: false
                     },
                     {
                         text: 'Datum',
+                        value: 'created_at',
                         align: 'center',
                     }
                 ]
