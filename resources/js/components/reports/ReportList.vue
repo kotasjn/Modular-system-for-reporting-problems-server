@@ -1,46 +1,92 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div class="card">
-        <div class="card-header">Podněty</div>
+    <div>
+        <div class="card" v-if="userReports.length">
+            <div class="card-header">Podněty uživatele</div>
 
-        <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
+            <v-progress-linear :indeterminate="true" height="5" v-show="isLoading2"></v-progress-linear>
 
-        <v-data-table v-if="currentTerritory" :headers="headers"
-                      :items="reports"
-                      class="elevation-1">
-            <template v-slot:items="props">
-                <td class="text-xs-left">{{ props.item.title }}</td>
-                <td class="text-xs-center" v-if="props.item.category_id === 1">Zeleň</td>
-                <td class="text-xs-center" v-else-if="props.item.category_id === 2">Odpad</td>
-                <td class="text-xs-center" v-else-if="props.item.category_id === 3">Doprava</td>
-                <td class="text-xs-center" v-else-if="props.item.category_id === 4">Mobiliář</td>
-                <td class="text-xs-center" v-else-if="props.item.category_id === 5">Veřejné osvětlení</td>
-                <td class="text-xs-center" v-else></td>
+            <v-data-table v-if="currentTerritory" :headers="headers"
+                          :items="userReports"
+                          class="elevation-1">
+                <template v-slot:items="props">
+                    <td class="text-xs-left">{{ props.item.title }}</td>
+                    <td class="text-xs-center" v-if="props.item.category_id === 1">Zeleň</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 2">Odpad</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 3">Doprava</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 4">Mobiliář</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 5">Veřejné osvětlení</td>
+                    <td class="text-xs-center" v-else></td>
 
-                <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{
-                    getName(props.item.responsible_user_id) }}
-                </td>
-                <td v-else class="text-xs-center">?</td>
+                    <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{
+                        getName(props.item.responsible_user_id) }}
+                    </td>
+                    <td v-else class="text-xs-center">?</td>
 
-                <td class="text-xs-center">{{ props.item.created_at }}</td>
-                <td class="text-xs-center">
+                    <td class="text-xs-center">{{ props.item.created_at }}</td>
+                    <td class="text-xs-center">
 
-                    <font-awesome-icon v-if="props.item.state === 0" icon="question-circle" style="color: yellow"
-                                       title="Čeká na schválení"/>
-                    <font-awesome-icon v-if="props.item.state === 1" icon="sync-alt" style="color: mediumblue"
-                                       title="Schváleno"/>
-                    <font-awesome-icon v-if="props.item.state === 2" icon="check-circle" style="color: forestgreen"
-                                       title="Vyřešeno"/>
-                    <font-awesome-icon v-if="props.item.state === 3" icon="times-circle" style="color: red"
-                                       title="Zamítnuto"/>
+                        <font-awesome-icon v-if="props.item.state === 0" icon="question-circle" style="color: yellow"
+                                           title="Čeká na schválení"/>
+                        <font-awesome-icon v-if="props.item.state === 1" icon="sync-alt" style="color: mediumblue"
+                                           title="Schváleno"/>
+                        <font-awesome-icon v-if="props.item.state === 2" icon="check-circle" style="color: forestgreen"
+                                           title="Vyřešeno"/>
+                        <font-awesome-icon v-if="props.item.state === 3" icon="times-circle" style="color: red"
+                                           title="Zamítnuto"/>
 
-                </td>
-                <td class="text-xs-center">
-                    <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2">
-                        <v-icon>remove_red_eye</v-icon>
-                    </v-btn>
-                </td>
-            </template>
-        </v-data-table>
+                    </td>
+                    <td class="text-xs-center">
+                        <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2">
+                            <v-icon>remove_red_eye</v-icon>
+                        </v-btn>
+                    </td>
+                </template>
+            </v-data-table>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Podněty</div>
+
+            <v-progress-linear :indeterminate="true" height="5" v-show="isLoading"></v-progress-linear>
+
+            <v-data-table v-if="currentTerritory" :headers="headers"
+                          :items="reports"
+                          class="elevation-1">
+                <template v-slot:items="props">
+                    <td class="text-xs-left">{{ props.item.title }}</td>
+                    <td class="text-xs-center" v-if="props.item.category_id === 1">Zeleň</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 2">Odpad</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 3">Doprava</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 4">Mobiliář</td>
+                    <td class="text-xs-center" v-else-if="props.item.category_id === 5">Veřejné osvětlení</td>
+                    <td class="text-xs-center" v-else></td>
+
+                    <td v-if="props.item.responsible_user_id != null" class="text-xs-center">{{
+                        getName(props.item.responsible_user_id) }}
+                    </td>
+                    <td v-else class="text-xs-center">?</td>
+
+                    <td class="text-xs-center">{{ props.item.created_at }}</td>
+                    <td class="text-xs-center">
+
+                        <font-awesome-icon v-if="props.item.state === 0" icon="question-circle" style="color: yellow"
+                                           title="Čeká na schválení"/>
+                        <font-awesome-icon v-if="props.item.state === 1" icon="sync-alt" style="color: mediumblue"
+                                           title="Schváleno"/>
+                        <font-awesome-icon v-if="props.item.state === 2" icon="check-circle" style="color: forestgreen"
+                                           title="Vyřešeno"/>
+                        <font-awesome-icon v-if="props.item.state === 3" icon="times-circle" style="color: red"
+                                           title="Zamítnuto"/>
+
+                    </td>
+                    <td class="text-xs-center">
+                        <v-btn flat icon @click="showDetail(props.item.id)" color="indigo accent-2">
+                            <v-icon>remove_red_eye</v-icon>
+                        </v-btn>
+                    </td>
+                </template>
+            </v-data-table>
+        </div>
     </div>
 
 </template>
@@ -51,6 +97,7 @@
         data() {
             return {
                 isLoading: true,
+                isLoading2: true,
                 headers: [
                     {
                         text: 'Titulek',
@@ -92,7 +139,8 @@
                 return;
             }
 
-            this.$store.dispatch('getReports').then(() =>{},error => {
+            this.$store.dispatch('getReports').then(() => {
+            }, error => {
                 this.$dialog.notify.error('Podněty se nepodařilo načíst. Zkuste prosím znovu načíst stránku.');
                 console.log(error);
             });
@@ -118,6 +166,19 @@
         computed: {
             reports() {
                 return this.$store.getters.reports;
+            },
+            userReports() {
+                let userReports = [];
+                this.reports.forEach((report) => {
+                    if (report.responsible_user_id === this.currentUser.id) {
+                        userReports.push(report);
+                    }
+                });
+                this.isLoading2 = false;
+                return userReports;
+            },
+            currentUser() {
+                return this.$store.getters.currentUser;
             },
             currentTerritory() {
                 return this.$store.getters.currentTerritory;
