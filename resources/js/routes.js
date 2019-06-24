@@ -20,6 +20,10 @@ import Employees from "./components/employees/EmployeeList";
 import Employee from "./components/employees/EmployeeView";
 import EmployeeNew from "./components/employees/EmployeeNew";
 
+import BugMain from "./components/bugs/BugMain";
+import Bugs from "./components/bugs/BugList";
+import BugNew from "./components/bugs/BugNew";
+
 export const routes = [
     {
         path: '/',
@@ -108,6 +112,22 @@ export const routes = [
                 path: ':idEmployee',
                 component: Employee,
             }
+        ]
+    },
+    {
+        path: '/bugs',
+        component: BugMain,
+        meta: {
+            requiresAuth: true
+        },
+        children: [
+            {
+                path: '/',
+                components: {
+                    default: BugNew,
+                    list: Bugs
+                }
+            },
         ]
     },
     {

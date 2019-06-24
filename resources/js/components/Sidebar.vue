@@ -36,24 +36,29 @@
             </router-link>
         </li>
 
+        <!--
         <li class="nav-item active">
             <router-link class="nav-link" to="/">
                 <font-awesome-icon icon="tachometer-alt"/>
                 <span>Přehled</span>
             </router-link>
         </li>
+        -->
+
         <li class="nav-item">
             <router-link class="nav-link" :to="`/territories/${currentTerritory.id}/reports`">
                 <font-awesome-icon icon="table"/>
                 <span>Podněty</span>
             </router-link>
         </li>
+        <!--
         <li class="nav-item">
             <router-link class="nav-link" to="/statistics">
                 <font-awesome-icon icon="chart-area"/>
                 <span>Statistiky</span>
             </router-link>
         </li>
+        -->
         <li class="nav-item">
             <router-link class="nav-link" :to="`/territories/${currentTerritory.id}/employees`">
                 <font-awesome-icon icon="user"/>
@@ -67,7 +72,7 @@
             </router-link>
         </li>
         <li class="nav-item last">
-            <router-link class="nav-link" to="/bug">
+            <router-link class="nav-link" to="/bugs">
                 <font-awesome-icon icon="bug"/>
                 <span>Nahlásit chybu</span>
             </router-link>
@@ -171,7 +176,7 @@
         vertical-align: middle;
         width: 100px;
         height: 100px;
-        border-radius: 50%;
+        border-radius: 10%;
         margin: .5em 0 .5em 0;
     }
 
