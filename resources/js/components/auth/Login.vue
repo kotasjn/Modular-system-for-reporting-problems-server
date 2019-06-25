@@ -33,7 +33,9 @@
                 ></v-checkbox>
 
 
-                <v-btn color="teal" class="white--text btn-full-width" :disabled="btn_clicked" @click="authenticate">Přihlásit se</v-btn>
+                <v-btn color="teal" class="white--text btn-full-width" :disabled="btn_clicked" @click="authenticate">
+                    Přihlásit se
+                </v-btn>
             </v-form>
 
             <div class="form-group text-center" style="margin: 1em 0 0 0;">
@@ -78,8 +80,8 @@
                     login(this.$data.login)
                         .then(res => {
                             this.btn_clicked = false;
-                            if (this.isEmpty(Object.assign({}, res.user.territories[0]))) {
-                                this.$dialog.notify.error('Uživatel není autorizován. Požádejte administrátora území, aby vás přidal do systému.');
+                            if (!res.user.territories) {
+                                this.$dialog.notify.error('Uživatel není autorizován.\nPožádejte administrátora území, aby vás přidal do systému.');
                             } else {
                                 this.$store.commit("loginSuccess", res);
                                 this.$dialog.notify.success('Přihlášení proběhlo úspěšně');
@@ -92,13 +94,6 @@
                             this.$store.commit("loginFailed", {error});
                         })
                 }
-            },
-            isEmpty(obj) {
-                for (let key in obj) {
-                    if (obj.hasOwnProperty(key))
-                        return false;
-                }
-                return true;
             }
         },
         computed: {
