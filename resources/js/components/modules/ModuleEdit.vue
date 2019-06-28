@@ -44,6 +44,18 @@
                     required
             ></v-select>
 
+            <div class="slider">
+                <v-slider
+                        v-if="input.inputType === 'string'"
+                        v-model="input.characters"
+                        thumb-label="always"
+                        label="Počet znaků"
+                        :thumb-size="24"
+                        :min="1"
+                        :max="255"
+                ></v-slider>
+            </div>
+
             <div v-if="input.inputType === 'spinner'" class="spinner_items">
 
                 <div v-for="(item, itemIndex) in input.items" :key="itemIndex" class="spinner_item">
@@ -57,7 +69,8 @@
                             required
                     ></v-text-field>
 
-                    <v-btn flat icon @click="deleteItem(inputIndex, itemIndex)" color="red darken-4" class="delete-icon">
+                    <v-btn flat icon @click="deleteItem(inputIndex, itemIndex)" color="red darken-4"
+                           class="delete-icon">
                         <v-icon>close</v-icon>
                     </v-btn>
 
@@ -65,7 +78,8 @@
 
                 <div class="spinner_item">
                     <v-btn flat icon @click="addItem(inputIndex)" color="teal" class="item_field">
-                        <v-icon>add</v-icon> Přidat položku
+                        <v-icon>add</v-icon>
+                        Přidat položku
                     </v-btn>
                 </div>
 
@@ -81,7 +95,8 @@
             ></v-textarea>
 
             <v-btn flat icon @click="deleteInput(inputIndex)" color="red darken-4" class="add_item">
-                <v-icon>close</v-icon> Odebrat input
+                <v-icon>close</v-icon>
+                Odebrat input
             </v-btn>
 
             <v-divider></v-divider>
@@ -89,7 +104,8 @@
         </div>
 
         <v-btn flat icon @click="addInput" color="teal" class="add_item">
-            <v-icon>add</v-icon> Přidat input
+            <v-icon>add</v-icon>
+            Přidat input
         </v-btn>
 
         <div class="wrapper-button-bottom">
@@ -153,19 +169,19 @@
                 });
             },
             deleteItem(inputIndex, itemIndex) {
-                this.editedModule.inputs[inputIndex].items.splice(itemIndex,1);
+                this.editedModule.inputs[inputIndex].items.splice(itemIndex, 1);
             },
             addInput() {
                 this.editedModule.inputs.push({
                     title: '',
                     inputType: '',
-                    characters: '',
+                    characters: 255,
                     hint: '',
                     items: []
                 });
             },
             deleteInput(inputIndex) {
-                this.editedModule.inputs.splice(inputIndex,1);
+                this.editedModule.inputs.splice(inputIndex, 1);
             }
         },
         data() {
@@ -226,6 +242,12 @@
 </script>
 
 <style scoped>
+
+    .slider {
+        width: 100%;
+        margin-top: 2.5em;
+        padding-right: 1em;
+    }
 
     .spinner_items {
         width: calc(100% - 1.25rem);

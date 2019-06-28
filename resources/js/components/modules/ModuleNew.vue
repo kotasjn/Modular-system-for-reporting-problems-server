@@ -49,6 +49,18 @@
                         required
                 ></v-select>
 
+                <div class="slider">
+                    <v-slider
+                            v-if="input.inputType === 'string'"
+                            v-model="input.characters"
+                            thumb-label="always"
+                            label="Počet znaků"
+                            :thumb-size="24"
+                            :min="1"
+                            :max="255"
+                    ></v-slider>
+                </div>
+
                 <div v-if="input.inputType === 'spinner'" class="spinner_items">
 
                     <div v-for="(item, itemIndex) in input.items" :key="itemIndex" class="spinner_item">
@@ -150,7 +162,7 @@
                 this.newModule.inputs.push({
                     title: '',
                     inputType: null,
-                    characters: null,
+                    characters: 255,
                     hint: '',
                     items: []
                 });
@@ -204,7 +216,7 @@
                     inputs: [{
                         title: '',
                         inputType: null,
-                        characters: '',
+                        characters: 255,
                         hint: '',
                         items: []
                     }]
@@ -227,6 +239,12 @@
 </script>
 
 <style scoped>
+
+    .slider {
+        width: 100%;
+        margin-top: 2.5em;
+        padding-right: 1em;
+    }
 
     .spinner_items {
         width: calc(100% - 1.25rem);
