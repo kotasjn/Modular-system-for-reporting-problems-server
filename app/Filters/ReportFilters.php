@@ -27,6 +27,6 @@ class ReportFilters extends QueryFilters
     }
 
     public function closed($value){
-        return ($value) ? $this->builder->where('state', 3) : $this->builder->where('state', '!=', 3);
+        return ($value) ? $this->builder->where('state', '>=', 2) : $this->builder->where('state', '<', 2);
     }
 }
