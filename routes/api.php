@@ -34,9 +34,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::apiResource('/territories', 'TerritoryController');
     Route::apiResource('/territories/{territory}/reports', 'ReportController');
-    Route::apiResource('/territories/{territory}/users', 'ModuleController');
-
     Route::apiResource('/territories/{territory}/modules', 'ModuleController');
+
     Route::put('/territories/{territory}/modules/{module}/activate', 'ModuleController@activate');
 
     Route::apiResource('/territories/{territory}/employees', 'EmployeeController');

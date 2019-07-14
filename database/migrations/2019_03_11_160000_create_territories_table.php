@@ -33,9 +33,11 @@ class CreateTerritoriesTable extends Migration
      */
     public function down()
     {
+        /*
         Schema::table('territories', function (Blueprint $table) {
             $table->dropSpatialIndex(['location']);
         });
+        */
 
         Schema::dropIfExists('territories');
     }
