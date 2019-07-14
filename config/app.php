@@ -239,13 +239,13 @@ return [
     // Database constants
 
     'page_size' => 5,
-    'users' => 10,
-    'reports' => 1000,
+    'users' => 1,
+    'reports' => 0,
     'categories' => 5,
-    'modules' => 25,
-    'inputs' => 30,
-    'items' => 50,
-    'comments' => 1000,
-    'report_photos' => 5000,
+    'modules' => 0,
+    'inputs' => 0,
+    'items' => 0,
+    'comments' => 0,
+    'report_photos' => 0,
 
 ];
