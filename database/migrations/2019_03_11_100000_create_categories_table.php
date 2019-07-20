@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateCategoriesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro kategorie
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -21,7 +22,7 @@ class CreateCategoriesTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

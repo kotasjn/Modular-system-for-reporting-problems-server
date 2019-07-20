@@ -10,6 +10,8 @@ class UserController extends Controller
 {
 
     /**
+     * Zobrazení detailu uživatele
+     *
      * @param User $user
      * @return JsonResponse
      */

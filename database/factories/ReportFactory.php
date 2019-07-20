@@ -4,6 +4,7 @@ use App\Territory;
 use Faker\Generator as Faker;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 
+// generování záznamu v db pomocí pomocné funkce factory
 $factory->define(App\Report::class, function (Faker $faker) {
     $userNote = $faker->paragraph(3);
     $employeeNote = $faker->paragraph(2);

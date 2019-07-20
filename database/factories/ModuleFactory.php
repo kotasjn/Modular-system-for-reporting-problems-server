@@ -2,6 +2,7 @@
 
 use Faker\Generator as Faker;
 
+// generování záznamu v db pomocí pomocné funkce factory
 $factory->define(App\Module::class, function (Faker $faker) {
     $territory = 1;
 

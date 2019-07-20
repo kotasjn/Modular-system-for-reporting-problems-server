@@ -12,8 +12,15 @@ use Illuminate\Support\Facades\Validator;
 class BugController extends Controller
 {
 
+    /**
+     * Získání všech nahlášených chyb
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function index(Request $request) {
 
+        // chyby aplikace si může zobrazit pouze administrátor aplikace
         if(Auth::user()->isSuperAdmin) {
 
             return response()->json([
@@ -28,6 +35,8 @@ class BugController extends Controller
     }
 
     /**
+     * Uložení chyby do databáze
+     *
      * @param Request $request
      * @return JsonResponse
      */

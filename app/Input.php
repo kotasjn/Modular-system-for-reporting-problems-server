@@ -10,14 +10,17 @@ class Input extends Model
         'title', 'inputType', 'characters', 'hint', 'module_id'
     ];
 
+    // získání modulu, který vlastní vstup
     public function module() {
         return $this->belongsTo(Module::class);
     }
 
+    // získání položek, které spadají pod vstup (pokud existují)
     public function item() {
         return $this->hasMany(Item::class);
     }
 
+    // získání všech dat vsputu
     public function inputData() {
         return $this->hasMany(InputData::class);
     }

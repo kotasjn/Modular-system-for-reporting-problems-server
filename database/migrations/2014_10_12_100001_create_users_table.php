@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateUsersTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro uživatele
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('avatarURL')->nullable();
@@ -29,7 +30,7 @@ class CreateUsersTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

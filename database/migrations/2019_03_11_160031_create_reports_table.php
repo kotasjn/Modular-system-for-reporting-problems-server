@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateReportsTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro podněty
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -28,6 +29,7 @@ class CreateReportsTable extends Migration
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('territory_id')->default(1);
 
+            // uložení bodu (souřadnic), kde se podnět nachází
             $table->spatialIndex('location');
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -39,7 +41,7 @@ class CreateReportsTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

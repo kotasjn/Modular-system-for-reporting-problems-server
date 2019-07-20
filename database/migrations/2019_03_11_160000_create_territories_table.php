@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateTerritoriesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro samosprávy
         Schema::create('territories', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -27,7 +28,7 @@ class CreateTerritoriesTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

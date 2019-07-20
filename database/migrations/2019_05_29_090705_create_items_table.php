@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateItemsTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro položky seznamu spinneru/selectboxu
         Schema::create('items', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -24,7 +25,7 @@ class CreateItemsTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

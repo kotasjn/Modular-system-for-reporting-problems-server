@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateCommentLikesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro lajky komentářů
         Schema::create('comment_likes', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -28,7 +29,7 @@ class CreateCommentLikesTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

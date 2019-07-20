@@ -16,15 +16,17 @@ use Illuminate\Support\Facades\DB;
 class ReportController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Zobrazení seznamu podnětů
      *
      * @param Territory $territory
      * @return Response
      */
     public function index(Territory $territory)
     {
+        // podněty si mohou zobrazovat pouze zaměstnanci dané samosprávy
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first() || $territory->problemSolver()->where('user_id', Auth::id())->first()) {
 
+            // výběr podnětů z databáze
             $reports = DB::table('reports')->select('id', 'title', 'state', 'userNote', 'user_id', 'responsible_user_id', 'category_id', 'created_at')->where('territory_id', $territory->id)->get();
 
             return response()->json([
@@ -37,7 +39,7 @@ class ReportController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * Uložení nového podnětu
      *
      * @param Request $request
      * @return Response
@@ -48,7 +50,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Zobrazení detailu konkrétního podnětu
      *
      * @param Territory $territory
      * @param Report $report
@@ -56,9 +58,10 @@ class ReportController extends Controller
      */
     public function show(Territory $territory, Report $report)
     {
-
+        // detail podnětu si mohou zobrazovat pouze zaměstnanci dané samosprávy
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->supervisor()->where('user_id', Auth::id())->first() || $territory->problemSolver()->where('user_id', Auth::id())->first()) {
 
+            // vybrat url adresy fotografií, které náleží podnětu
             $photos = ReportPhoto::select('url')->where('report_id', '=', $report->id)->get();
 
             $arrayPhotos = array();
@@ -66,7 +69,11 @@ class ReportController extends Controller
                 array_push($arrayPhotos, json_decode($photos[$i])->url);
             }
             $report->photos = $arrayPhotos;
+
+            // vybrat vlastníka podnětu
             $report->user = $report->user()->first();
+
+            // vybrat zodpovědnou osobu (pokud existuje)
             $report->responsible = User::find($report->responsible_user_id);
 
             $report->location = (object)[
@@ -74,6 +81,7 @@ class ReportController extends Controller
                 'lng' => $report->location->getLng(),
             ];
 
+            // přidání dat modulů k podnětu (pokud existují)
             $report->moduleData = $report->moduleData()
                 ->join('modules', 'modules.id', '=', 'module_data.module_id')
                 ->get(['module_data.id', 'modules.name']);
@@ -98,7 +106,7 @@ class ReportController extends Controller
 
 
     /**
-     * Update the specified resource in storage.
+     * Aktualizace konkrétního podnětu
      *
      * @param Territory $territory
      * @param Report $report
@@ -106,9 +114,10 @@ class ReportController extends Controller
      */
     public function update(Territory $territory, Report $report)
     {
-
+        // podněty mohou aktualizovat pouze admin, schvalovatel nebo jeho řešitel
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->problemSolver()->where('user_id', Auth::id())->where('user_id', $report->responsible_user_id)->first()) {
 
+            // validace a aktualizace podnětu
             $report->update(array_merge(request()->validate([
                 'title' => ['required', 'string', 'max:255'],
                 'category_id' => ['required', 'integer'],
@@ -157,7 +166,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Odstranění podnětu
      *
      * @param Territory $territory
      * @param Report $report
@@ -166,6 +175,7 @@ class ReportController extends Controller
      */
     public function destroy(Territory $territory, Report $report)
     {
+        // podněty mohou být odstraněny pouze administrátorem, schvalovatelem nebo jeho řešitelem
         if ($territory->admin_id === Auth::id() || $territory->approver_id === Auth::id() || $territory->problemSolver()->where('user_id', Auth::id())->where('user_id', $report->responsible_user_id)->first()) {
 
             $report->delete();

@@ -10,10 +10,12 @@ class ReportLike extends Model
         'user_id', 'report_id'
     ];
 
+    // xískání podnětu, kterému lajk náleží
     public function report() {
         return $this->belongsTo(Report::class);
     }
 
+    // získání uživatele, který lajk přidal
     public function user() {
         return $this->belongsTo(User::class);
     }

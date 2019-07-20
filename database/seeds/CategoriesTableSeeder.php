@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class CategoriesTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Spuštění seedu pro model Category. Vygeneruje se počet záznamů, který je uveden v konfiguračním souboru.
      *
      * @return void
      */

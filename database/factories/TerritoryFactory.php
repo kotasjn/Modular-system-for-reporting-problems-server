@@ -3,6 +3,7 @@
 use Faker\Generator as Faker;
 use Grimzy\LaravelMysqlSpatial\Types\MultiPolygon;
 
+// generování záznamu v db pomocí pomocné funkce factory
 $factory->define(App\Territory::class, function (Faker $faker) {
     return [
         'name' => $faker->city,

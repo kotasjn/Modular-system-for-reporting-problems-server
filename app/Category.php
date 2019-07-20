@@ -10,10 +10,12 @@ class Category extends Model
         'name'
     ];
 
+    // výběr podnětů spadajících pod kategorii
     public function report(){
         return $this->hasMany(Report::class);
     }
 
+    // výběr řešitelů, kteří mají zodpovědnost za danou kategorii
     public function problemSolver() {
         return $this->hasMany(ProblemSolver::class);
     }

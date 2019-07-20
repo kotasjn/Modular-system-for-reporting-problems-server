@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class ReportPhotosTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Spuštění seedu pro model ReportPhoto. Vygeneruje se počet záznamů, který je uveden v konfiguračním souboru.
      *
      * @return void
      */

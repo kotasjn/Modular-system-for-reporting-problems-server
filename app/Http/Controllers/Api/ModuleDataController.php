@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 
 class   ModuleDataController
 {
+    /**
+     * Uložení dat modulů
+     *
+     * @param Request $request
+     * @param Report $report
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request, Report $report)
     {
         if(!$request->has('module')){

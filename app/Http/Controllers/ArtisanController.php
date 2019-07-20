@@ -15,6 +15,15 @@ class ArtisanController extends Controller
         $this->output = new BufferedOutput;
     }
 
+    /**
+     * Funkce, která zachycuje chybu, která vzniká na hostingu Wedos
+     *
+     * @param $errno
+     * @param $errstr
+     * @param $errfile
+     * @param $errline
+     * @return bool|mixed
+     */
     public function errorHandler($errno, $errstr, $errfile, $errline)
     {
         if ($errno == 2 && preg_match('/putenv\(\)/i', $errstr)) {
@@ -26,6 +35,13 @@ class ArtisanController extends Controller
         return false;
     }
 
+    /**
+     * Funkce provádí příkazy Artisan
+     *
+     * @param $command
+     * @param array $parameters
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     protected function callArtisan($command, $parameters = [])
     {
         if ($this->previousErrorHandler === false) {
@@ -41,7 +57,9 @@ class ArtisanController extends Controller
             ->header('Content-Type', 'text/plain');
     }
 
-// Routy jsou nasměrovány na tuto funkci a podobné
+    /**
+     * Routy jsou nasměrovány na tuto funkci a podobné
+     */
     public function down()
     {
         $this->callArtisan("down");

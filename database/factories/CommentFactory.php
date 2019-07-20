@@ -2,6 +2,7 @@
 
 use Faker\Generator as Faker;
 
+// generování záznamu v db pomocí pomocné funkce factory
 $factory->define(App\Comment::class, function (Faker $faker) {
     $comment = $faker->paragraph(5);
     return [

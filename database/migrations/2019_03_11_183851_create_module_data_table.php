@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateModuleDataTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro data modulů
         Schema::create('module_data', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -26,7 +27,7 @@ class CreateModuleDataTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

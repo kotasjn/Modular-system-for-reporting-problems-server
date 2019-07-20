@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class InputTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Spuštění seedu pro model Input. Vygeneruje se počet záznamů, který je uveden v konfiguračním souboru.
      *
      * @return void
      */

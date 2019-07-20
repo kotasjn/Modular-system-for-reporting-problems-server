@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController
 {
+    /**
+     * Seznam komentářů pod podnětem
+     *
+     * @param Report $report
+     * @param CommentFilters $filters
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Report $report, CommentFilters $filters)
     {
         $comments = Comment::filter($filters)->where('report_id', $report->id)->limit(10)->get();
@@ -26,6 +33,13 @@ class CommentController
         ], 200);
     }
 
+    /**
+     * Zobrazení konkrétního komentáře
+     *
+     * @param Report $report
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Report $report, Comment $comment)
     {
         $comment->likes = CommentLike::where('comment_id', $comment->id)->count();
@@ -37,6 +51,13 @@ class CommentController
         ], 200);
     }
 
+    /**
+     * Uložení komentáře do databáze
+     *
+     * @param Request $request
+     * @param Report $report
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request, Report $report)
     {
         Comment::create(array_merge($request->validate([
@@ -48,6 +69,14 @@ class CommentController
         ], 200);
     }
 
+    /**
+     * Uložení upraveného komentáře
+     *
+     * @param Request $request
+     * @param Report $report
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, Report $report, Comment $comment){
 
         if($comment->user_id == Auth::id()){
@@ -67,6 +96,14 @@ class CommentController
         }
     }
 
+    /**
+     * Odstranění komentáře z databáze
+     *
+     * @param Report $report
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function destroy(Report $report, Comment $comment){
         if($comment->user_id == Auth::id()){
 

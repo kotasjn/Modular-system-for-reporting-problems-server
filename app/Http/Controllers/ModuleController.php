@@ -16,7 +16,7 @@ class ModuleController extends Controller
 {
 
     /**
-     * Display a listing of the resource.
+     * Získání seznamu modulů samosprávy
      *
      * @param Territory $territory
      * @return Response
@@ -24,17 +24,22 @@ class ModuleController extends Controller
     public function index(Territory $territory)
     {
 
+        // spravovat moduly může pouze administrátor obce
         if ($territory->admin_id === Auth::id()) {
 
             $modules = $territory->modules()->get();
 
+            // každému modulu je nutné přiřadit vstupy, které mu náleží
             foreach ($modules as $module) {
                 unset($module->territory_id, $module->created_at, $module->updated_at);
 
+                // výběr vstupů pro modul
                 $module->inputs = Input::where('module_id', $module->id)->get();
 
                 foreach ($module->inputs as $input) {
                     unset($input->module_id, $input->created_at, $input->updated_at);
+
+                    // pokud je vstup selectbox a má tak položky seznamu, je nutné je také dodat
                     $input->items = Item::where('input_id', $input->id)->get();
 
                     foreach ($input->items as $item)
@@ -51,7 +56,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Uložení modulu do databáze
      *
      * @param Request $request
      * @param Territory $territory
@@ -59,6 +64,7 @@ class ModuleController extends Controller
      */
     public function store(Request $request, Territory $territory)
     {
+        // ukládat nové moduly může pouze administrátor samosprávy
         if ($territory->admin_id === Auth::id()) {
 
             $moduleNew = $request->module;
@@ -79,17 +85,21 @@ class ModuleController extends Controller
                 'text' => 'required|string|max:80'
             ];
 
+            // je nutné validovat, zda modul splňuje všechny podmínky pro jeho uložení do databáze
+
             $validatorModule = Validator::make($moduleNew, $moduleRules);
             if ($validatorModule->passes()) {
 
                 foreach ($moduleNew['inputs'] as $input) {
 
+                    // stejně jako u modulů i u vstupů je nutné validovat, zda mají všechny náležitosti
                     $validatorInput = Validator::make($input, $inputRules);
                     if ($validatorInput->passes()) {
 
                         if ($input['inputType'] == 'spinner') {
 
                             foreach ($input['items'] as $item) {
+                                // stejně tak se validují i položky selectboxu
                                 $validatorItem = Validator::make($item, $itemRules);
                                 if (!$validatorItem->passes()) {
                                     return response()->json([
@@ -113,6 +123,7 @@ class ModuleController extends Controller
                 ], 400);
             }
 
+            // vytvoření záznamu modulu v databázi
             $module = Module::create(['name' => $moduleNew['name'], 'category_id' => $moduleNew['category_id'], 'territory_id' => $territory->id]);
 
             unset($module->territory_id, $module->created_at, $module->updated_at);
@@ -121,6 +132,7 @@ class ModuleController extends Controller
 
             foreach ($moduleNew['inputs'] as $input) {
 
+                // vytvoření záznamu vstupu pro konkrétní modul v databázi
                 $inp = Input::create([
                     'title' => $input['title'],
                     'inputType' => $input['inputType'],
@@ -132,6 +144,7 @@ class ModuleController extends Controller
 
                 array_push($inputs, $inp);
 
+                // pokud je typ vstupu spinner/selectbox je nutné vytvořit i záznamy pro položky seznamu
                 if ($inp->inputType == 'spinner') {
 
                     $items = array();
@@ -162,7 +175,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Zobrazení konkrétního modulu
      *
      * @param Territory $territory
      * @param Module $module
@@ -193,7 +206,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Aktualizace modulu v databázi
      *
      * @param Request $request
      * @param Territory $territory
@@ -203,6 +216,7 @@ class ModuleController extends Controller
     public function update(Request $request, Territory $territory, Module $module)
     {
 
+        // upravovat moduly může pouze administrátor
         if ($territory->admin_id === Auth::id()) {
 
             $moduleNew = $request->module;
@@ -223,16 +237,19 @@ class ModuleController extends Controller
                 'text' => 'required|string|max:80'
             ];
 
+            // je nutné validovat, zda modul splňuje všechny podmínky pro jeho uložení do databáze
             $validatorModule = Validator::make($moduleNew, $moduleRules);
             if ($validatorModule->passes()) {
 
                 foreach ($moduleNew['inputs'] as $input) {
 
+                    // validace vstupů
                     $validatorInput = Validator::make($input, $inputRules);
                     if ($validatorInput->passes()) {
 
                         if ($input['inputType'] == 'spinner') {
 
+                            // validace položek seznamu
                             foreach ($input['items'] as $item) {
                                 $validatorItem = Validator::make($item, $itemRules);
                                 if (!$validatorItem->passes()) {
@@ -257,16 +274,19 @@ class ModuleController extends Controller
                 ], 400);
             }
 
+            // nejdříve se musí odstranit staré vstupy
             $oldInputs = $module->inputs()->get();
 
             foreach ($oldInputs as $input) $input->delete();
 
+            // poté se odstraní stará data modulů
             $oldModuleData = $module->moduleData()->get();
 
             foreach ($oldModuleData as $moduleData) $moduleData->delete();
 
             $inputs = array();
 
+            // vytvoření nových vstupů modulu
             foreach ($moduleNew['inputs'] as $input) {
 
                 $inp = Input::create([
@@ -280,6 +300,7 @@ class ModuleController extends Controller
 
                 array_push($inputs, $inp);
 
+                // pokud je typ vstupu spinner/selectbox je třeba vytvořit i položky seznamu
                 if ($inp->inputType == 'spinner') {
 
                     $items = array();
@@ -302,6 +323,7 @@ class ModuleController extends Controller
 
             $module->category_id = $moduleNew['category_id'];
 
+            // aktualizace původního modulu
             $module->update();
 
             unset($module->territory_id, $module->created_at, $module->updated_at);
@@ -318,7 +340,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * Activate module.
+     * Aktivace modulu
      *
      * @param Territory $territory
      * @param Module $module
@@ -327,6 +349,7 @@ class ModuleController extends Controller
      */
     public function activate(Territory $territory, Module $module)
     {
+        // aktivaci může provést pouze administrátor obce
         if ($territory->admin_id === Auth::id()) {
 
             $module->active = !$module->active;
@@ -341,7 +364,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Odstranění modulu z databáze
      *
      * @param Territory $territory
      * @param Module $module
@@ -350,7 +373,7 @@ class ModuleController extends Controller
      */
     public function destroy(Territory $territory, Module $module)
     {
-
+        // odstranění modulu může provést pouze administrátor obce
         if ($territory->admin_id === Auth::id()) {
 
             $module->delete();

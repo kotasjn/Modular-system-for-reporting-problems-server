@@ -10,7 +10,7 @@ class ReportPhoto extends Model
         'url', 'report_id'
     ];
 
-
+    // získání podnětu, kterému fotografie náleží
     public function report() {
         return $this->belongsTo(Report::class);
     }

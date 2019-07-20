@@ -13,6 +13,12 @@ class CommentFilters extends QueryFilters
         parent::__construct($request);
     }
 
+    /**
+     * Filtrování podle uživatele, který komentář přidal
+     *
+     * @param $id
+     * @return mixed
+     */
     public function user($id) {
         return $this->builder->where('user_id', 'LIKE', $id);
     }

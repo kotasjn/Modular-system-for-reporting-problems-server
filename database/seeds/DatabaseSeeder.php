@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Hlavní seed, který spouští ostatní seedy pro konkrétní modely.
      *
      * @return void
      */

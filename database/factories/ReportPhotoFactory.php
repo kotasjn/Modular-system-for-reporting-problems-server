@@ -2,6 +2,7 @@
 
 use Faker\Generator as Faker;
 
+// generování záznamu v db pomocí pomocné funkce factory
 $factory->define(App\ReportPhoto::class, function (Faker $faker) {
     return [
         'report_id' => random_int(1, config('app.reports')),

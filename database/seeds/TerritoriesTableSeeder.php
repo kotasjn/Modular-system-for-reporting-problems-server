@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class TerritoriesTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Spuštění seedu pro model Territory. Vygeneruje se pouze jeden záznam.
      *
      * @return void
      */

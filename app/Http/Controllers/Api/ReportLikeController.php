@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportLikeController
 {
+    /**
+     * Seznam lajků podnětu
+     *
+     * @param Report $report
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Report $report)
     {
         return response()->json([
@@ -18,6 +24,13 @@ class ReportLikeController
         ], 200);
     }
 
+
+    /**
+     * Uložení lajku podnětu
+     *
+     * @param Report $report
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Report $report)
     {
         ReportLike::create(['user_id' => Auth::id(), 'report_id' => $report->id]);
@@ -37,6 +50,14 @@ class ReportLikeController
         abort(404);
     }
 
+    /**
+     * Odstranění lajku z databáze
+     *
+     * @param Report $report
+     * @param ReportLike $like
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function destroy(Report $report, ReportLike $like)
     {
         if ($like->user_id == Auth::id()) {

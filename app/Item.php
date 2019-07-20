@@ -10,6 +10,7 @@ class Item extends Model
         'input_id', 'text'
     ];
 
+    // získání vstupu selectboxu, kterému náleží položka seznamu
     public function input() {
         return $this->belongsTo(Input::class);
     }

@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateInputsTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro vstupy modulů
         Schema::create('inputs', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -28,7 +29,7 @@ class CreateInputsTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

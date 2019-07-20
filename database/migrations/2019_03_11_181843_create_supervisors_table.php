@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateSupervisorsTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro supervisory
         Schema::create('supervisors', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -27,7 +28,7 @@ class CreateSupervisorsTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

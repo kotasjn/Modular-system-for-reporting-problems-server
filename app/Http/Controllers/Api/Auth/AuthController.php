@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
     /**
-     * Create user
+     * Registrace uživatele
      *
      * @param Request $request
      * @return JsonResponse [string] message
@@ -53,7 +53,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Login user and create token
+     * Přihlášení uživatele a vytvoření přístupového tokenu
      *
      * @param Request $request
      * @return JsonResponse [string] access_token
@@ -68,6 +68,7 @@ class AuthController extends Controller
 
         $credentials = request(['email', 'password']);
 
+        // pokud přihlašovací údaje nesedí, odešle se informace uživateli
         if (!Auth::attempt($credentials))
             return response()->json([
                 'error' => true,
@@ -78,7 +79,7 @@ class AuthController extends Controller
 
         unset($user['email_verified_at'], $user['created_at'], $user['updated_at']);
 
-
+        // vytvoření přístupového tokenu pro přihlášeného uživatele
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
 
@@ -89,6 +90,8 @@ class AuthController extends Controller
 
         $user->isSuperAdmin = ($user->isSuperAdmin) ? true : false;
 
+
+        // do odpovědi se přidá i seznam samospráv, kde uživatel nabývá nějaké funkce
         $territoriesAdmin = DB::table('territories')
             ->select('id', 'avatarURL', 'name', 'approver_id', 'admin_id')
             ->where('admin_id', Auth::id());
@@ -104,6 +107,7 @@ class AuthController extends Controller
             })
             ->select('territories.id', 'territories.avatarURL', 'territories.name', 'territories.approver_id', 'territories.admin_id');
 
+        // spojení vybraných záznamů
         $territories = DB::table('territories')
             ->join('supervisors', function ($join) {
                 $join->on('territories.id', '=', 'supervisors.territory_id')
@@ -115,6 +119,7 @@ class AuthController extends Controller
             ->get(['territories.id', 'territories.avatarURL', 'territories.name', 'territories.approver_id', 'territories.admin_id']);
 
 
+        // pokud seznam samospráv není prázdný, vytvoří se seznam dalších zaměstnanců, kteří pro obec také pracují
         if (count($territories)) {
             $user->territories = $territories;
             foreach ($user->territories as $territory) {
@@ -164,7 +169,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout user (Revoke the token)
+     * Odhlášení uživatele
      *
      * @param Request $request
      * @return JsonResponse [string] message
@@ -180,7 +185,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User
+     * Získání přihlášeného uživatele
      *
      * @param Request $request
      * @return JsonResponse [json] user object

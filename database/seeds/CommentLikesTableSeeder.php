@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 class CommentLikesTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Spuštění seedu pro model CommentLike.
      *
      * @return void
      * @throws Exception

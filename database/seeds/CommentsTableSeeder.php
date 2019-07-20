@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class CommentsTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Spuštění seedu pro model Comment. Vygeneruje se počet záznamů, který je uveden v konfiguračním souboru.
      *
      * @return void
      */

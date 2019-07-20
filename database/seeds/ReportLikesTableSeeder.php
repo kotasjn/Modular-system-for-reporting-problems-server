@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 class ReportLikesTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Spuštění seedu pro model ReportLike.
      *
      * @return void
      * @throws Exception

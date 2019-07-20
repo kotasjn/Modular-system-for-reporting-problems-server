@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateProblemSolversTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro řešitele
         Schema::create('problem_solvers', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -30,7 +31,7 @@ class CreateProblemSolversTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

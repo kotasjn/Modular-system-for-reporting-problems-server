@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateReportPhotosTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro fotografie místa nebo předmětu hlášení
         Schema::create('report_photos', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -25,7 +26,7 @@ class CreateReportPhotosTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */

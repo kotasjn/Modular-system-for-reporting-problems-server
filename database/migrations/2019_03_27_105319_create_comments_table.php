@@ -7,12 +7,13 @@ use Illuminate\Database\Migrations\Migration;
 class CreateCommentsTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Spuštění migrací
      *
      * @return void
      */
     public function up()
     {
+        // vytvoření tabulky pro komentáře
         Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -28,7 +29,7 @@ class CreateCommentsTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrácení migrací
      *
      * @return void
      */
